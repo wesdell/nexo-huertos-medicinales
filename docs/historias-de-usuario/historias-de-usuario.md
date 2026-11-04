@@ -4,11 +4,11 @@
 
 | Módulo | Historias |
 | --- | --- |
-| 1. Registro | HU-001 a HU-002 |
-| 2. Comunidades | HU-003 a HU-008 |
-| 3. Huerto | HU-009 a HU-015 |
-| 4. Actividades | HU-016 a HU-028 |
-| 5. Puntos | HU-029 a HU-034 |
+| 1. Registro | HU-001 a HU-003 |
+| 2. Comunidades | HU-004 a HU-009 |
+| 3. Huerto | HU-0010 a HU-016 |
+| 4. Actividades | HU-017 a HU-029 |
+| 5. Puntos | HU-030 a HU-035 |
 
 ## 1. REGISTRO
 
