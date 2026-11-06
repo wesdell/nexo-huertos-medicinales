@@ -18,7 +18,8 @@ Objetivo: flujo mínimo de punta a punta, ejecutable con `docker compose up --bu
 
 | Funcionalidad | HU | Estado |
 |---|---|---|
-| Base del monorepo (pnpm, TypeScript, Docker Compose, CI) | — | En curso |
+| Base del monorepo (pnpm, TypeScript, Docker Compose, CI) | — | En curso (pnpm y TypeScript listos) |
+| Reglas de dominio en `@nexo/shared` con pruebas | 016, 017, 018, 021, 023, 025, 030 | Hecho |
 | Interfaces en Figma de las pantallas v1 | — | Esperando conexión de Figma MCP |
 | Registro con consentimiento de protección de datos (LOPDP) | 001, 036 (nueva) | Pendiente |
 | Inicio y cierre de sesión | 002 | Pendiente |
@@ -60,3 +61,4 @@ Objetivo: flujo mínimo de punta a punta, ejecutable con `docker compose up --bu
 | Fecha | Qué se hizo |
 |---|---|
 | 05/11/2026 | Revisión del repositorio: al día con `origin/main` (6c5b552); solo documentación y `schema.prisma`, sin código. Se definió el alcance de v1, v2 y v3. Se inició la base del monorepo. |
+| 05/11/2026 | `@nexo/shared`: fase lunar (1900–2100), recomendación del día, consejos ancestrales, validación de las 4 actividades de v1, puntos (HU-030) y huerto virtual (HU-016). 29 pruebas en verde, incluida la sincronía de enums con `schema.prisma`. |
