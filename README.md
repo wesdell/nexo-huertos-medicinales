@@ -6,7 +6,9 @@ Proyecto de la materia **Calidad de Software**. Estado y pendientes: [docs/bitac
 
 ## Ejecutar con Docker (recomendado)
 
-Requisito: [Docker Desktop](https://www.docker.com/products/docker-desktop/) abierto.
+**Guía paso a paso para cualquier persona, con solución de problemas: [docs/como-ejecutar.md](docs/como-ejecutar.md).**
+
+Resumen. Requisito: [Docker Desktop](https://www.docker.com/products/docker-desktop/) abierto.
 
 1. Copia la configuración de ejemplo:
 
