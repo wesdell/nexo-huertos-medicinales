@@ -171,7 +171,7 @@ export function Banner({ tipo, children, enfocar }: { tipo: keyof typeof BANNER;
       ref={ref}
       tabIndex={enfocar ? -1 : undefined}
       role={tipo === 'error' ? 'alert' : 'status'}
-      className={`flex gap-3 rounded-lg border-l-4 p-3 ${clase}`}
+      className={`flex gap-3 rounded-lg border p-3 ${clase}`}
     >
       <span aria-hidden="true" className="font-bold">
         {icono}
@@ -269,7 +269,7 @@ export function Dialogo({
       ref={ref}
       aria-labelledby={idTitulo}
       onClose={onCerrar}
-      className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-tarjeta border-t-8 border-aviso-800 bg-white p-0 text-luna-800"
+      className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-tarjeta bg-white p-0 text-luna-800"
     >
       <div className="space-y-4 p-6">
         <h2 id={idTitulo} className="text-xl font-semibold">

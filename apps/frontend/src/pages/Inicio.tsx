@@ -17,14 +17,14 @@ export function Inicio() {
       </header>
 
       {datos?.recomendacion && (
-        <Tarjeta className="border-l-8 border-oro">
+        <section className="rounded-tarjeta bg-aviso-100 p-4 text-aviso-800 shadow-tarjeta sm:p-6">
           <h2 className="flex items-center gap-2 text-xl font-semibold">
             <span aria-hidden="true">{LUNA[datos.recomendacion.fase]}</span>
             Recomendación del día
           </h2>
           <p className="mt-1 font-medium">Hoy: {datos.recomendacion.nombre}</p>
-          <p className="mt-1 text-luna-600">{datos.recomendacion.texto}</p>
-        </Tarjeta>
+          <p className="mt-1 text-aviso-800">{datos.recomendacion.texto}</p>
+        </section>
       )}
 
       {!yo?.comunidad ? (
