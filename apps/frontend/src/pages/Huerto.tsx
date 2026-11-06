@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
-import { CONSEJOS_ANCESTRALES } from '@nexo/shared';
-import { Leaf, LocateFixed } from 'lucide-react';
+import { CONSEJOS_ANCESTRALES, type Etapa } from '@nexo/shared';
+import { Leaf, LocateFixed, MapPin, Snowflake, Sun } from 'lucide-react';
 import { api } from '../api';
 import { useDatos, type HuertoMio, type Planta } from '../datos';
 import { useEnvio } from '../formulario';
@@ -163,9 +163,12 @@ const CUALIDADES = { CALIENTE: 'Caliente', FRIA: 'Fría' };
 
 function ChipCualidad({ cualidad }: { cualidad: Planta['cualidad'] }) {
   return (
-    <span
-      className={`rounded-full px-3 py-1 text-sm font-bold ${cualidad === 'CALIENTE' ? 'bg-caliente text-white' : 'bg-fria text-exito-800'}`}
-    >
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-tierra-100 px-3 py-1 text-sm font-bold text-luna-800">
+      {cualidad === 'CALIENTE' ? (
+        <Sun aria-hidden="true" className="size-4 text-caliente" strokeWidth={2.5} />
+      ) : (
+        <Snowflake aria-hidden="true" className="size-4 text-info-800" strokeWidth={2.5} />
+      )}
       {CUALIDADES[cualidad]}
     </span>
   );
@@ -257,6 +260,8 @@ export function Huerto() {
   const { datos, error, cargando, recargar } = useDatos<HuertoMio>(yo?.comunidad ? '/huertos/mio' : null);
   const responsable = !!yo?.comunidad?.esResponsable;
   const h = datos?.huerto;
+  const virtual = useDatos<{ plantas: { plantaId: string; etapa: Etapa }[] }>(h ? `/huertos/${h.id}/virtual` : null);
+  const etapas = new Map(virtual.datos?.plantas.map((p) => [p.plantaId, p.etapa]));
 
   return (
     <div className="space-y-6">
@@ -281,28 +286,37 @@ export function Huerto() {
         <>
           <Tarjeta>
             <h2 className="text-xl">{h.nombre ?? 'Huerto de la comunidad'}</h2>
-            <p className="text-luna-600">
-              {h.parroquia.nombre}, {h.provincia.nombre} · {Number(h.latitud).toFixed(4)}, {Number(h.longitud).toFixed(4)}
+            <p className="flex items-center gap-1.5 text-luna-600">
+              <MapPin aria-hidden="true" className="size-4" />
+              {h.parroquia.nombre}, {h.provincia.nombre}
             </p>
           </Tarjeta>
           <Tarjeta>
-            <h2 className="mb-4 text-xl">Plantas ({h.plantas.length})</h2>
+            <h2 className="mb-2 text-xl">Plantas ({h.plantas.length})</h2>
             {h.plantas.length === 0 ? (
               <p className="mb-4 text-luna-600">Todavía no hay plantas registradas.</p>
             ) : (
-              <ul className="mb-6 grid gap-3 sm:grid-cols-2">
-                {h.plantas.map((p) => (
-                  <li key={p.id} className="rounded-lg border border-tierra-300 p-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <p className="font-bold">{p.nombreComun}</p>
-                      <ChipCualidad cualidad={p.cualidad} />
-                    </div>
-                    {p.nombreCientifico && <p className="text-sm italic text-luna-600">{p.nombreCientifico}</p>}
-                    <p className="mt-1 text-sm">
-                      {CICLOS[p.ciclo]} · {p.usosMedicinales}
-                    </p>
-                  </li>
-                ))}
+              <ul className="mb-6 divide-y divide-tierra-300">
+                {h.plantas.map((p) => {
+                  const etapa = etapas.get(p.id);
+                  return (
+                    <li key={p.id} className="flex items-center gap-4 py-4">
+                      <span className="grid size-16 shrink-0 place-items-center rounded-full bg-tierra-100">
+                        <img src={`/etapas/${etapa?.recurso ?? 'etapa-0-inicial.svg'}`} alt="" className="size-14" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                          <p className="font-bold">{p.nombreComun}</p>
+                          <ChipCualidad cualidad={p.cualidad} />
+                        </div>
+                        <p className="text-sm text-luna-600">
+                          {etapa ? `Etapa ${etapa.nivel}: ${etapa.nombre}` : 'Sin iniciar'} · {CICLOS[p.ciclo]}
+                        </p>
+                        <p className="text-sm">{p.usosMedicinales}</p>
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             )}
             {responsable ? (

@@ -1,4 +1,6 @@
 import type { Etapa } from '@nexo/shared';
+import { useState } from 'react';
+import { useLocation } from 'react-router';
 import { useDatos, type HuertoMio } from '../datos';
 import { useSesion } from '../sesion';
 import { BarraProgreso, Banner, Cargando, EnlaceBoton, EstadoVacio, Tarjeta } from '../ui';
@@ -11,6 +13,13 @@ interface Virtual {
 /** HU-016: una tarjeta por planta con su etapa más avanzada; progreso = promedio. */
 export function HuertoVirtual() {
   const { yo } = useSesion();
+  // Firma: solo brota la planta recién trabajada, una vez. Se limpia el estado para que no se repita al volver.
+  const loc = useLocation();
+  const [brota] = useState(() => {
+    const b = (loc.state as { brotar?: string } | null)?.brotar;
+    if (b) window.history.replaceState({ ...window.history.state, usr: null }, '');
+    return b;
+  });
   const mio = useDatos<HuertoMio>(yo?.comunidad ? '/huertos/mio' : null);
   const id = mio.datos?.huerto?.id;
   const v = useDatos<Virtual>(id ? `/huertos/${id}/virtual` : null);
@@ -42,7 +51,12 @@ export function HuertoVirtual() {
           <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             {v.datos.plantas.map((p) => (
               <li key={p.plantaId} className="flex flex-col items-center rounded-tarjeta bg-white p-3 text-center shadow-tarjeta">
-                <img key={p.etapa.recurso} src={`/etapas/${p.etapa.recurso}`} alt="" className="brotar aspect-square w-full max-w-36" />
+                <img
+                  key={p.etapa.recurso}
+                  src={`/etapas/${p.etapa.recurso}`}
+                  alt=""
+                  className={`aspect-square w-full max-w-36 ${brota === '*' || brota === p.plantaId ? 'brotar' : ''}`}
+                />
                 <p className="mt-2 font-bold">{p.nombreComun}</p>
                 <p className="text-sm text-luna-600">
                   Etapa {p.etapa.nivel}: {p.etapa.nombre}

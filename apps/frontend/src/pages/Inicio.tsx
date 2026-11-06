@@ -1,6 +1,6 @@
 import { CONSEJOS_ANCESTRALES, type Etapa } from '@nexo/shared';
-import { ChevronRight, Flower2, Leaf, Plus, Sprout, type LucideIcon } from 'lucide-react';
-import { Link } from 'react-router';
+import { ChevronRight, Leaf, LogOut, Plus } from 'lucide-react';
+import { Link, useNavigate } from 'react-router';
 import { useDatos, type HuertoMio } from '../datos';
 import { Luna } from '../Luna';
 import { useSesion } from '../sesion';
@@ -11,25 +11,9 @@ interface Virtual {
   plantas: { plantaId: string; nombreComun: string; etapa: Etapa }[];
 }
 
-function AccionRapida({ to, texto, Icono, principal }: { to: string; texto: string; Icono: LucideIcon; principal?: boolean }) {
-  return (
-    <Link to={to} className="presionable group flex flex-col items-center gap-2 text-center text-sm font-bold">
-      <span
-        className={`grid size-16 place-items-center rounded-full ${
-          principal
-            ? 'bg-primary-600 text-white group-hover:bg-primary-700'
-            : 'border-2 border-tierra-300 bg-white text-luna-800 group-hover:border-luna-600'
-        }`}
-      >
-        <Icono aria-hidden="true" className="size-7" strokeWidth={2.25} />
-      </span>
-      {texto}
-    </Link>
-  );
-}
-
 export function Inicio() {
-  const { yo } = useSesion();
+  const { yo, salir } = useSesion();
+  const navegar = useNavigate();
   const { datos, error, cargando } = useDatos<HuertoMio>('/huertos/mio');
   const huertoId = datos?.huerto?.id;
   const virtual = useDatos<Virtual>(huertoId ? `/huertos/${huertoId}/virtual` : null);
@@ -43,12 +27,23 @@ export function Inicio() {
       </header>
 
       {rec && (
-        <Tarjeta className="flex items-center gap-4">
-          <Luna fase={rec.fase} className="size-16 shrink-0" />
-          <div>
-            <h2 className="text-lg">Hoy: {rec.nombre.toLowerCase()}</h2>
-            <p className="text-luna-600">{rec.texto}</p>
+        <Tarjeta className="space-y-5">
+          <div className="flex items-center gap-5">
+            <Luna fase={rec.fase} className="size-24 shrink-0" />
+            <div>
+              <h2 className="text-2xl sm:text-3xl">Hoy: {rec.nombre.toLowerCase()}</h2>
+              <p className="mt-1 text-lg">{rec.texto}</p>
+            </div>
           </div>
+          {datos?.huerto && (
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <EnlaceBoton to="/actividades/nueva" className="w-full sm:w-auto">
+                <Plus aria-hidden="true" className="size-5" strokeWidth={2.5} />
+                Registrar actividad
+              </EnlaceBoton>
+              <p className="text-sm text-luna-600">Si sigues la recomendación de la luna, ganas 5 puntos extra.</p>
+            </div>
+          )}
         </Tarjeta>
       )}
 
@@ -104,12 +99,6 @@ export function Inicio() {
               <span className="mt-2 block text-luna-600">Agrega plantas para verlas crecer aquí.</span>
             )}
           </Link>
-
-          <nav aria-label="Acciones rápidas" className="grid grid-cols-3 gap-2 py-1">
-            <AccionRapida to="/actividades/nueva" texto="Registrar actividad" Icono={Plus} principal />
-            <AccionRapida to="/huerto" texto="Mi huerto" Icono={Sprout} />
-            <AccionRapida to="/huerto/virtual" texto="Huerto virtual" Icono={Flower2} />
-          </nav>
         </>
       )}
 
@@ -124,6 +113,18 @@ export function Inicio() {
           ))}
         </ul>
       </Tarjeta>
+
+      {/* En móvil, cerrar sesión vive aquí y no en la cabecera, lejos de toques accidentales. */}
+      <button
+        onClick={() => {
+          salir();
+          navegar('/login');
+        }}
+        className="presionable flex min-h-11 items-center gap-2 font-bold text-primary-700 md:hidden"
+      >
+        <LogOut aria-hidden="true" className="size-5" />
+        Cerrar sesión
+      </button>
     </div>
   );
 }

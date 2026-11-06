@@ -79,13 +79,9 @@ export function Layout() {
       <div className="flex min-h-dvh flex-1 flex-col">
         <header className="flex items-center justify-between px-4 pt-4 md:hidden">
           <Marca />
-          <button
-            onClick={cerrar}
-            className="presionable flex min-h-11 items-center gap-1.5 rounded-xl px-3 text-sm font-bold text-primary-700"
-          >
-            <LogOut aria-hidden="true" className="size-4" />
-            Cerrar sesión
-          </button>
+          <p className="text-sm font-bold text-luna-600">
+            <span className="tabular-nums">{yo?.puntos ?? 0}</span> puntos
+          </p>
         </header>
 
         <main id="contenido" className="mx-auto w-full max-w-3xl flex-1 px-4 pb-32 pt-5 md:px-10 md:pb-12 md:pt-10">

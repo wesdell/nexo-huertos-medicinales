@@ -27,7 +27,7 @@ const VISTAS = [
   ['escritorio', { width: 1440, height: 900 }, 1],
 ];
 
-const navegador = await chromium.launch();
+const navegador = await chromium.launch({ args: ['--lang=es-EC'] });
 for (const [vista, viewport, deviceScaleFactor] of VISTAS) {
   const ctx = await navegador.newContext({ viewport, deviceScaleFactor, reducedMotion: 'reduce', locale: 'es-EC' });
   const page = await ctx.newPage();

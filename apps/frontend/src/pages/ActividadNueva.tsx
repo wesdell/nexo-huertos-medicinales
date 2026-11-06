@@ -103,7 +103,7 @@ export function ActividadNueva() {
         : `Actividad guardada: +${total} puntos${r.puntos.bono ? ' (incluye bono por seguir la recomendación)' : ''}.`,
     );
     await recargarSesion();
-    navegar('/huerto/virtual');
+    navegar('/huerto/virtual', { state: { brotar: base.plantaId || '*' } });
   }
 
   function alEnviar(e: FormEvent) {

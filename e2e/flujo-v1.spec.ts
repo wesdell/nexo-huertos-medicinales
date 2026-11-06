@@ -95,6 +95,7 @@ test('flujo v1: registro → comunidad → huerto → planta → actividad → h
   await expect(page.getByText('Etapa 2: Sembrada')).toBeVisible();
 
   // HU-002: cerrar sesión y ruta protegida
+  await page.goto('/');
   await page.getByRole('button', { name: 'Cerrar sesión' }).filter({ visible: true }).click();
   await page.goto('/huerto');
   await expect(page).toHaveURL(/\/login$/);
