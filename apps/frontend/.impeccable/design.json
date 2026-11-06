@@ -1,0 +1,531 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-06T04:16:01.793Z",
+  "title": "Design System: Nexo",
+  "extensions": {
+    "colorMeta": {
+      "primary-50": {
+        "role": "primary",
+        "displayName": "Brote claro",
+        "canonical": "oklch(95.8% 0.013 159.9)",
+        "tonalRamp": [
+          "#134d32",
+          "#186340",
+          "#1f7a4d",
+          "#d3e9db",
+          "#eaf4ee"
+        ]
+      },
+      "primary-100": {
+        "role": "primary",
+        "displayName": "Brote",
+        "canonical": "oklch(91.4% 0.030 157.9)",
+        "tonalRamp": [
+          "#134d32",
+          "#186340",
+          "#1f7a4d",
+          "#d3e9db",
+          "#eaf4ee"
+        ]
+      },
+      "primary-600": {
+        "role": "primary",
+        "displayName": "Verde chakra",
+        "canonical": "oklch(51.5% 0.110 156.8)",
+        "tonalRamp": [
+          "#134d32",
+          "#186340",
+          "#1f7a4d",
+          "#d3e9db",
+          "#eaf4ee"
+        ]
+      },
+      "primary-700": {
+        "role": "primary",
+        "displayName": "Verde chakra hondo",
+        "canonical": "oklch(44.5% 0.092 158.3)",
+        "tonalRamp": [
+          "#134d32",
+          "#186340",
+          "#1f7a4d",
+          "#d3e9db",
+          "#eaf4ee"
+        ]
+      },
+      "primary-800": {
+        "role": "primary",
+        "displayName": "Verde raíz",
+        "canonical": "oklch(37.5% 0.075 158.8)",
+        "tonalRamp": [
+          "#134d32",
+          "#186340",
+          "#1f7a4d",
+          "#d3e9db",
+          "#eaf4ee"
+        ]
+      },
+      "oro": {
+        "role": "secondary",
+        "displayName": "Oro de foco",
+        "canonical": "oklch(68.0% 0.139 75.5)",
+        "tonalRamp": [
+          "oklch(15% 0.139 75.5)",
+          "oklch(26% 0.139 75.5)",
+          "oklch(38% 0.139 75.5)",
+          "oklch(50% 0.139 75.5)",
+          "oklch(62% 0.139 75.5)",
+          "oklch(74% 0.139 75.5)",
+          "oklch(85% 0.139 75.5)",
+          "oklch(95% 0.030 75.5)"
+        ]
+      },
+      "caliente": {
+        "role": "tertiary",
+        "displayName": "Ají",
+        "canonical": "oklch(50.0% 0.182 29.5)",
+        "tonalRamp": [
+          "oklch(15% 0.182 29.5)",
+          "oklch(26% 0.182 29.5)",
+          "oklch(38% 0.182 29.5)",
+          "oklch(50% 0.182 29.5)",
+          "oklch(62% 0.182 29.5)",
+          "oklch(74% 0.182 29.5)",
+          "oklch(85% 0.182 29.5)",
+          "oklch(95% 0.030 29.5)"
+        ]
+      },
+      "tierra-50": {
+        "role": "neutral",
+        "displayName": "Tierra clara",
+        "canonical": "oklch(97.5% 0.012 79.8)",
+        "tonalRamp": [
+          "oklch(15% 0.012 79.8)",
+          "oklch(26% 0.012 79.8)",
+          "oklch(38% 0.012 79.8)",
+          "oklch(50% 0.012 79.8)",
+          "oklch(62% 0.012 79.8)",
+          "oklch(74% 0.012 79.8)",
+          "oklch(85% 0.012 79.8)",
+          "oklch(95% 0.012 79.8)"
+        ]
+      },
+      "tierra-100": {
+        "role": "neutral",
+        "displayName": "Tierra",
+        "canonical": "oklch(94.3% 0.021 79.1)",
+        "tonalRamp": [
+          "oklch(15% 0.021 79.1)",
+          "oklch(26% 0.021 79.1)",
+          "oklch(38% 0.021 79.1)",
+          "oklch(50% 0.021 79.1)",
+          "oklch(62% 0.021 79.1)",
+          "oklch(74% 0.021 79.1)",
+          "oklch(85% 0.021 79.1)",
+          "oklch(95% 0.021 79.1)"
+        ]
+      },
+      "tierra-300": {
+        "role": "neutral",
+        "displayName": "Arcilla",
+        "canonical": "oklch(87.3% 0.034 77.6)",
+        "tonalRamp": [
+          "oklch(15% 0.034 77.6)",
+          "oklch(26% 0.034 77.6)",
+          "oklch(38% 0.034 77.6)",
+          "oklch(50% 0.034 77.6)",
+          "oklch(62% 0.034 77.6)",
+          "oklch(74% 0.034 77.6)",
+          "oklch(85% 0.034 77.6)",
+          "oklch(95% 0.030 77.6)"
+        ]
+      },
+      "luna-600": {
+        "role": "neutral",
+        "displayName": "Tinta secundaria",
+        "canonical": "oklch(44.7% 0.020 75.9)",
+        "tonalRamp": [
+          "oklch(15% 0.020 75.9)",
+          "oklch(26% 0.020 75.9)",
+          "oklch(38% 0.020 75.9)",
+          "oklch(50% 0.020 75.9)",
+          "oklch(62% 0.020 75.9)",
+          "oklch(74% 0.020 75.9)",
+          "oklch(85% 0.020 75.9)",
+          "oklch(95% 0.020 75.9)"
+        ]
+      },
+      "luna-800": {
+        "role": "neutral",
+        "displayName": "Tinta cálida",
+        "canonical": "oklch(26.5% 0.015 71.4)",
+        "tonalRamp": [
+          "oklch(15% 0.015 71.4)",
+          "oklch(26% 0.015 71.4)",
+          "oklch(38% 0.015 71.4)",
+          "oklch(50% 0.015 71.4)",
+          "oklch(62% 0.015 71.4)",
+          "oklch(74% 0.015 71.4)",
+          "oklch(85% 0.015 71.4)",
+          "oklch(95% 0.015 71.4)"
+        ]
+      },
+      "aviso-100": {
+        "role": "status",
+        "displayName": "Aviso claro",
+        "canonical": "oklch(95.8% 0.038 85.3)",
+        "tonalRamp": [
+          "oklch(15% 0.038 85.3)",
+          "oklch(26% 0.038 85.3)",
+          "oklch(38% 0.038 85.3)",
+          "oklch(50% 0.038 85.3)",
+          "oklch(62% 0.038 85.3)",
+          "oklch(74% 0.038 85.3)",
+          "oklch(85% 0.038 85.3)",
+          "oklch(95% 0.030 85.3)"
+        ]
+      },
+      "aviso-800": {
+        "role": "status",
+        "displayName": "Aviso",
+        "canonical": "oklch(42.7% 0.104 51.1)",
+        "tonalRamp": [
+          "oklch(15% 0.104 51.1)",
+          "oklch(26% 0.104 51.1)",
+          "oklch(38% 0.104 51.1)",
+          "oklch(50% 0.104 51.1)",
+          "oklch(62% 0.104 51.1)",
+          "oklch(74% 0.104 51.1)",
+          "oklch(85% 0.104 51.1)",
+          "oklch(95% 0.030 51.1)"
+        ]
+      },
+      "error-100": {
+        "role": "status",
+        "displayName": "Error claro",
+        "canonical": "oklch(93.8% 0.028 25.9)",
+        "tonalRamp": [
+          "oklch(15% 0.028 25.9)",
+          "oklch(26% 0.028 25.9)",
+          "oklch(38% 0.028 25.9)",
+          "oklch(50% 0.028 25.9)",
+          "oklch(62% 0.028 25.9)",
+          "oklch(74% 0.028 25.9)",
+          "oklch(85% 0.028 25.9)",
+          "oklch(95% 0.028 25.9)"
+        ]
+      },
+      "error-800": {
+        "role": "status",
+        "displayName": "Error",
+        "canonical": "oklch(44.8% 0.162 26.8)",
+        "tonalRamp": [
+          "oklch(15% 0.162 26.8)",
+          "oklch(26% 0.162 26.8)",
+          "oklch(38% 0.162 26.8)",
+          "oklch(50% 0.162 26.8)",
+          "oklch(62% 0.162 26.8)",
+          "oklch(74% 0.162 26.8)",
+          "oklch(85% 0.162 26.8)",
+          "oklch(95% 0.030 26.8)"
+        ]
+      },
+      "exito-100": {
+        "role": "status",
+        "displayName": "Éxito claro",
+        "canonical": "oklch(94.3% 0.031 157.2)",
+        "tonalRamp": [
+          "oklch(15% 0.031 157.2)",
+          "oklch(26% 0.031 157.2)",
+          "oklch(38% 0.031 157.2)",
+          "oklch(50% 0.031 157.2)",
+          "oklch(62% 0.031 157.2)",
+          "oklch(74% 0.031 157.2)",
+          "oklch(85% 0.031 157.2)",
+          "oklch(95% 0.030 157.2)"
+        ]
+      },
+      "exito-800": {
+        "role": "status",
+        "displayName": "Éxito",
+        "canonical": "oklch(39.3% 0.090 152.5)",
+        "tonalRamp": [
+          "oklch(15% 0.090 152.5)",
+          "oklch(26% 0.090 152.5)",
+          "oklch(38% 0.090 152.5)",
+          "oklch(50% 0.090 152.5)",
+          "oklch(62% 0.090 152.5)",
+          "oklch(74% 0.090 152.5)",
+          "oklch(85% 0.090 152.5)",
+          "oklch(95% 0.030 152.5)"
+        ]
+      },
+      "info-100": {
+        "role": "status",
+        "displayName": "Información clara",
+        "canonical": "oklch(94.5% 0.021 254.9)",
+        "tonalRamp": [
+          "oklch(15% 0.021 254.9)",
+          "oklch(26% 0.021 254.9)",
+          "oklch(38% 0.021 254.9)",
+          "oklch(50% 0.021 254.9)",
+          "oklch(62% 0.021 254.9)",
+          "oklch(74% 0.021 254.9)",
+          "oklch(85% 0.021 254.9)",
+          "oklch(95% 0.021 254.9)"
+        ]
+      },
+      "info-800": {
+        "role": "status",
+        "displayName": "Información",
+        "canonical": "oklch(37.9% 0.138 265.5)",
+        "tonalRamp": [
+          "oklch(15% 0.138 265.5)",
+          "oklch(26% 0.138 265.5)",
+          "oklch(38% 0.138 265.5)",
+          "oklch(50% 0.138 265.5)",
+          "oklch(62% 0.138 265.5)",
+          "oklch(74% 0.138 265.5)",
+          "oklch(85% 0.138 265.5)",
+          "oklch(95% 0.030 265.5)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Título de cada pantalla; 1.875rem en móvil, 2.25rem desde 640 px."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Fase de la luna en la tarjeta «Hoy»; 1.5rem a 1.875rem."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Títulos de tarjeta, leyendas, diálogo y estado vacío."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Todo el texto corrido."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Texto de botones y campos."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Ayudas, errores, chips y etapa de la planta."
+      }
+    },
+    "shadows": [
+      {
+        "name": "tarjeta",
+        "value": "0 1px 2px rgb(42 36 29 / 0.05), 0 6px 16px -4px rgb(42 36 29 / 0.08)",
+        "purpose": "Toda tarjeta, tarjeta de planta y estado vacío."
+      },
+      {
+        "name": "tarjeta-hover",
+        "value": "0 10px 24px -6px rgb(42 36 29 / 0.18)",
+        "purpose": "Hover de la tarjeta enlace «Tu huerto virtual»."
+      },
+      {
+        "name": "barra-flotante",
+        "value": "0 8px 30px -6px rgb(42 36 29 / 0.25)",
+        "purpose": "Barra inferior de navegación en móvil."
+      },
+      {
+        "name": "telon-dialogo",
+        "value": "rgb(42 36 29 / 0.45)",
+        "purpose": "Fondo (::backdrop) del diálogo."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-salida",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Curva de todo el sistema: resorte, brotar, aparecer y barra de progreso."
+      },
+      {
+        "name": "presionable",
+        "value": "transform scale(0.97), 160ms ease-salida",
+        "purpose": "Resorte al presionar, solo en lo que se toca."
+      },
+      {
+        "name": "brotar",
+        "value": "520ms ease-salida; translateY(6px) scale(0.9) → translateY(-3px) scale(1.06) al 55 % → reposo",
+        "purpose": "Firma: la planta salta a su nueva etapa tras 600 ms mostrando la etapa anterior."
+      },
+      {
+        "name": "aparecer",
+        "value": "260ms ease-salida; opacity 0, translateY(-8px) → reposo",
+        "purpose": "Entrada del toast de logro."
+      },
+      {
+        "name": "progreso",
+        "value": "width 700ms ease-salida",
+        "purpose": "Relleno de la barra de progreso."
+      },
+      {
+        "name": "movimiento-reducido",
+        "value": "prefers-reduced-motion: duraciones a 0.01ms",
+        "purpose": "Desactiva animaciones y transiciones."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón primario",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción principal de la pantalla; el único verde saturado.",
+      "html": "<button class=\"ds-btn-primario\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg>Registrar actividad</button>",
+      "css": ".ds-btn-primario{font-family:'Nunito Variable','Segoe UI',system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 24px;border:0;border-radius:16px;background:#1f7a4d;color:#fff;font-size:1rem;font-weight:700;box-shadow:0 1px 2px rgb(0 0 0/.05);cursor:pointer;transition:transform 160ms cubic-bezier(0.16,1,0.3,1),background-color 160ms;}.ds-btn-primario:hover{background:#186340}.ds-btn-primario:active{transform:scale(.97)}.ds-btn-primario:focus-visible{outline:3px solid #c98a12;outline-offset:2px;}"
+    },
+    {
+      "name": "Botón secundario",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Alternativa junto al primario, p. ej. en el diálogo de confirmación.",
+      "html": "<button class=\"ds-btn-secundario\">Volver a revisar</button>",
+      "css": ".ds-btn-secundario{font-family:'Nunito Variable','Segoe UI',system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;border:2px solid #2a241d;border-radius:16px;background:#fff;color:#2a241d;font-size:1rem;font-weight:700;cursor:pointer;transition:transform 160ms cubic-bezier(0.16,1,0.3,1),background-color 160ms;}.ds-btn-secundario:hover{background:#f4ebdd}.ds-btn-secundario:active{transform:scale(.97)}.ds-btn-secundario:focus-visible{outline:3px solid #c98a12;outline-offset:2px;}"
+    },
+    {
+      "name": "Enlace de texto",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Acción terciaria o enlace dentro del texto.",
+      "html": "<a href=\"#\" class=\"ds-enlace\">Crea tu cuenta</a>",
+      "css": ".ds-enlace{font-family:'Nunito Variable','Segoe UI',system-ui,sans-serif;color:#186340;font-weight:700;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.2em}.ds-enlace:hover{text-decoration-color:#1f7a4d}.ds-enlace:focus-visible{outline:3px solid #c98a12;outline-offset:2px;}"
+    },
+    {
+      "name": "Campo de texto",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo con etiqueta en negrita encima.",
+      "html": "<label class=\"ds-campo\"><span class=\"ds-campo-etiqueta\">Nombre común</span><input class=\"ds-campo-input\" placeholder=\"Manzanilla\"></label>",
+      "css": ".ds-campo{font-family:'Nunito Variable','Segoe UI',system-ui,sans-serif;display:flex;flex-direction:column;gap:6px;color:#2a241d}.ds-campo-etiqueta{font-weight:700;font-size:1.0625rem}.ds-campo-input{font-family:'Nunito Variable','Segoe UI',system-ui,sans-serif;min-height:48px;padding:8px 16px;border:2px solid #e2d3bd;border-radius:12px;background:#fff;color:#2a241d;font-size:1rem;transition:border-color 150ms}.ds-campo-input::placeholder{color:#5b5348}.ds-campo-input:hover{border-color:#5b5348}.ds-campo-input:focus{border-color:#1f7a4d;outline:none}.ds-campo-input:focus-visible{outline:3px solid #c98a12;outline-offset:2px;}"
+    },
+    {
+      "name": "Tarjeta",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Contenedor base: blanco, 20 px de radio, sombra ambiental cálida.",
+      "html": "<section class=\"ds-tarjeta\"><h2 class=\"ds-tarjeta-titulo\">Saberes de nuestros mayores</h2><p class=\"ds-tarjeta-texto\">Cosecha después del rocío de la mañana.</p></section>",
+      "css": ".ds-tarjeta{font-family:'Nunito Variable','Segoe UI',system-ui,sans-serif;background:#fff;border-radius:20px;padding:20px;box-shadow:0 1px 2px rgb(42 36 29/.05),0 6px 16px -4px rgb(42 36 29/.08);color:#2a241d;max-width:360px}.ds-tarjeta-titulo{margin:0;font-size:1.25rem;font-weight:800;letter-spacing:-.025em}.ds-tarjeta-texto{margin:8px 0 0;font-size:1.0625rem;line-height:1.625;color:#5b5348}"
+    },
+    {
+      "name": "Chip de cualidad",
+      "kind": "chip",
+      "refersTo": "chip-cualidad",
+      "description": "Cualidad caliente o fría de una planta, con icono y palabra.",
+      "html": "<span class=\"ds-chip\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#b42318\" stroke-width=\"2.5\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41\"/></svg>Caliente</span>",
+      "css": ".ds-chip{font-family:'Nunito Variable','Segoe UI',system-ui,sans-serif;display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:9999px;background:#f4ebdd;color:#2a241d;font-size:.875rem;font-weight:700}"
+    },
+    {
+      "name": "Barra inferior",
+      "kind": "nav",
+      "refersTo": "nav-item-action",
+      "description": "Navegación móvil flotante; «Registrar» relleno en verde, el activo en brote claro.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" class=\"ds-nav-item ds-nav-activo\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"/><path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/></svg>Inicio</a><a href=\"#\" class=\"ds-nav-item\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"/><path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/></svg>Mi huerto</a><a href=\"#\" class=\"ds-nav-item ds-nav-accion\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg>Registrar</a><a href=\"#\" class=\"ds-nav-item\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"/><path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/></svg>Huerto virtual</a></nav>",
+      "css": ".ds-nav{font-family:'Nunito Variable','Segoe UI',system-ui,sans-serif;display:grid;grid-template-columns:repeat(4,1fr);padding:6px;border-radius:24px;background:#fff;box-shadow:0 8px 30px -6px rgb(42 36 29/.25);max-width:400px}.ds-nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;border-radius:16px;color:#5b5348;font-size:.75rem;font-weight:700;text-decoration:none;transition:transform 160ms cubic-bezier(0.16,1,0.3,1),background-color 160ms;}.ds-nav-item:active{transform:scale(.97)}.ds-nav-item:focus-visible{outline:3px solid #c98a12;outline-offset:2px;}.ds-nav-activo{background:#eaf4ee;color:#186340}.ds-nav-accion{background:#1f7a4d;color:#fff}"
+    },
+    {
+      "name": "Aviso",
+      "kind": "custom",
+      "refersTo": "aviso-100",
+      "description": "Banner de estado con icono y texto, sin franja lateral.",
+      "html": "<div class=\"ds-aviso\" role=\"status\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg><p>La luna no acompaña la siembra hoy. Puedes guardar de todos modos.</p></div>",
+      "css": ".ds-aviso{font-family:'Nunito Variable','Segoe UI',system-ui,sans-serif;display:flex;gap:12px;padding:16px;border-radius:16px;background:#fdf0d5;color:#7a3b0c;max-width:420px}.ds-aviso svg{flex-shrink:0;margin-top:2px}.ds-aviso p{margin:0;line-height:1.625}"
+    },
+    {
+      "name": "Toast de logro",
+      "kind": "custom",
+      "refersTo": "toast",
+      "description": "Confirma los puntos ganados durante 6 s.",
+      "html": "<p class=\"ds-toast\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 20h10\"/><path d=\"M10 20c5.5-2.5.8-6.4 3-10\"/><path d=\"M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z\"/><path d=\"M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z\"/></svg>Ganaste 15 puntos</p>",
+      "css": ".ds-toast{font-family:'Nunito Variable','Segoe UI',system-ui,sans-serif;display:inline-flex;align-items:center;gap:12px;margin:0;padding:12px 20px;border-radius:16px;background:#2a241d;color:#fff;font-weight:700;box-shadow:0 20px 25px -5px rgb(0 0 0/.1),0 8px 10px -6px rgb(0 0 0/.1);animation:ds-aparecer 260ms cubic-bezier(.16,1,.3,1)}.ds-toast svg{color:#d3e9db;flex-shrink:0}@keyframes ds-aparecer{from{opacity:0;transform:translateY(-8px)}}"
+    },
+    {
+      "name": "Planta que brota",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "Firma: la planta salta a su nueva etapa tras registrar una actividad.",
+      "html": "<div class=\"ds-planta\"><svg class=\"ds-planta-dibujo\" viewBox=\"0 0 120 120\" aria-hidden=\"true\"><circle cx=\"60\" cy=\"60\" r=\"56\" fill=\"#eef7f1\"/><ellipse cx=\"60\" cy=\"96\" rx=\"48\" ry=\"14\" fill=\"#8b5e3c\"/><ellipse cx=\"60\" cy=\"92\" rx=\"44\" ry=\"10\" fill=\"#a47148\"/><path d=\"M60 90V40\" stroke=\"#2d6e45\" stroke-width=\"4\" stroke-linecap=\"round\"/><path d=\"M60 78c-18 0-26-12-26-22 15 0 26 8 26 22zM60 70c16 0 24-11 24-20-14 0-24 7-24 20zM60 54c-12 0-18-9-18-16 10 0 18 6 18 16zM60 48c10 0 16-8 16-14-9 0-16 5-16 14z\" fill=\"#3f8a52\"/></svg><p class=\"ds-planta-nombre\">Manzanilla</p><p class=\"ds-planta-etapa\">Etapa 3: En cuidado</p></div>",
+      "css": ".ds-planta{font-family:'Nunito Variable','Segoe UI',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;width:160px;padding:12px;border-radius:20px;background:#fff;box-shadow:0 1px 2px rgb(42 36 29/.05),0 6px 16px -4px rgb(42 36 29/.08);text-align:center;color:#2a241d}.ds-planta-dibujo{width:100%;max-width:144px;aspect-ratio:1;animation:ds-brotar 520ms cubic-bezier(.16,1,.3,1) both}.ds-planta-nombre{margin:8px 0 0;font-weight:700}.ds-planta-etapa{margin:0;font-size:.875rem;color:#5b5348}@keyframes ds-brotar{from{transform:translateY(6px) scale(.9)}55%{transform:translateY(-3px) scale(1.06)}}@media (prefers-reduced-motion:reduce){.ds-planta-dibujo{animation:none}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "La chakra en la palma de la mano",
+    "overview": "Nexo es una app de consumo cálida para usar en el huerto, con el teléfono en una mano y a pleno sol. El suelo de cada pantalla es un fondo de tierra clara teñida (`tierra-50`), sobre el que descansan tarjetas blancas de esquinas suaves. La tinta es café oscuro cálido (`luna-800`), nunca un gris pizarra frío. Todo el sistema gira en torno a una sola decisión: el único color saturado de la pantalla es algo que se puede presionar.\n\nLa densidad es baja y generosa: textos de cuerpo a 17 px, objetivos táctiles de 48 px, una columna de tarjetas separadas por 24 px. La jerarquía la da el peso de una sola familia redondeada (Nunito), no el cambio de tipografía. Los iconos son de línea (Lucide) y siempre acompañan una etiqueta en español sencillo. Lo que se toca responde con un resorte suave al presionar, y la firma del sistema es el **brotar**: la planta salta a su nueva etapa en el huerto virtual después de registrar una actividad.\n\nEl sistema rechaza explícitamente la plantilla de jardinería con cabecera verde e icono de hoja, y el tablero de tarjetas de estadísticas. Los avisos no llevan franja lateral de acento.",
+    "keyCharacteristics": [
+      "Fondo de tierra teñida, tarjetas blancas de 20 px de radio con sombra ambiental cálida.",
+      "Un solo color de acción (verde chakra), reservado para lo presionable y su estado activo.",
+      "Tinta y secundario cálidos; ningún gris frío.",
+      "Una familia tipográfica (Nunito Variable); jerarquía por peso 400 / 700 / 800 / 900.",
+      "Iconos Lucide de línea, siempre con texto; el color nunca es la única señal.",
+      "Resorte al presionar y la animación «brotar» como firma."
+    ],
+    "rules": [
+      {
+        "name": "The Lo Que Se Toca Rule",
+        "body": "El verde chakra saturado (`primary-600` / `primary-700`) aparece solo en elementos presionables: botones, enlaces, destinos de navegación, opciones y casillas. Una barra de progreso, un número o un título nunca son verdes; el progreso se pinta en tinta cálida.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tierra Cálida Rule",
+        "body": "Todo neutro sale de la familia `tierra` / `luna`. Ningún gris frío (slate, zinc, gray), ni en texto ni en bordes ni en sombras; las sombras se tiñen con la tinta `rgb(42 36 29 / …)`.",
+        "section": "colors"
+      },
+      {
+        "name": "The Oro Es Foco Rule",
+        "body": "El oro marca dónde está el foco del teclado y nada más.",
+        "section": "colors"
+      },
+      {
+        "name": "The Una Familia Rule",
+        "body": "Una sola familia; la jerarquía la hacen el peso (400 / 700 / 800 / 900) y el tamaño. Sin versalitas, sin mayúsculas sostenidas, sin rótulos sobre los títulos.",
+        "section": "typography"
+      },
+      {
+        "name": "The Número Tabular Rule",
+        "body": "Puntos y porcentajes usan cifras tabulares para que no bailen al cambiar.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sombra Cálida Rule",
+        "body": "Toda sombra propia se tiñe con la tinta `rgb(42 36 29)`; nunca negro puro ni sombras duras desplazadas.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** reservar `primary-600` / `primary-700` para lo que se puede presionar y su estado activo o elegido.",
+      "**Do** pintar el progreso, los números y los títulos en tinta cálida (`luna-800`).",
+      "**Do** acompañar cada estado, cualidad o destino con icono y texto; el color nunca va solo.",
+      "**Do** usar tarjetas blancas de 20 px con la sombra «Tarjeta» sobre el fondo `tierra-50`, y `tierra-100` para lo hundido dentro de ellas.",
+      "**Do** mantener objetivos táctiles de al menos 44 px (48 px en botones y campos).",
+      "**Do** dar el resorte `presionable` (escala 0.97) solo a elementos que se tocan.",
+      "**Do** advertir con el diálogo «guardar de todos modos» en vez de bloquear cuando la luna no acompaña."
+    ],
+    "donts": [
+      "**Don't** usar el verde de acción en elementos que no se tocan: barras de progreso, cifras, encabezados o cabeceras de color.",
+      "**Don't** introducir grises fríos (slate `#1F2937` y similares) ni sombras en negro puro.",
+      "**Don't** usar el oro para algo distinto del anillo de foco.",
+      "**Don't** poner franjas laterales de acento en avisos o diálogos.",
+      "**Don't** colocar rótulos en mayúsculas sobre los títulos ni usar una segunda familia tipográfica.",
+      "**Don't** armar tableros de tarjetas de estadísticas ni la cabecera verde con icono de hoja."
+    ]
+  }
+}
