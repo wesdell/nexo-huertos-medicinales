@@ -172,6 +172,9 @@ model Usuario {
   rol             Rol          @default(VOLUNTARIO)
   nivel           NivelMiembro @default(APRENDIZ) // lo actualiza el sistema (HU-033), no el usuario
   puntos          Int          @default(0)        // caché del total; la fuente de verdad es MovimientoPuntos
+  // HU-036: consentimiento de tratamiento de datos personales (LOPDP Ecuador)
+  consentimientoDatosEn DateTime
+  versionPolitica       String
   creadoEn        DateTime     @default(now())
 
   membresias      Membresia[]
