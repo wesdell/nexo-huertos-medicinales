@@ -20,7 +20,7 @@ Objetivo: flujo mínimo de punta a punta, ejecutable con `docker compose up --bu
 |---|---|---|
 | Base del monorepo (pnpm, TypeScript, Docker Compose, CI) | — | Hecho salvo CI |
 | Reglas de dominio en `@nexo/shared` con pruebas | 016, 017, 018, 021, 023, 025, 030 | Hecho |
-| Interfaces en Figma de las pantallas v1 | — | Esperando conexión de Figma MCP |
+| Interfaces en Figma de las pantallas v1 | Parcial | [Nexo — MVP v1](https://www.figma.com/design/5lN9PIqZZV9XJsqGy1yaiI): variables, estilos, componentes y 6 pantallas móvil (390). Falta escritorio (1440): se agotó el cupo de llamadas MCP del plan Starter |
 | Registro con consentimiento de protección de datos (LOPDP) | 001, 036 (nueva) | Hecho |
 | Inicio y cierre de sesión | 002 | Hecho |
 | Crear comunidad (el creador queda como responsable) | 004 | Hecho |
@@ -65,3 +65,4 @@ Objetivo: flujo mínimo de punta a punta, ejecutable con `docker compose up --bu
 | 05/11/2026 | Backend NestJS + Prisma (migración inicial con consentimiento LOPDP, seed de 24 provincias y cuenta demo), frontend React + Tailwind con las 8 pantallas de v1, Docker Compose funcionando (`docker compose up --build`). 13 pruebas de API de punta a punta en verde. |
 | 05/11/2026 | Prueba e2e con Playwright (móvil y escritorio) + revisión de accesibilidad axe WCAG 2.1 AA sin violaciones serias. Encontró y corrigió un error: tras crear la comunidad se volvía a Inicio en vez de ir a Mi huerto. |
 | 06/11/2026 | Sistema de diseño elegido: «App cálida de consumo» (fondo cálido, tarjetas blancas, verde solo para acciones, Nunito local, iconos Lucide, logo y favicon propios). Rediseño de las 8 pantallas; e2e + axe en verde; capturas en `docs/capturas/`. |
+| 06/11/2026 | Revisión de diseño cerrada (2 rondas): la planta muestra su etapa anterior y brota a la nueva; la línea del bono tiene tamaño de texto normal. `apps/frontend/DESIGN.md` documenta el sistema. Figma: tokens como variables, componentes (Botón, Campo, Selector, NavItem, BarraInferior, MenúLateral, MosaicoActividad, Luna, etapas) y 6 pantallas móvil. |
