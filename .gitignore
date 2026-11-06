@@ -13,3 +13,4 @@ playwright-report/
 test-results/
 .impeccable/questions/
 apps/frontend/.impeccable/questions/
+apps/frontend/.impeccable/review/

@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { CONSEJOS_ANCESTRALES } from '@nexo/shared';
+import { Leaf, LocateFixed } from 'lucide-react';
 import { api } from '../api';
 import { useDatos, type HuertoMio, type Planta } from '../datos';
 import { useEnvio } from '../formulario';
@@ -14,12 +15,12 @@ interface Provincia {
 
 function Consejos({ titulo, consejos }: { titulo: string; consejos: readonly string[] }) {
   return (
-    <aside className="rounded-lg bg-primary-50 p-4" aria-label={titulo}>
-      <p className="font-semibold text-primary-800">{titulo}</p>
+    <aside className="rounded-2xl bg-tierra-100 p-4" aria-label={titulo}>
+      <p className="font-bold">{titulo}</p>
       <ul className="mt-2 space-y-1">
         {consejos.map((c) => (
           <li key={c} className="flex gap-2">
-            <span aria-hidden="true">❦</span>
+            <Leaf aria-hidden="true" className="mt-1 size-4 shrink-0" />
             {c}
           </li>
         ))}
@@ -32,7 +33,13 @@ function Consejos({ titulo, consejos }: { titulo: string; consejos: readonly str
 function FormularioHuerto({ alCrear }: { alCrear: () => void }) {
   const { datos: provincias } = useDatos<Provincia[]>('/provincias');
   const { errores, setErrores, enviando, enviar, resumen } = useEnvio();
-  const [d, setD] = useState({ nombre: '', provinciaId: '', parroquiaId: '', latitud: '', longitud: '' });
+  const [d, setD] = useState({
+    nombre: '',
+    provinciaId: '',
+    parroquiaId: '',
+    latitud: '',
+    longitud: '',
+  });
   const [gps, setGps] = useState<'' | 'buscando' | 'denegado'>('');
   const toast = useToast();
   const parroquias = provincias?.find((p) => String(p.id) === d.provinciaId)?.parroquias ?? [];
@@ -42,7 +49,11 @@ function FormularioHuerto({ alCrear }: { alCrear: () => void }) {
     setGps('buscando');
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setD((x) => ({ ...x, latitud: pos.coords.latitude.toFixed(6), longitud: pos.coords.longitude.toFixed(6) }));
+        setD((x) => ({
+          ...x,
+          latitud: pos.coords.latitude.toFixed(6),
+          longitud: pos.coords.longitude.toFixed(6),
+        }));
         setGps('');
       },
       () => setGps('denegado'),
@@ -60,7 +71,14 @@ function FormularioHuerto({ alCrear }: { alCrear: () => void }) {
     if (Object.keys(faltan).length) return setErrores(faltan);
     await enviar(async () => {
       await api('/huertos', {
-        body: { ...d, nombre: d.nombre || undefined, provinciaId: +d.provinciaId, parroquiaId: +d.parroquiaId, latitud: +d.latitud, longitud: +d.longitud },
+        body: {
+          ...d,
+          nombre: d.nombre || undefined,
+          provinciaId: +d.provinciaId,
+          parroquiaId: +d.parroquiaId,
+          latitud: +d.latitud,
+          longitud: +d.longitud,
+        },
       });
       toast('Huerto registrado. Ahora agrega tus plantas.');
       alCrear();
@@ -69,7 +87,7 @@ function FormularioHuerto({ alCrear }: { alCrear: () => void }) {
 
   return (
     <Tarjeta>
-      <h2 className="mb-4 text-xl font-semibold">Registrar el huerto</h2>
+      <h2 className="mb-4 text-xl">Registrar el huerto</h2>
       <div className="grid gap-6 lg:grid-cols-[1fr_16rem]">
         <form onSubmit={alEnviar} noValidate className="flex flex-col gap-4">
           <ResumenErrores errores={resumen} />
@@ -95,16 +113,36 @@ function FormularioHuerto({ alCrear }: { alCrear: () => void }) {
             />
           </div>
           <fieldset className="flex flex-col gap-3">
-            <legend className="mb-2 font-semibold">Ubicación</legend>
-            <Boton type="button" variante="secundario" onClick={usarUbicacion} cargando={gps === 'buscando'} textoCargando="Buscando ubicación…" className="sm:self-start">
+            <legend className="mb-2 font-bold">Ubicación</legend>
+            <Boton
+              type="button"
+              variante="secundario"
+              onClick={usarUbicacion}
+              cargando={gps === 'buscando'}
+              textoCargando="Buscando ubicación…"
+              className="sm:self-start"
+            >
+              <LocateFixed aria-hidden="true" className="size-5" />
               Usar mi ubicación actual
             </Boton>
-            {gps === 'denegado' && (
-              <Banner tipo="aviso">No pudimos obtener tu ubicación. Escribe las coordenadas manualmente.</Banner>
-            )}
+            {gps === 'denegado' && <Banner tipo="aviso">No pudimos obtener tu ubicación. Escribe las coordenadas manualmente.</Banner>}
             <div className="grid gap-4 sm:grid-cols-2">
-              <Campo etiqueta="Latitud" inputMode="decimal" required value={d.latitud} error={errores.latitud} onChange={(e) => setD({ ...d, latitud: e.target.value })} />
-              <Campo etiqueta="Longitud" inputMode="decimal" required value={d.longitud} error={errores.longitud} onChange={(e) => setD({ ...d, longitud: e.target.value })} />
+              <Campo
+                etiqueta="Latitud"
+                inputMode="decimal"
+                required
+                value={d.latitud}
+                error={errores.latitud}
+                onChange={(e) => setD({ ...d, latitud: e.target.value })}
+              />
+              <Campo
+                etiqueta="Longitud"
+                inputMode="decimal"
+                required
+                value={d.longitud}
+                error={errores.longitud}
+                onChange={(e) => setD({ ...d, longitud: e.target.value })}
+              />
             </div>
           </fieldset>
           <Boton type="submit" cargando={enviando} className="sm:self-start">
@@ -126,7 +164,7 @@ const CUALIDADES = { CALIENTE: 'Caliente', FRIA: 'Fría' };
 function ChipCualidad({ cualidad }: { cualidad: Planta['cualidad'] }) {
   return (
     <span
-      className={`rounded-full px-3 py-1 text-sm font-semibold ${cualidad === 'CALIENTE' ? 'bg-caliente text-white' : 'bg-fria text-exito-800'}`}
+      className={`rounded-full px-3 py-1 text-sm font-bold ${cualidad === 'CALIENTE' ? 'bg-caliente text-white' : 'bg-fria text-exito-800'}`}
     >
       {CUALIDADES[cualidad]}
     </span>
@@ -135,7 +173,13 @@ function ChipCualidad({ cualidad }: { cualidad: Planta['cualidad'] }) {
 
 /** HU-014 (sin fotos en v1). */
 function FormularioPlanta({ huertoId, alCrear }: { huertoId: string; alCrear: () => void }) {
-  const vacio = { nombreComun: '', nombreCientifico: '', ciclo: '', cualidad: '', usosMedicinales: '' };
+  const vacio = {
+    nombreComun: '',
+    nombreCientifico: '',
+    ciclo: '',
+    cualidad: '',
+    usosMedicinales: '',
+  };
   const [d, setD] = useState(vacio);
   const { errores, setErrores, enviando, enviar, resumen } = useEnvio();
   const toast = useToast();
@@ -149,7 +193,9 @@ function FormularioPlanta({ huertoId, alCrear }: { huertoId: string; alCrear: ()
     if (!d.usosMedicinales.trim()) faltan.usosMedicinales = 'Los usos medicinales son obligatorios.';
     if (Object.keys(faltan).length) return setErrores(faltan);
     await enviar(async () => {
-      await api(`/huertos/${huertoId}/plantas`, { body: { ...d, nombreCientifico: d.nombreCientifico || undefined } });
+      await api(`/huertos/${huertoId}/plantas`, {
+        body: { ...d, nombreCientifico: d.nombreCientifico || undefined },
+      });
       toast(`${d.nombreComun} se agregó al huerto.`);
       setD(vacio);
       alCrear();
@@ -158,12 +204,29 @@ function FormularioPlanta({ huertoId, alCrear }: { huertoId: string; alCrear: ()
 
   return (
     <form onSubmit={alEnviar} noValidate className="flex flex-col gap-4">
-      <h3 className="text-lg font-semibold">Agregar planta</h3>
+      <h3 className="text-lg">Agregar planta</h3>
       <ResumenErrores errores={resumen} />
       <div className="grid gap-4 sm:grid-cols-2">
-        <Campo etiqueta="Nombre común" required value={d.nombreComun} error={errores.nombreComun} onChange={(e) => setD({ ...d, nombreComun: e.target.value })} />
-        <Campo etiqueta="Nombre científico (opcional)" value={d.nombreCientifico} onChange={(e) => setD({ ...d, nombreCientifico: e.target.value })} />
-        <Selector etiqueta="Ciclo" required opciones={CICLOS} value={d.ciclo} error={errores.ciclo} onChange={(e) => setD({ ...d, ciclo: e.target.value })} />
+        <Campo
+          etiqueta="Nombre común"
+          required
+          value={d.nombreComun}
+          error={errores.nombreComun}
+          onChange={(e) => setD({ ...d, nombreComun: e.target.value })}
+        />
+        <Campo
+          etiqueta="Nombre científico (opcional)"
+          value={d.nombreCientifico}
+          onChange={(e) => setD({ ...d, nombreCientifico: e.target.value })}
+        />
+        <Selector
+          etiqueta="Ciclo"
+          required
+          opciones={CICLOS}
+          value={d.ciclo}
+          error={errores.ciclo}
+          onChange={(e) => setD({ ...d, ciclo: e.target.value })}
+        />
         <Selector
           etiqueta="Cualidad"
           required
@@ -197,9 +260,13 @@ export function Huerto() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-semibold">Mi huerto</h1>
+      <h1 className="text-3xl sm:text-4xl">Mi huerto</h1>
       {!yo?.comunidad ? (
-        <EstadoVacio titulo="Aún no tienes comunidad" texto="Crea una comunidad para registrar tu huerto." accion={<EnlaceBoton to="/comunidad/nueva">Crear comunidad</EnlaceBoton>} />
+        <EstadoVacio
+          titulo="Aún no tienes comunidad"
+          texto="Crea una comunidad para registrar tu huerto."
+          accion={<EnlaceBoton to="/comunidad/nueva">Crear comunidad</EnlaceBoton>}
+        />
       ) : cargando && !datos ? (
         <Cargando />
       ) : error ? (
@@ -213,13 +280,13 @@ export function Huerto() {
       ) : (
         <>
           <Tarjeta>
-            <h2 className="text-xl font-semibold">{h.nombre ?? 'Huerto de la comunidad'}</h2>
+            <h2 className="text-xl">{h.nombre ?? 'Huerto de la comunidad'}</h2>
             <p className="text-luna-600">
               {h.parroquia.nombre}, {h.provincia.nombre} · {Number(h.latitud).toFixed(4)}, {Number(h.longitud).toFixed(4)}
             </p>
           </Tarjeta>
           <Tarjeta>
-            <h2 className="mb-4 text-xl font-semibold">Plantas ({h.plantas.length})</h2>
+            <h2 className="mb-4 text-xl">Plantas ({h.plantas.length})</h2>
             {h.plantas.length === 0 ? (
               <p className="mb-4 text-luna-600">Todavía no hay plantas registradas.</p>
             ) : (
@@ -227,7 +294,7 @@ export function Huerto() {
                 {h.plantas.map((p) => (
                   <li key={p.id} className="rounded-lg border border-tierra-300 p-3">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <p className="font-semibold">{p.nombreComun}</p>
+                      <p className="font-bold">{p.nombreComun}</p>
                       <ChipCualidad cualidad={p.cualidad} />
                     </div>
                     {p.nombreCientifico && <p className="text-sm italic text-luna-600">{p.nombreCientifico}</p>}

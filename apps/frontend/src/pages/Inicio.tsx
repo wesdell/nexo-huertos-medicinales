@@ -1,37 +1,62 @@
-import { CONSEJOS_ANCESTRALES } from '@nexo/shared';
+import { CONSEJOS_ANCESTRALES, type Etapa } from '@nexo/shared';
+import { ChevronRight, Flower2, Leaf, Plus, Sprout, type LucideIcon } from 'lucide-react';
+import { Link } from 'react-router';
 import { useDatos, type HuertoMio } from '../datos';
+import { Luna } from '../Luna';
 import { useSesion } from '../sesion';
 import { Banner, Cargando, EnlaceBoton, Tarjeta } from '../ui';
 
-const LUNA: Record<string, string> = { LUNA_NUEVA: '🌑', CRECIENTE: '🌓', LLENA: '🌕', MENGUANTE: '🌗' };
+interface Virtual {
+  progreso: number;
+  plantas: { plantaId: string; nombreComun: string; etapa: Etapa }[];
+}
+
+function AccionRapida({ to, texto, Icono, principal }: { to: string; texto: string; Icono: LucideIcon; principal?: boolean }) {
+  return (
+    <Link to={to} className="presionable group flex flex-col items-center gap-2 text-center text-sm font-bold">
+      <span
+        className={`grid size-16 place-items-center rounded-full ${
+          principal
+            ? 'bg-primary-600 text-white group-hover:bg-primary-700'
+            : 'border-2 border-tierra-300 bg-white text-luna-800 group-hover:border-luna-600'
+        }`}
+      >
+        <Icono aria-hidden="true" className="size-7" strokeWidth={2.25} />
+      </span>
+      {texto}
+    </Link>
+  );
+}
 
 export function Inicio() {
   const { yo } = useSesion();
   const { datos, error, cargando } = useDatos<HuertoMio>('/huertos/mio');
+  const huertoId = datos?.huerto?.id;
+  const virtual = useDatos<Virtual>(huertoId ? `/huertos/${huertoId}/virtual` : null);
+  const rec = datos?.recomendacion;
 
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-3xl font-semibold">Hola, {yo?.nombre.split(' ')[0]}</h1>
-        {yo?.comunidad && <p className="text-luna-600">{yo.comunidad.nombre}</p>}
+        <h1 className="text-3xl sm:text-4xl">Hola, {yo?.nombre.split(' ')[0]}</h1>
+        <p className="mt-1 text-luna-600">{yo?.comunidad ? yo.comunidad.nombre : 'Aún no perteneces a una comunidad'}</p>
       </header>
 
-      {datos?.recomendacion && (
-        <section className="rounded-tarjeta bg-aviso-100 p-4 text-aviso-800 shadow-tarjeta sm:p-6">
-          <h2 className="flex items-center gap-2 text-xl font-semibold">
-            <span aria-hidden="true">{LUNA[datos.recomendacion.fase]}</span>
-            Recomendación del día
-          </h2>
-          <p className="mt-1 font-medium">Hoy: {datos.recomendacion.nombre}</p>
-          <p className="mt-1 text-aviso-800">{datos.recomendacion.texto}</p>
-        </section>
+      {rec && (
+        <Tarjeta className="flex items-center gap-4">
+          <Luna fase={rec.fase} className="size-16 shrink-0" />
+          <div>
+            <h2 className="text-lg">Hoy: {rec.nombre.toLowerCase()}</h2>
+            <p className="text-luna-600">{rec.texto}</p>
+          </div>
+        </Tarjeta>
       )}
 
       {!yo?.comunidad ? (
         <Tarjeta>
-          <h2 className="text-xl font-semibold">Crea tu comunidad de siembra</h2>
-          <p className="mb-4 mt-1 text-luna-600">
-            Para registrar un huerto y sus actividades, primero necesitas una comunidad. Puede ser de una sola persona o de todo un barrio.
+          <h2 className="text-xl">Empieza tu comunidad de siembra</h2>
+          <p className="mb-5 mt-1 text-luna-600">
+            Puede ser de una sola persona o de todo un barrio. Con ella registras tu huerto y sus actividades.
           </p>
           <EnlaceBoton to="/comunidad/nueva">Crear comunidad</EnlaceBoton>
         </Tarjeta>
@@ -39,43 +64,61 @@ export function Inicio() {
         <Cargando />
       ) : error ? (
         <Banner tipo="error">{error}</Banner>
+      ) : !datos?.huerto ? (
+        <Tarjeta>
+          <h2 className="text-xl">Registra tu huerto</h2>
+          <p className="mb-5 mt-1 text-luna-600">
+            {yo.comunidad.esResponsable
+              ? 'Indica dónde está y agrega tus plantas medicinales.'
+              : 'El responsable de tu comunidad debe registrarlo.'}
+          </p>
+          {yo.comunidad.esResponsable && <EnlaceBoton to="/huerto">Registrar el huerto</EnlaceBoton>}
+        </Tarjeta>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-3">
-          <Tarjeta>
-            <p className="text-sm text-luna-600">Mis puntos</p>
-            <p className="font-display text-4xl font-bold text-primary-700">{yo.puntos}</p>
-          </Tarjeta>
-          <Tarjeta>
-            <p className="text-sm text-luna-600">Puntos de la comunidad</p>
-            <p className="font-display text-4xl font-bold text-primary-700">{yo.comunidad.puntosTotales}</p>
-          </Tarjeta>
-          <Tarjeta>
-            <p className="text-sm text-luna-600">Plantas en el huerto</p>
-            <p className="font-display text-4xl font-bold text-primary-700">{datos?.huerto?.plantas.length ?? 0}</p>
-          </Tarjeta>
-          <div className="flex flex-col gap-3 sm:col-span-3 sm:flex-row">
-            {datos?.huerto ? (
+        <>
+          <Link
+            to="/huerto/virtual"
+            className="presionable block rounded-tarjeta bg-white p-5 shadow-tarjeta hover:shadow-[0_10px_24px_-6px_rgb(42_36_29/0.18)] sm:p-6"
+          >
+            <span className="flex items-center justify-between gap-3">
+              <span className="font-display text-xl font-extrabold">Tu huerto virtual</span>
+              <ChevronRight aria-hidden="true" className="size-6 text-luna-600" />
+            </span>
+            {virtual.datos && virtual.datos.plantas.length > 0 ? (
               <>
-                <EnlaceBoton to="/actividades/nueva">Registrar actividad</EnlaceBoton>
-                <EnlaceBoton to="/huerto/virtual" variante="secundario">
-                  Ver huerto virtual
-                </EnlaceBoton>
+                <span className="mt-4 flex gap-3 overflow-hidden">
+                  {virtual.datos.plantas.slice(0, 5).map((p) => (
+                    <span key={p.plantaId} className="flex w-16 shrink-0 flex-col items-center">
+                      <img src={`/etapas/${p.etapa.recurso}`} alt="" className="size-16" />
+                      <span className="mt-1 w-full truncate text-center text-xs font-bold">{p.nombreComun}</span>
+                    </span>
+                  ))}
+                </span>
+                <span className="mt-4 block text-luna-600">
+                  Avance del huerto: <strong className="text-luna-800">{virtual.datos.progreso} %</strong> · Tienes{' '}
+                  <strong className="tabular-nums text-luna-800">{yo.puntos}</strong> puntos y tu comunidad{' '}
+                  <strong className="tabular-nums text-luna-800">{yo.comunidad.puntosTotales}</strong>.
+                </span>
               </>
             ) : (
-              <EnlaceBoton to="/huerto">{yo.comunidad.esResponsable ? 'Registrar el huerto' : 'Ver mi huerto'}</EnlaceBoton>
+              <span className="mt-2 block text-luna-600">Agrega plantas para verlas crecer aquí.</span>
             )}
-          </div>
-        </div>
+          </Link>
+
+          <nav aria-label="Acciones rápidas" className="grid grid-cols-3 gap-2 py-1">
+            <AccionRapida to="/actividades/nueva" texto="Registrar actividad" Icono={Plus} principal />
+            <AccionRapida to="/huerto" texto="Mi huerto" Icono={Sprout} />
+            <AccionRapida to="/huerto/virtual" texto="Huerto virtual" Icono={Flower2} />
+          </nav>
+        </>
       )}
 
       <Tarjeta>
-        <h2 className="text-xl font-semibold">Saberes ancestrales</h2>
-        <ul className="mt-3 space-y-2">
-          {[...CONSEJOS_ANCESTRALES.general, ...CONSEJOS_ANCESTRALES.ubicacion.slice(0, 1)].map((c) => (
-            <li key={c} className="flex gap-2">
-              <span aria-hidden="true" className="text-primary-600">
-                ❦
-              </span>
+        <h2 className="text-lg">Saberes de nuestros mayores</h2>
+        <ul className="mt-3 space-y-3">
+          {[...CONSEJOS_ANCESTRALES.general, CONSEJOS_ANCESTRALES.ubicacion[0]].map((c) => (
+            <li key={c} className="flex gap-3">
+              <Leaf aria-hidden="true" className="mt-1 size-5 shrink-0 text-luna-600" />
               {c}
             </li>
           ))}

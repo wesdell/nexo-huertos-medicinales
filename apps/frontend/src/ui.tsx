@@ -12,17 +12,19 @@ import {
   type SelectHTMLAttributes,
 } from 'react';
 import { Link } from 'react-router';
+import { AlertCircle, CheckCircle2, ChevronDown, Info, Sprout, TriangleAlert, XCircle, type LucideIcon } from 'lucide-react';
 
-// Componentes base de diseno.md §2.3. Alto mínimo 44 px, foco visible y estados con texto (nunca solo color).
+// Componentes base. Alto mínimo 44 px, foco visible y estados con texto e icono (nunca solo color).
+// El verde de acción aparece solo en lo que se puede tocar.
 
 type Variante = 'primario' | 'secundario' | 'texto';
 const VARIANTES: Record<Variante, string> = {
-  primario: 'bg-primary-600 text-white hover:bg-primary-700 disabled:bg-luna-600',
-  secundario: 'border-2 border-primary-600 text-primary-700 bg-white hover:bg-primary-50',
-  texto: 'text-primary-700 underline-offset-4 hover:underline',
+  primario: 'bg-primary-600 text-white shadow-sm hover:bg-primary-700 disabled:bg-tierra-300 disabled:text-luna-600 disabled:shadow-none',
+  secundario: 'border-2 border-luna-800 bg-white text-luna-800 hover:bg-tierra-100 disabled:border-tierra-300 disabled:text-luna-600',
+  texto: 'text-primary-700 underline decoration-2 hover:decoration-primary-600',
 };
 const BASE_BOTON =
-  'inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-5 font-semibold transition-colors disabled:cursor-not-allowed';
+  'presionable inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl px-6 text-base font-bold disabled:cursor-not-allowed';
 
 export function Boton({
   variante = 'primario',
@@ -31,7 +33,11 @@ export function Boton({
   className = '',
   children,
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { variante?: Variante; cargando?: boolean; textoCargando?: string }) {
+}: ButtonHTMLAttributes<HTMLButtonElement> & {
+  variante?: Variante;
+  cargando?: boolean;
+  textoCargando?: string;
+}) {
   return (
     <button
       {...props}
@@ -44,9 +50,19 @@ export function Boton({
   );
 }
 
-export function EnlaceBoton({ to, variante = 'primario', children }: { to: string; variante?: Variante; children: ReactNode }) {
+export function EnlaceBoton({
+  to,
+  variante = 'primario',
+  className = '',
+  children,
+}: {
+  to: string;
+  variante?: Variante;
+  className?: string;
+  children: ReactNode;
+}) {
   return (
-    <Link to={to} className={`${BASE_BOTON} ${VARIANTES[variante]}`}>
+    <Link to={to} className={`${BASE_BOTON} ${VARIANTES[variante]} ${className}`}>
       {children}
     </Link>
   );
@@ -58,32 +74,37 @@ interface PropsCampo {
   ayuda?: string;
 }
 
+function MensajeError({ id, texto }: { id: string; texto: string }) {
+  return (
+    <p id={id} className="flex items-start gap-1.5 text-sm font-semibold text-error-800">
+      <AlertCircle aria-hidden="true" className="mt-0.5 size-4 shrink-0" strokeWidth={2.25} />
+      {texto}
+    </p>
+  );
+}
+
 function Envoltura({ id, etiqueta, error, ayuda, children }: PropsCampo & { id: string; children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="font-medium">
+    <div className="flex flex-col gap-1.5">
+      <label htmlFor={id} className="font-bold">
         {etiqueta}
       </label>
       {ayuda && (
-        <p id={`${id}-ayuda`} className="text-sm text-luna-600">
+        <p id={`${id}-ayuda`} className="-mt-1 text-sm text-luna-600">
           {ayuda}
         </p>
       )}
       {children}
-      {error && (
-        <p id={`${id}-error`} className="flex items-start gap-1 text-sm font-medium text-error-800">
-          <span aria-hidden="true">⚠</span>
-          {error}
-        </p>
-      )}
+      {error && <MensajeError id={`${id}-error`} texto={error} />}
     </div>
   );
 }
 
-const describe = (id: string, p: PropsCampo) =>
-  [p.ayuda && `${id}-ayuda`, p.error && `${id}-error`].filter(Boolean).join(' ') || undefined;
+const describe = (id: string, p: PropsCampo) => [p.ayuda && `${id}-ayuda`, p.error && `${id}-error`].filter(Boolean).join(' ') || undefined;
 const CLASE_INPUT = (error?: string) =>
-  `min-h-11 w-full rounded-lg border-2 bg-white px-3 py-2 text-base ${error ? 'border-error-800' : 'border-tierra-300'} focus:border-primary-600`;
+  `min-h-12 w-full rounded-xl border-2 bg-white px-4 py-2 text-base text-luna-800 transition-colors placeholder:text-luna-600 disabled:bg-tierra-100 disabled:text-luna-600 ${
+    error ? 'border-error-800' : 'border-tierra-300 hover:border-luna-600'
+  } focus:border-primary-600 focus:outline-none focus-visible:outline-3 focus-visible:outline-oro`;
 
 export function Campo({ etiqueta, error, ayuda, ...props }: PropsCampo & InputHTMLAttributes<HTMLInputElement>) {
   const id = useId();
@@ -106,88 +127,100 @@ export function Selector({
   ayuda,
   opciones,
   ...props
-}: PropsCampo & SelectHTMLAttributes<HTMLSelectElement> & { opciones: Record<string, string> }) {
+}: PropsCampo &
+  SelectHTMLAttributes<HTMLSelectElement> & {
+    opciones: Record<string, string>;
+  }) {
   const id = useId();
   return (
     <Envoltura id={id} etiqueta={etiqueta} error={error} ayuda={ayuda}>
-      <select
-        id={id}
-        aria-invalid={!!error || undefined}
-        aria-describedby={describe(id, { etiqueta, error, ayuda })}
-        className={CLASE_INPUT(error)}
-        {...props}
-      >
-        <option value="">Elige una opción</option>
-        {Object.entries(opciones).map(([v, t]) => (
-          <option key={v} value={v}>
-            {t}
-          </option>
-        ))}
-      </select>
+      <div className="relative">
+        <select
+          id={id}
+          aria-invalid={!!error || undefined}
+          aria-describedby={describe(id, { etiqueta, error, ayuda })}
+          className={`${CLASE_INPUT(error)} appearance-none pr-11`}
+          {...props}
+        >
+          <option value="">Elige una opción</option>
+          {Object.entries(opciones).map(([v, t]) => (
+            <option key={v} value={v}>
+              {t}
+            </option>
+          ))}
+        </select>
+        <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 size-5 -translate-y-1/2 text-luna-600" />
+      </div>
     </Envoltura>
   );
 }
 
-export function Casilla({ etiqueta, error, ...props }: { etiqueta: ReactNode; error?: string } & InputHTMLAttributes<HTMLInputElement>) {
+export function Casilla({
+  etiqueta,
+  error,
+  ...props
+}: {
+  etiqueta: ReactNode;
+  error?: string;
+} & InputHTMLAttributes<HTMLInputElement>) {
   const id = useId();
   return (
     <div>
-      <div className="flex min-h-11 items-start gap-3">
+      <div className="flex min-h-11 items-start gap-3 py-1">
         <input
           id={id}
           type="checkbox"
           aria-invalid={!!error || undefined}
           aria-describedby={error ? `${id}-error` : undefined}
-          className="mt-1 size-5 shrink-0 accent-primary-600"
+          className="mt-0.5 size-6 shrink-0 cursor-pointer rounded-md accent-primary-600"
           {...props}
         />
-        <label htmlFor={id}>{etiqueta}</label>
+        <label htmlFor={id} className="cursor-pointer">
+          {etiqueta}
+        </label>
       </div>
       {error && (
-        <p id={`${id}-error`} className="ml-8 text-sm font-medium text-error-800">
-          <span aria-hidden="true">⚠ </span>
-          {error}
-        </p>
+        <div className="ml-9">
+          <MensajeError id={`${id}-error`} texto={error} />
+        </div>
       )}
     </div>
   );
 }
 
-const BANNER = {
-  exito: { clase: 'bg-exito-100 text-exito-800 border-exito-800', icono: '✓' },
-  aviso: { clase: 'bg-aviso-100 text-aviso-800 border-aviso-800', icono: '!' },
-  error: { clase: 'bg-error-100 text-error-800 border-error-800', icono: '✕' },
-  info: { clase: 'bg-info-100 text-info-800 border-info-800', icono: 'i' },
-} as const;
+const BANNER: Record<'exito' | 'aviso' | 'error' | 'info', { clase: string; Icono: LucideIcon }> = {
+  exito: { clase: 'bg-exito-100 text-exito-800', Icono: CheckCircle2 },
+  aviso: { clase: 'bg-aviso-100 text-aviso-800', Icono: TriangleAlert },
+  error: { clase: 'bg-error-100 text-error-800', Icono: XCircle },
+  info: { clase: 'bg-info-100 text-info-800', Icono: Info },
+};
 
 export function Banner({ tipo, children, enfocar }: { tipo: keyof typeof BANNER; children: ReactNode; enfocar?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (enfocar) ref.current?.focus();
   }, [enfocar, children]);
-  const { clase, icono } = BANNER[tipo];
+  const { clase, Icono } = BANNER[tipo];
   return (
     <div
       ref={ref}
       tabIndex={enfocar ? -1 : undefined}
       role={tipo === 'error' ? 'alert' : 'status'}
-      className={`flex gap-3 rounded-lg border p-3 ${clase}`}
+      className={`flex gap-3 rounded-2xl p-4 ${clase}`}
     >
-      <span aria-hidden="true" className="font-bold">
-        {icono}
-      </span>
+      <Icono aria-hidden="true" className="mt-0.5 size-5 shrink-0" strokeWidth={2.25} />
       <div>{children}</div>
     </div>
   );
 }
 
-/** Resumen de errores arriba del formulario: «Falta completar: …» (diseno.md §7). */
+/** Resumen de errores arriba del formulario (recibe el foco para lectores de pantalla). */
 export function ResumenErrores({ errores }: { errores: string[] }) {
   if (!errores.length) return null;
   return (
     <Banner tipo="error" enfocar>
-      <p className="font-semibold">Revisa estos datos:</p>
-      <ul className="list-disc pl-5">
+      <p className="font-bold">Revisa estos datos:</p>
+      <ul className="mt-1 list-disc pl-5">
         {errores.map((e) => (
           <li key={e}>{e}</li>
         ))}
@@ -197,15 +230,15 @@ export function ResumenErrores({ errores }: { errores: string[] }) {
 }
 
 export function Tarjeta({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <section className={`rounded-tarjeta bg-white p-4 shadow-tarjeta sm:p-6 ${className}`}>{children}</section>;
+  return <section className={`rounded-tarjeta bg-white p-5 shadow-tarjeta sm:p-6 ${className}`}>{children}</section>;
 }
 
 export function BarraProgreso({ valor, etiqueta }: { valor: number; etiqueta: string }) {
   return (
     <div>
-      <div className="mb-1 flex justify-between font-medium">
-        <span>{etiqueta}</span>
-        <span>{valor} %</span>
+      <div className="mb-2 flex items-baseline justify-between gap-3">
+        <span className="font-bold">{etiqueta}</span>
+        <span className="font-extrabold tabular-nums">{valor} %</span>
       </div>
       <div
         role="progressbar"
@@ -215,7 +248,10 @@ export function BarraProgreso({ valor, etiqueta }: { valor: number; etiqueta: st
         aria-valuemax={100}
         className="h-3 overflow-hidden rounded-full bg-tierra-100"
       >
-        <div className="h-full rounded-full bg-primary-600 transition-[width] duration-500" style={{ width: `${valor}%` }} />
+        <div
+          className="h-full rounded-full bg-luna-800 transition-[width] duration-700 ease-[var(--ease-salida)]"
+          style={{ width: `${valor}%` }}
+        />
       </div>
     </div>
   );
@@ -223,21 +259,21 @@ export function BarraProgreso({ valor, etiqueta }: { valor: number; etiqueta: st
 
 export function EstadoVacio({ titulo, texto, accion }: { titulo: string; texto: string; accion?: ReactNode }) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-tarjeta border-2 border-dashed border-tierra-300 p-8 text-center">
-      <img src="/etapas/etapa-0-inicial.svg" alt="" className="size-20" />
-      <h2 className="text-xl font-semibold">{titulo}</h2>
+    <div className="flex flex-col items-center gap-3 rounded-tarjeta bg-white px-6 py-10 text-center shadow-tarjeta">
+      <img src="/etapas/etapa-0-inicial.svg" alt="" className="size-24" />
+      <h2 className="text-xl">{titulo}</h2>
       <p className="max-w-prose text-luna-600">{texto}</p>
-      {accion}
+      {accion && <div className="mt-2">{accion}</div>}
     </div>
   );
 }
 
 export function Cargando({ texto = 'Cargando…' }: { texto?: string }) {
   return (
-    <div role="status" className="space-y-3">
+    <div role="status" className="space-y-4">
       <span className="sr-only">{texto}</span>
-      <div className="h-24 animate-pulse rounded-tarjeta bg-tierra-100" />
-      <div className="h-24 animate-pulse rounded-tarjeta bg-tierra-100" />
+      <div className="h-28 animate-pulse rounded-tarjeta bg-tierra-100" />
+      <div className="h-28 animate-pulse rounded-tarjeta bg-tierra-100" />
     </div>
   );
 }
@@ -269,20 +305,25 @@ export function Dialogo({
       ref={ref}
       aria-labelledby={idTitulo}
       onClose={onCerrar}
-      className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-tarjeta bg-white p-0 text-luna-800"
+      className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-tarjeta bg-white p-0 text-luna-800 shadow-2xl"
     >
       <div className="space-y-4 p-6">
-        <h2 id={idTitulo} className="text-xl font-semibold">
-          {titulo}
-        </h2>
+        <div className="flex items-start gap-3">
+          <span className="grid size-10 shrink-0 place-items-center rounded-full bg-aviso-100 text-aviso-800">
+            <TriangleAlert aria-hidden="true" className="size-5" strokeWidth={2.25} />
+          </span>
+          <h2 id={idTitulo} className="pt-1 text-xl">
+            {titulo}
+          </h2>
+        </div>
         {children}
-        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">{acciones}</div>
+        <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">{acciones}</div>
       </div>
     </dialog>
   );
 }
 
-// Toast de logro: 6 s, aria-live="polite" (diseno.md §2.3).
+// Toast de logro: 6 s, aria-live="polite".
 const ContextoToast = createContext<(texto: string) => void>(() => {});
 export const useToast = () => useContext(ContextoToast);
 
@@ -297,10 +338,10 @@ export function ProveedorToast({ children }: { children: ReactNode }) {
   return (
     <ContextoToast.Provider value={mostrar}>
       {children}
-      <div aria-live="polite" className="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-4">
+      <div aria-live="polite" className="pointer-events-none fixed inset-x-0 top-3 z-50 flex justify-center px-4">
         {texto && (
-          <p className="animar-entrada pointer-events-auto rounded-xl bg-primary-800 px-5 py-3 font-semibold text-white shadow-lg">
-            <span aria-hidden="true">🌱 </span>
+          <p className="aparecer pointer-events-auto flex max-w-md items-center gap-3 rounded-2xl bg-luna-800 px-5 py-3 font-bold text-white shadow-xl">
+            <Sprout aria-hidden="true" className="size-5 shrink-0 text-primary-100" />
             {texto}
           </p>
         )}

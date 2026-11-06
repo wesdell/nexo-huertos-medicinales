@@ -33,7 +33,7 @@ test('flujo v1: registro → comunidad → huerto → planta → actividad → h
 
   // Inicio sin comunidad + recomendación del día
   await expect(page.getByRole('heading', { name: /Hola, Persona/ })).toBeVisible();
-  await expect(page.getByText('Recomendación del día')).toBeVisible();
+  await expect(page.getByRole('heading', { name: /^Hoy:/ })).toBeVisible();
   await sinViolaciones(page);
 
   // HU-004

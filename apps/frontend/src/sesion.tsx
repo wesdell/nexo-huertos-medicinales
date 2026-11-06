@@ -9,7 +9,12 @@ export interface Yo {
   email: string;
   puntos: number;
   nivel: string;
-  comunidad: { id: string; nombre: string; puntosTotales: number; esResponsable: boolean } | null;
+  comunidad: {
+    id: string;
+    nombre: string;
+    puntosTotales: number;
+    esResponsable: boolean;
+  } | null;
 }
 
 interface Sesion {

@@ -54,7 +54,6 @@ export async function api<T>(ruta: string, opciones: { method?: string; body?: u
     window.dispatchEvent(new Event('nexo:sesion-expirada'));
   }
   const m = datos.message;
-  const mensaje =
-    typeof m === 'string' ? m : (m?.message ?? datos.errores?.[0]?.mensaje ?? 'Algo salió mal. Inténtalo de nuevo.');
+  const mensaje = typeof m === 'string' ? m : (m?.message ?? datos.errores?.[0]?.mensaje ?? 'Algo salió mal. Inténtalo de nuevo.');
   throw new ApiError(res.status, mensaje, m?.errores ?? datos.errores, m?.advertencias ?? datos.advertencias);
 }

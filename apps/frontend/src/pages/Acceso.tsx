@@ -3,6 +3,7 @@ import { Link, Navigate, useLocation, useNavigate } from 'react-router';
 import { Genero } from '@nexo/shared';
 import { api } from '../api';
 import { useEnvio } from '../formulario';
+import { Marca } from '../Layout';
 import { useSesion } from '../sesion';
 import { Banner, Boton, Campo, Casilla, ResumenErrores, Selector, Tarjeta } from '../ui';
 
@@ -15,12 +16,14 @@ const GENEROS: Record<Genero, string> = {
 
 export function PaginaPublica({ titulo, children }: { titulo: string; children: ReactNode }) {
   return (
-    <div className="min-h-dvh bg-primary-800 px-4 py-8 sm:py-16">
+    <div className="min-h-dvh px-4 py-8 sm:py-14">
       <main className="mx-auto max-w-md">
-        <p className="mb-2 text-center font-display text-4xl font-bold text-white">Nexo</p>
-        <p className="mb-8 text-center text-primary-100">Saberes ancestrales para huertos medicinales comunitarios</p>
+        <div className="mb-6 flex flex-col items-center gap-3 text-center">
+          <Marca />
+          <p className="text-luna-600">Saberes ancestrales para huertos medicinales comunitarios</p>
+        </div>
         <Tarjeta>
-          <h1 className="mb-6 text-2xl font-semibold">{titulo}</h1>
+          <h1 className="mb-6 text-2xl">{titulo}</h1>
           {children}
         </Tarjeta>
       </main>
@@ -41,9 +44,13 @@ export function Login() {
   async function alEnviar(e: FormEvent) {
     e.preventDefault();
     await enviar(async () => {
-      const { token } = await api<{ token: string }>('/auth/login', { body: datos });
+      const { token } = await api<{ token: string }>('/auth/login', {
+        body: datos,
+      });
       await entrar(token);
-      navegar((loc.state as { desde?: string } | null)?.desde ?? '/', { replace: true });
+      navegar((loc.state as { desde?: string } | null)?.desde ?? '/', {
+        replace: true,
+      });
     });
   }
 
@@ -72,7 +79,7 @@ export function Login() {
         </Boton>
         <p className="text-center">
           ¿No tienes cuenta?{' '}
-          <Link to="/registro" className="font-semibold text-primary-700 underline underline-offset-4">
+          <Link to="/registro" className="font-bold text-primary-700 underline decoration-2">
             Regístrate
           </Link>
         </p>
@@ -106,7 +113,14 @@ export function Registro() {
   const navegar = useNavigate();
   const { yo } = useSesion();
   const { errores, setErrores, enviando, enviar, resumen } = useEnvio();
-  const [d, setD] = useState({ nombre: '', email: '', password: '', fechaNacimiento: '', genero: '', aceptaPrivacidad: false });
+  const [d, setD] = useState({
+    nombre: '',
+    email: '',
+    password: '',
+    fechaNacimiento: '',
+    genero: '',
+    aceptaPrivacidad: false,
+  });
 
   if (yo) return <Navigate to="/" replace />;
 
@@ -133,9 +147,30 @@ export function Registro() {
     <PaginaPublica titulo="Crea tu cuenta de voluntario">
       <form onSubmit={alEnviar} noValidate className="flex flex-col gap-4">
         <ResumenErrores errores={resumen} />
-        <Campo etiqueta="Nombre completo" autoComplete="name" required value={d.nombre} error={errores.nombre} onChange={(e) => setD({ ...d, nombre: e.target.value })} />
-        <Campo etiqueta="Correo" type="email" autoComplete="email" required value={d.email} error={errores.email} onChange={(e) => setD({ ...d, email: e.target.value })} />
-        <CampoContrasena autoComplete="new-password" ayuda="Mínimo 8 caracteres." value={d.password} error={errores.password} onChange={(v) => setD({ ...d, password: v })} />
+        <Campo
+          etiqueta="Nombre completo"
+          autoComplete="name"
+          required
+          value={d.nombre}
+          error={errores.nombre}
+          onChange={(e) => setD({ ...d, nombre: e.target.value })}
+        />
+        <Campo
+          etiqueta="Correo"
+          type="email"
+          autoComplete="email"
+          required
+          value={d.email}
+          error={errores.email}
+          onChange={(e) => setD({ ...d, email: e.target.value })}
+        />
+        <CampoContrasena
+          autoComplete="new-password"
+          ayuda="Mínimo 8 caracteres."
+          value={d.password}
+          error={errores.password}
+          onChange={(v) => setD({ ...d, password: v })}
+        />
         <Campo
           etiqueta="Fecha de nacimiento"
           type="date"
@@ -145,7 +180,14 @@ export function Registro() {
           error={errores.fechaNacimiento}
           onChange={(e) => setD({ ...d, fechaNacimiento: e.target.value })}
         />
-        <Selector etiqueta="Género" opciones={GENEROS} required value={d.genero} error={errores.genero} onChange={(e) => setD({ ...d, genero: e.target.value })} />
+        <Selector
+          etiqueta="Género"
+          opciones={GENEROS}
+          required
+          value={d.genero}
+          error={errores.genero}
+          onChange={(e) => setD({ ...d, genero: e.target.value })}
+        />
         <Casilla
           checked={d.aceptaPrivacidad}
           error={errores.aceptaPrivacidad}
@@ -153,7 +195,7 @@ export function Registro() {
           etiqueta={
             <>
               Acepto el tratamiento de mis datos personales según la{' '}
-              <Link to="/privacidad" target="_blank" className="font-semibold text-primary-700 underline underline-offset-4">
+              <Link to="/privacidad" target="_blank" className="font-bold text-primary-700 underline decoration-2">
                 política de privacidad
                 <span className="sr-only"> (se abre en una pestaña nueva)</span>
               </Link>
@@ -166,7 +208,7 @@ export function Registro() {
         </Boton>
         <p className="text-center">
           ¿Ya tienes cuenta?{' '}
-          <Link to="/login" className="font-semibold text-primary-700 underline underline-offset-4">
+          <Link to="/login" className="font-bold text-primary-700 underline decoration-2">
             Inicia sesión
           </Link>
         </p>

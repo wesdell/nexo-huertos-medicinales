@@ -27,9 +27,13 @@ export function HuertoVirtual() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-semibold">Huerto virtual</h1>
+      <h1 className="text-3xl sm:text-4xl">Huerto virtual</h1>
       {v.datos.plantas.length === 0 ? (
-        <EstadoVacio titulo="Parcela vacía" texto="Registra tus plantas para verlas crecer aquí." accion={<EnlaceBoton to="/huerto">Registrar plantas</EnlaceBoton>} />
+        <EstadoVacio
+          titulo="Parcela vacía"
+          texto="Registra tus plantas para verlas crecer aquí."
+          accion={<EnlaceBoton to="/huerto">Registrar plantas</EnlaceBoton>}
+        />
       ) : (
         <>
           <Tarjeta>
@@ -38,8 +42,8 @@ export function HuertoVirtual() {
           <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             {v.datos.plantas.map((p) => (
               <li key={p.plantaId} className="flex flex-col items-center rounded-tarjeta bg-white p-3 text-center shadow-tarjeta">
-                <img key={p.etapa.recurso} src={`/etapas/${p.etapa.recurso}`} alt="" className="animar-entrada aspect-square w-full max-w-36" />
-                <p className="mt-2 font-semibold">{p.nombreComun}</p>
+                <img key={p.etapa.recurso} src={`/etapas/${p.etapa.recurso}`} alt="" className="brotar aspect-square w-full max-w-36" />
+                <p className="mt-2 font-bold">{p.nombreComun}</p>
                 <p className="text-sm text-luna-600">
                   Etapa {p.etapa.nivel}: {p.etapa.nombre}
                 </p>

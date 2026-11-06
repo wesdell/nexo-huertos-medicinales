@@ -13,15 +13,24 @@ import {
   type Advertencia,
   type TipoActividadV1,
 } from '@nexo/shared';
+import { AlertCircle, Droplets, Shovel, Sprout, Wheat, type LucideIcon } from 'lucide-react';
 import { api } from '../api';
+import { Luna } from '../Luna';
 import { useDatos, type HuertoMio } from '../datos';
 import { useEnvio } from '../formulario';
 import { useSesion } from '../sesion';
-import { Banner, Boton, Campo, Cargando, Casilla, Dialogo, EnlaceBoton, EstadoVacio, ResumenErrores, Selector, Tarjeta, useToast } from '../ui';
+import { Boton, Campo, Cargando, Casilla, Dialogo, EnlaceBoton, EstadoVacio, ResumenErrores, Selector, Tarjeta, useToast } from '../ui';
 
 const hoyLocal = () => {
   const d = new Date();
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+};
+
+const ICONO: Record<TipoActividadV1, LucideIcon> = {
+  PREPARACION_TIERRA: Shovel,
+  SIEMBRA: Sprout,
+  RIEGO: Droplets,
+  COSECHA: Wheat,
 };
 
 const AYUDA: Record<TipoActividadV1, string> = {
@@ -44,7 +53,11 @@ export function ActividadNueva() {
   const toast = useToast();
   const { errores, setErrores, enviando, enviar, resumen } = useEnvio();
   const [tipo, setTipo] = useState<TipoActividadV1 | ''>('');
-  const [base, setBase] = useState({ fecha: hoyLocal(), hora: '', plantaId: '' });
+  const [base, setBase] = useState({
+    fecha: hoyLocal(),
+    hora: '',
+    plantaId: '',
+  });
   const [detalle, setDetalle] = useState<Record<string, unknown>>({});
   const [advertencias, setAdvertencias] = useState<Advertencia[]>([]);
 
@@ -67,7 +80,14 @@ export function ActividadNueva() {
     const r = await enviar(
       () =>
         api<Respuesta>(`/huertos/${huerto!.id}/actividades`, {
-          body: { tipo, ...base, hora: base.hora || undefined, plantaId: base.plantaId || undefined, detalle, confirmarAdvertencias },
+          body: {
+            tipo,
+            ...base,
+            hora: base.hora || undefined,
+            plantaId: base.plantaId || undefined,
+            detalle,
+            confirmarAdvertencias,
+          },
         }),
       (e) => {
         if (e.status !== 409 || !e.advertencias.length) return false;
@@ -97,46 +117,63 @@ export function ActividadNueva() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-semibold">Registrar actividad</h1>
+      <h1 className="text-3xl sm:text-4xl">Registrar actividad</h1>
       <form onSubmit={alEnviar} noValidate className="space-y-6">
         <ResumenErrores errores={resumen} />
 
         <Tarjeta>
           <fieldset>
-            <legend className="mb-3 text-xl font-semibold font-display">¿Qué hiciste?</legend>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {ACTIVIDADES_V1.map((t) => (
-                <label
-                  key={t}
-                  className={`flex min-h-11 cursor-pointer gap-3 rounded-lg border-2 p-3 has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-oro ${tipo === t ? 'border-primary-600 bg-primary-50' : 'border-tierra-300'}`}
-                >
-                  <input
-                    type="radio"
-                    name="tipo"
-                    value={t}
-                    checked={tipo === t}
-                    onChange={() => {
-                      setTipo(t);
-                      setDetalle({});
-                      setErrores({});
-                    }}
-                    className="mt-1 size-5 accent-primary-600"
-                  />
-                  <span>
-                    <span className="block font-semibold">{NOMBRE_ACTIVIDAD[t]}</span>
-                    <span className="text-sm text-luna-600">{AYUDA[t]}</span>
-                  </span>
-                </label>
-              ))}
+            <legend className="mb-4 font-display text-xl font-extrabold">¿Qué hiciste?</legend>
+            <div className="grid grid-cols-2 gap-3">
+              {ACTIVIDADES_V1.map((t) => {
+                const Icono = ICONO[t];
+                return (
+                  <label
+                    key={t}
+                    className={`presionable relative flex cursor-pointer flex-col gap-2 rounded-2xl border-2 p-4 has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-oro ${tipo === t ? 'border-primary-600 bg-primary-50' : 'border-tierra-300 bg-white hover:border-luna-600'}`}
+                  >
+                    <Icono aria-hidden="true" className={`size-8 ${tipo === t ? 'text-primary-700' : 'text-luna-800'}`} strokeWidth={2} />
+                    <input
+                      type="radio"
+                      name="tipo"
+                      value={t}
+                      checked={tipo === t}
+                      onChange={() => {
+                        setTipo(t);
+                        setDetalle({});
+                        setErrores({});
+                      }}
+                      className="absolute right-4 top-4 size-5 accent-primary-600"
+                    />
+                    <span>
+                      <span className="block font-bold leading-snug">{NOMBRE_ACTIVIDAD[t]}</span>
+                      <span className="mt-0.5 block text-sm leading-snug text-luna-600">{AYUDA[t]}</span>
+                    </span>
+                  </label>
+                );
+              })}
             </div>
-            {errores.tipo && <p className="mt-2 text-sm font-medium text-error-800">⚠ {errores.tipo}</p>}
+            {errores.tipo && (
+              <p className="mt-2 flex items-center gap-1.5 text-sm font-bold text-error-800">
+                <AlertCircle aria-hidden="true" className="size-4" />
+                {errores.tipo}
+              </p>
+            )}
           </fieldset>
         </Tarjeta>
 
         {tipo && (
           <Tarjeta className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
-              <Campo etiqueta="Fecha" type="date" max={hoyLocal()} required value={base.fecha} error={errores.fecha} onChange={(e) => setBase({ ...base, fecha: e.target.value })} />
+              <Campo
+                etiqueta="Fecha"
+                type="date"
+                max={hoyLocal()}
+                required
+                value={base.fecha}
+                error={errores.fecha}
+                onChange={(e) => setBase({ ...base, fecha: e.target.value })}
+              />
               <Campo
                 etiqueta={tipo === 'SIEMBRA' || tipo === 'COSECHA' ? 'Hora' : 'Hora (opcional)'}
                 type="time"
@@ -146,9 +183,12 @@ export function ActividadNueva() {
               />
             </div>
             {fase && (
-              <Banner tipo="info">
-                <strong>{NOMBRE_FASE[fase]}.</strong> {RECOMENDACION_POR_FASE[fase]}
-              </Banner>
+              <div role="status" className="flex items-center gap-3 rounded-2xl bg-tierra-100 p-4">
+                <Luna fase={fase} className="size-10 shrink-0" />
+                <p>
+                  <strong>{NOMBRE_FASE[fase]}.</strong> {RECOMENDACION_POR_FASE[fase]}
+                </p>
+              </div>
             )}
 
             {tipo !== 'PREPARACION_TIERRA' && (
@@ -163,24 +203,67 @@ export function ActividadNueva() {
 
             {tipo === 'PREPARACION_TIERRA' && (
               <fieldset className="space-y-1">
-                <legend className="mb-2 font-semibold">Pasos realizados</legend>
-                <Casilla etiqueta="Retiré la maleza en un día soleado" checked={detalle.retiroMaleza === true} error={errores.retiroMaleza} onChange={marcar('retiroMaleza')} />
-                <Casilla etiqueta="Esparcí la maleza desmenuzada" checked={detalle.esparcido === true} error={errores.esparcido} onChange={marcar('esparcido')} />
-                <Casilla etiqueta="Removí la tierra con azadón o pala" checked={detalle.remocion === true} error={errores.remocion} onChange={marcar('remocion')} />
-                <Casilla etiqueta="Usé abono orgánico (opcional)" checked={detalle.abonoOrganico === true} onChange={marcar('abonoOrganico')} />
+                <legend className="mb-2 font-bold">Pasos realizados</legend>
+                <Casilla
+                  etiqueta="Retiré la maleza en un día soleado"
+                  checked={detalle.retiroMaleza === true}
+                  error={errores.retiroMaleza}
+                  onChange={marcar('retiroMaleza')}
+                />
+                <Casilla
+                  etiqueta="Esparcí la maleza desmenuzada"
+                  checked={detalle.esparcido === true}
+                  error={errores.esparcido}
+                  onChange={marcar('esparcido')}
+                />
+                <Casilla
+                  etiqueta="Removí la tierra con azadón o pala"
+                  checked={detalle.remocion === true}
+                  error={errores.remocion}
+                  onChange={marcar('remocion')}
+                />
+                <Casilla
+                  etiqueta="Usé abono orgánico (opcional)"
+                  checked={detalle.abonoOrganico === true}
+                  onChange={marcar('abonoOrganico')}
+                />
               </fieldset>
             )}
             {tipo === 'SIEMBRA' && (
               <div className="grid gap-4 sm:grid-cols-2">
-                <Selector etiqueta="Técnica" opciones={TECNICAS_SIEMBRA} value={String(detalle.tecnica ?? '')} error={errores.tecnica} onChange={elegir('tecnica')} />
-                <Selector etiqueta="Tipo de siembra" opciones={TIPOS_SIEMBRA} value={String(detalle.tipoSiembra ?? '')} error={errores.tipoSiembra} onChange={elegir('tipoSiembra')} />
+                <Selector
+                  etiqueta="Técnica"
+                  opciones={TECNICAS_SIEMBRA}
+                  value={String(detalle.tecnica ?? '')}
+                  error={errores.tecnica}
+                  onChange={elegir('tecnica')}
+                />
+                <Selector
+                  etiqueta="Tipo de siembra"
+                  opciones={TIPOS_SIEMBRA}
+                  value={String(detalle.tipoSiembra ?? '')}
+                  error={errores.tipoSiembra}
+                  onChange={elegir('tipoSiembra')}
+                />
               </div>
             )}
             {tipo === 'RIEGO' && (
-              <Selector etiqueta="Método de riego" opciones={METODOS_RIEGO} value={String(detalle.metodo ?? '')} error={errores.metodo} onChange={elegir('metodo')} />
+              <Selector
+                etiqueta="Método de riego"
+                opciones={METODOS_RIEGO}
+                value={String(detalle.metodo ?? '')}
+                error={errores.metodo}
+                onChange={elegir('metodo')}
+              />
             )}
             {tipo === 'COSECHA' && (
-              <Selector etiqueta="Parte cosechada" opciones={PARTES_COSECHA} value={String(detalle.parte ?? '')} error={errores.parte} onChange={elegir('parte')} />
+              <Selector
+                etiqueta="Parte cosechada"
+                opciones={PARTES_COSECHA}
+                value={String(detalle.parte ?? '')}
+                error={errores.parte}
+                onChange={elegir('parte')}
+              />
             )}
 
             <Boton type="submit" cargando={enviando} className="w-full sm:w-auto">
