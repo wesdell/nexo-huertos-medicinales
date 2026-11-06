@@ -21,9 +21,10 @@ export function ComunidadNueva() {
     const cuerpo = Object.fromEntries(Object.entries(d).filter(([, v]) => v.trim()));
     await enviar(async () => {
       await api('/comunidades', { body: cuerpo });
-      await recargar();
+      // Navegar antes de recargar: con la comunidad ya cargada esta página redirige a Inicio.
+      navegar('/huerto', { replace: true });
       toast('¡Comunidad creada! Ahora eres su responsable.');
-      navegar('/huerto');
+      await recargar();
     });
   }
 
