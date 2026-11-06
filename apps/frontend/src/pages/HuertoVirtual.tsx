@@ -1,5 +1,5 @@
 import type { Etapa } from '@nexo/shared';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { useDatos, type HuertoMio } from '../datos';
 import { useSesion } from '../sesion';
@@ -15,11 +15,18 @@ export function HuertoVirtual() {
   const { yo } = useSesion();
   // Firma: solo brota la planta recién trabajada, una vez. Se limpia el estado para que no se repita al volver.
   const loc = useLocation();
-  const [brota] = useState(() => {
-    const b = (loc.state as { brotar?: string } | null)?.brotar;
-    if (b) window.history.replaceState({ ...window.history.state, usr: null }, '');
-    return b;
+  const [{ brota, antes: antesInicial }] = useState(() => {
+    const st = loc.state as { brotar?: string; antes?: string } | null;
+    if (st?.brotar) window.history.replaceState({ ...window.history.state, usr: null }, '');
+    return { brota: st?.brotar, antes: st?.antes };
   });
+  // Se muestra un instante el dibujo de la etapa anterior y luego brota el nuevo.
+  const [antes, setAntes] = useState(antesInicial);
+  useEffect(() => {
+    if (!antes) return;
+    const t = setTimeout(() => setAntes(undefined), 600);
+    return () => clearTimeout(t);
+  }, [antes]);
   const mio = useDatos<HuertoMio>(yo?.comunidad ? '/huertos/mio' : null);
   const id = mio.datos?.huerto?.id;
   const v = useDatos<Virtual>(id ? `/huertos/${id}/virtual` : null);
@@ -51,12 +58,16 @@ export function HuertoVirtual() {
           <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             {v.datos.plantas.map((p) => (
               <li key={p.plantaId} className="flex flex-col items-center rounded-tarjeta bg-white p-3 text-center shadow-tarjeta">
-                <img
-                  key={p.etapa.recurso}
-                  src={`/etapas/${p.etapa.recurso}`}
-                  alt=""
-                  className={`aspect-square w-full max-w-36 ${brota === '*' || brota === p.plantaId ? 'brotar' : ''}`}
-                />
+                {antes && brota === p.plantaId ? (
+                  <img key="antes" src={`/etapas/${antes}`} alt="" className="aspect-square w-full max-w-36" />
+                ) : (
+                  <img
+                    key="ahora"
+                    src={`/etapas/${p.etapa.recurso}`}
+                    alt=""
+                    className={`aspect-square w-full max-w-36 ${brota === '*' || brota === p.plantaId ? 'brotar' : ''}`}
+                  />
+                )}
                 <p className="mt-2 font-bold">{p.nombreComun}</p>
                 <p className="text-sm text-luna-600">
                   Etapa {p.etapa.nivel}: {p.etapa.nombre}

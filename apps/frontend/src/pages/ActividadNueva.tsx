@@ -49,6 +49,10 @@ interface Respuesta {
 export function ActividadNueva() {
   const { yo, recargar: recargarSesion } = useSesion();
   const { datos, cargando } = useDatos<HuertoMio>(yo?.comunidad ? '/huertos/mio' : null);
+  // Dibujo de la etapa actual de cada planta, para que el huerto virtual muestre el cambio de etapa al guardar.
+  const virtual = useDatos<{ plantas: { plantaId: string; etapa: { recurso: string } }[] }>(
+    datos?.huerto ? `/huertos/${datos.huerto.id}/virtual` : null,
+  );
   const navegar = useNavigate();
   const toast = useToast();
   const { errores, setErrores, enviando, enviar, resumen } = useEnvio();
@@ -103,7 +107,8 @@ export function ActividadNueva() {
         : `Actividad guardada: +${total} puntos${r.puntos.bono ? ' (incluye bono por seguir la recomendación)' : ''}.`,
     );
     await recargarSesion();
-    navegar('/huerto/virtual', { state: { brotar: base.plantaId || '*' } });
+    const antes = virtual.datos?.plantas.find((p) => p.plantaId === base.plantaId)?.etapa.recurso;
+    navegar('/huerto/virtual', { state: { brotar: base.plantaId || '*', antes } });
   }
 
   function alEnviar(e: FormEvent) {

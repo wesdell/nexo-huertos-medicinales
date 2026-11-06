@@ -41,7 +41,7 @@ export function Inicio() {
                 <Plus aria-hidden="true" className="size-5" strokeWidth={2.5} />
                 Registrar actividad
               </EnlaceBoton>
-              <p className="text-sm text-luna-600">Si sigues la recomendación de la luna, ganas 5 puntos extra.</p>
+              <p className="text-luna-600">Si sigues la recomendación de la luna, ganas 5 puntos extra.</p>
             </div>
           )}
         </Tarjeta>
