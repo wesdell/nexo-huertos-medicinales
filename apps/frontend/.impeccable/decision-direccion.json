@@ -1,0 +1,122 @@
+{
+  "title": "Elige el mundo visual de Nexo",
+  "question": "El sorteo asignó «Rótulo de minga». Quédate con él, toma una alternativa o vuelve a sortear.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Rótulo de minga",
+      "kicker": "EL SORTEO",
+      "lineage": "Gráfica popular ecuatoriana: letreros pintados a mano, carteles de convocatoria a la minga y buses rotulados",
+      "thesis": "Cada día del huerto es una convocatoria a la minga, pintada en letrero.",
+      "palette": ["#F2C230", "#D7261E", "#1E8C45", "#1D3E8A", "#141414", "#FAF7F0"],
+      "materials": ["esmalte sintético sobre lata", "letra rotulada condensada", "franjas de color planas"],
+      "viewport": "Móvil: franja amarilla tipo letrero con «HOY: CUARTO MENGUANTE · COSECHA SEMILLAS Y RAÍCES» en letra condensada enorme; debajo, el botón rojo «+ REGISTRAR» como cartel; puntos de la comunidad en tablillas pintadas.",
+      "risk": "Si la letra imita lo hecho a mano sin oficio, se vuelve disfraz; el cuerpo de texto debe ser una sans sobria para formularios largos.",
+      "raised": [
+        { "from": "challenger-ikeda", "raise": "Modo sol: texto siempre negro puro sobre amarillo o blanco, sin grises intermedios, para leer a pleno sol." },
+        { "from": "challenger-labanotation", "raise": "La duración se dibuja: la línea de tiempo de cada planta mide en largo los días entre siembra y cosecha." },
+        { "from": "challenger-crouwel", "raise": "Retícula real: el huerto virtual se arma en parcelas de una cuadrícula visible, una celda por planta." },
+        { "from": "challenger-margen", "raise": "Margen de saberes: los consejos ancestrales cuelgan junto al campo que explican, como notas al margen." }
+      ]
+    },
+    {
+      "id": "model-pick",
+      "label": "Pintura de Tigua",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "Pintura naíf de Tigua (Cotopaxi) sobre cuero de oveja, con marcos de colores",
+      "thesis": "El huerto espejo es un cuadro de Tigua que se va pintando con cada actividad.",
+      "palette": ["#2BA6C9", "#E0A526", "#C8102E", "#3E8E41", "#E8508F", "#1A1A1A"],
+      "materials": ["esmalte brillante sobre cuero", "marco pintado en franjas", "paisaje de cerros y chakra"],
+      "viewport": "Móvil: el Inicio abre con un paisaje pintado (cerros, luna del día, chakra) donde cada planta aparece en su etapa; debajo, la recomendación del día en un marco de colores y el botón para registrar.",
+      "risk": "Es mi candidata más fuerte y también la más esperable para «saberes andinos»; exige ilustraciones propias y respeto a la tradición (inspirarse, no copiar artistas)."
+    },
+    {
+      "id": "challenger-letrero-aeropuerto",
+      "label": "Señalética de terminal",
+      "verdict": "competitive",
+      "lineage": "Señalética amarilla de aeropuerto internacional",
+      "thesis": "Una sola decisión por pantalla, legible a diez metros y a pleno sol.",
+      "palette": ["#FFD200", "#000000", "#FFFFFF"],
+      "materials": ["paneles amarillos", "pictogramas blancos sobre negro", "flechas al borde"],
+      "viewport": "Móvil: banda amarilla con la próxima acción («Siguiente: riega la manzanilla →») y el número de puntos en escala monumental.",
+      "case": "Gana en claridad bajo el sol y en flujo paso a paso; pierde en identificación: no habla del mundo andino.",
+      "risk": "Puede sentirse frío e institucional para una comunidad."
+    },
+    {
+      "id": "challenger-app-calida",
+      "label": "App cálida de consumo",
+      "verdict": "competitive",
+      "lineage": "Canon de apps de consumo: tarjetas suaves y un solo color de acción",
+      "thesis": "Tarjetas amables, etiquetas en lenguaje simple y color solo donde se puede tocar.",
+      "palette": ["#FBF6EE", "#FFFFFF", "#1F7A4D", "#1F2937"],
+      "materials": ["tarjetas de radio amplio", "barra inferior fija", "rebote suave al tocar"],
+      "viewport": "Móvil: columna de tarjetas con la recomendación, los puntos y el botón verde de registrar; barra inferior al alcance del pulgar.",
+      "case": "Gana en claridad y familiaridad; pierde en identificación: cualquier app de hábitos se ve así (y se parece a la versión actual).",
+      "risk": "Indistinguible de otras apps; poco memorable para la presentación."
+    },
+    {
+      "id": "challenger-ikeda",
+      "label": "Campo de datos en blanco y negro",
+      "verdict": "declined",
+      "lineage": "Instalaciones de datos de Ryoji Ikeda",
+      "thesis": "Barras y números densos en blanco y negro puro.",
+      "palette": ["#000000", "#FFFFFF"],
+      "materials": ["barras de código", "monoespaciada"],
+      "viewport": "Columnas de datos del huerto como código de barras.",
+      "case": "Pierde en ambos ejes: la comunidad no se reconoce en un tablero de datos.",
+      "kept": "Su compromiso total con el contraste, convertido en el modo sol.",
+      "risk": "Hostil para baja alfabetización digital."
+    },
+    {
+      "id": "challenger-margen",
+      "label": "Edición con notas al margen",
+      "verdict": "declined",
+      "lineage": "Edición de referencia con riel central y margen anotado",
+      "thesis": "Texto en columnas con anotaciones en un margen amplio.",
+      "palette": ["#1B1B1B", "#C2401C", "#EDE6D6"],
+      "materials": ["filetes finos", "versalitas"],
+      "viewport": "Formulario en dos columnas con notas en el margen.",
+      "case": "Pierde en ambos ejes: demasiado libresco y denso para el celular en el huerto.",
+      "kept": "Las notas al margen, convertidas en el margen de saberes junto a cada campo.",
+      "risk": "Ilegible en 360 px."
+    },
+    {
+      "id": "challenger-labanotation",
+      "label": "Partitura de movimiento",
+      "verdict": "declined",
+      "lineage": "Labanotación (notación de danza)",
+      "thesis": "Cada acción es un bloque cuyo largo es su duración.",
+      "palette": ["#FFFFFF", "#111111", "#BDBDBD"],
+      "materials": ["bloques sombreados", "pentagrama vertical"],
+      "viewport": "Línea de tiempo vertical de actividades.",
+      "case": "Pierde en ambos ejes: notación abstracta que nadie del huerto lee.",
+      "kept": "La duración dibujada como largo, para la línea de tiempo de cada planta.",
+      "risk": "Requiere aprender un código."
+    },
+    {
+      "id": "challenger-crouwel",
+      "label": "Especimen en retícula",
+      "verdict": "declined",
+      "lineage": "Carteles de Wim Crouwel",
+      "thesis": "Letras construidas celda por celda sobre una retícula visible.",
+      "palette": ["#FFFFFF", "#1C3FAA", "#E5E5E5"],
+      "materials": ["retícula a la vista", "letra modular"],
+      "viewport": "Títulos monumentales armados en la cuadrícula.",
+      "case": "Pierde en ambos ejes: frío y europeo para este público.",
+      "kept": "La retícula visible, convertida en las parcelas del huerto virtual.",
+      "risk": "Letra modular poco legible."
+    }
+  ],
+  "reroll": { "registers": ["safer", "bolder"] },
+  "buildPath": { "value": "code", "toggle": false },
+  "canon": true,
+  "canonCard": {
+    "label": "El estándar de apps de huerto",
+    "thesis": "Lo que esta categoría suele publicar, hecho con oficio.",
+    "palette": ["#FFFFFF", "#F5F7F2", "#2E7D32", "#1F2937"],
+    "materials": ["fotos de plantas", "iconos de hoja", "tarjetas limpias"],
+    "viewport": "Encabezado verde, tarjetas blancas con fotos de plantas y botón verde de registrar.",
+    "risk": "Indistinguible de la competencia por diseño."
+  },
+  "steer": true
+}

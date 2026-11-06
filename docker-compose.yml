@@ -1,0 +1,42 @@
+name: nexo-huertos
+
+services:
+  nexo-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-nexo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nexo_local}
+      POSTGRES_DB: ${POSTGRES_DB:-nexo}
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 3s
+      retries: 20
+
+  nexo-backend:
+    build: { context: ., dockerfile: apps/backend/Dockerfile }
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-nexo}:${POSTGRES_PASSWORD:-nexo_local}@nexo-db:5432/${POSTGRES_DB:-nexo}
+      JWT_SECRET: ${JWT_SECRET:-cambia-este-secreto-local}
+      DEMO_EMAIL: ${DEMO_EMAIL:-demo@nexo.test}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-HuertoDemo2026}
+    ports: ["3000:3000"]
+    depends_on:
+      nexo-db: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/salud"]
+      interval: 5s
+      start_period: 60s
+      retries: 20
+
+  nexo-frontend:
+    build: { context: ., dockerfile: apps/frontend/Dockerfile }
+    environment:
+      API_PROXY: http://nexo-backend:3000
+    ports: ["5173:5173"]
+    depends_on:
+      nexo-backend: { condition: service_healthy }
+
+volumes:
+  pgdata:

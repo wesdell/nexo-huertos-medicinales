@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Nexo">
+  <rect width="64" height="64" rx="18" fill="#134D32"/>
+  <path d="M32 50V30" stroke="#FBF6EE" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M32 34c-11 0-17-7-17-16 10 0 17 6 17 16z" fill="#FBF6EE"/>
+  <path d="M32 30c10 0 16-7 16-15-9 0-16 5-16 15z" fill="#9ED3B0"/>
+  <path d="M22 50h20" stroke="#E2D3BD" stroke-width="4.5" stroke-linecap="round"/>
+</svg>

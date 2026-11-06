@@ -1,0 +1,144 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/nunito';
+
+/*
+ * Mundo visual: app cálida de consumo. Fondo cálido teñido, tarjetas blancas de esquinas suaves
+ * y un solo color saturado (verde chakra) reservado para lo que se puede tocar.
+ * Contraste verificado WCAG AA: tinta/fondo 14:1, secundario/fondo 7.2:1, blanco/acción 5.4:1.
+ */
+@theme {
+  --color-primary-50: #eaf4ee;
+  --color-primary-100: #d3e9db;
+  --color-primary-600: #1f7a4d;
+  --color-primary-700: #186340;
+  --color-primary-800: #134d32;
+  --color-tierra-50: #fbf6ee;
+  --color-tierra-100: #f4ebdd;
+  --color-tierra-300: #e2d3bd;
+  --color-luna-600: #5b5348;
+  --color-luna-800: #2a241d;
+  --color-aviso-100: #fdf0d5;
+  --color-aviso-800: #7a3b0c;
+  --color-error-100: #fde4e1;
+  --color-error-800: #9b1c1c;
+  --color-exito-100: #dcf3e4;
+  --color-exito-800: #14532d;
+  --color-info-100: #e4eefb;
+  --color-info-800: #1e3a8a;
+  --color-caliente: #b42318;
+  --color-fria: #dcf3e4;
+  --color-oro: #c98a12;
+
+  --font-display: 'Nunito Variable', 'Segoe UI', system-ui, sans-serif;
+  --font-sans: 'Nunito Variable', 'Segoe UI', system-ui, sans-serif;
+  --radius-tarjeta: 1.25rem;
+  --shadow-tarjeta: 0 1px 2px rgb(42 36 29 / 0.05), 0 6px 16px -4px rgb(42 36 29 / 0.08);
+  --ease-salida: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    accent-color: var(--color-primary-600);
+    caret-color: var(--color-primary-600);
+    scrollbar-color: var(--color-tierra-300) transparent;
+  }
+  body {
+    @apply bg-tierra-50 font-sans text-[1.0625rem] leading-relaxed text-luna-800 antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display font-extrabold tracking-tight text-balance;
+  }
+  ::selection {
+    background: var(--color-primary-100);
+    color: var(--color-luna-800);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-oro);
+    outline-offset: 2px;
+  }
+  a {
+    text-underline-offset: 0.2em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Firma: la planta brota a su nueva etapa con un resorte suave. */
+@keyframes brotar {
+  from {
+    transform: translateY(6px) scale(0.9);
+  }
+  55% {
+    transform: translateY(-3px) scale(1.06);
+  }
+}
+
+/* Casillas y opciones con la paleta, no con el gris del navegador. */
+input[type='checkbox'],
+input[type='radio'] {
+  appearance: none;
+  display: inline-grid;
+  place-content: center;
+  border: 2px solid var(--color-luna-600);
+  background: #fff;
+  transition:
+    background-color 120ms,
+    border-color 120ms;
+}
+input[type='checkbox'] {
+  border-radius: 0.375rem;
+}
+input[type='radio'] {
+  border-radius: 9999px;
+}
+input[type='checkbox']:checked {
+  border-color: var(--color-primary-600);
+  background: var(--color-primary-600)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3.5 8.5 3 3 6-7'/%3E%3C/svg%3E")
+    center / 80% no-repeat;
+}
+input[type='radio']:checked {
+  border-color: var(--color-primary-600);
+  background: radial-gradient(circle, var(--color-primary-600) 0 45%, #fff 50%);
+}
+input[type='checkbox'][aria-invalid='true'],
+input[type='radio'][aria-invalid='true'] {
+  border-color: var(--color-error-800);
+}
+.brotar {
+  animation: brotar 520ms var(--ease-salida) both;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+.aparecer {
+  animation: aparecer 260ms var(--ease-salida);
+}
+
+/* Resorte al presionar: solo en lo que se puede tocar. */
+.presionable {
+  transition:
+    transform 160ms var(--ease-salida),
+    background-color 160ms;
+}
+.presionable:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+dialog::backdrop {
+  background: rgb(42 36 29 / 0.45);
+}

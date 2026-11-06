@@ -9,3 +9,8 @@ build/
 apps/backend/uploads/*
 !apps/backend/uploads/.gitkeep
 coverage/
+playwright-report/
+test-results/
+.impeccable/questions/
+apps/frontend/.impeccable/questions/
+apps/frontend/.impeccable/review/
