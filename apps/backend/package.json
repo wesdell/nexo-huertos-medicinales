@@ -8,7 +8,7 @@
     "start": "node dist/main.js",
     "dev": "tsc -p tsconfig.json --watch --preserveWatchOutput & node --watch-path=dist dist/main.js",
     "test": "echo \"API e2e: pnpm --filter backend test:e2e (requiere la API corriendo)\"",
-    "test:e2e": "node --test test/",
+    "test:e2e": "node --test test/api.e2e.test.mjs",
     "prisma:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed"

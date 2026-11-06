@@ -18,19 +18,19 @@ Objetivo: flujo mínimo de punta a punta, ejecutable con `docker compose up --bu
 
 | Funcionalidad | HU | Estado |
 |---|---|---|
-| Base del monorepo (pnpm, TypeScript, Docker Compose, CI) | — | En curso (pnpm y TypeScript listos) |
+| Base del monorepo (pnpm, TypeScript, Docker Compose, CI) | — | Hecho salvo CI |
 | Reglas de dominio en `@nexo/shared` con pruebas | 016, 017, 018, 021, 023, 025, 030 | Hecho |
 | Interfaces en Figma de las pantallas v1 | — | Esperando conexión de Figma MCP |
-| Registro con consentimiento de protección de datos (LOPDP) | 001, 036 (nueva) | Pendiente |
-| Inicio y cierre de sesión | 002 | Pendiente |
-| Crear comunidad (el creador queda como responsable) | 004 | Pendiente |
-| Registrar huerto básico: nombre, provincia, parroquia y coordenadas (GPS del navegador o manual) | 010 (parcial) | Pendiente |
-| Registrar plantas (sin fotos) | 014 (parcial) | Pendiente |
-| Registrar actividad: preparación de tierra, siembra, riego y cosecha, con errores y advertencias | 018, 021, 023, 025 | Pendiente |
-| Puntos por actividad y bono por seguir la recomendación | 030 | Pendiente |
-| Huerto virtual (etapas 0 a 4 y porcentaje de progreso) | 016 | Pendiente |
-| Inicio con recomendación del día según la fase lunar | 017 (parcial) | Pendiente |
-| Consejos ancestrales (orientación al Este, cercas vivas) como texto de ayuda | — | Pendiente |
+| Registro con consentimiento de protección de datos (LOPDP) | 001, 036 (nueva) | Hecho |
+| Inicio y cierre de sesión | 002 | Hecho |
+| Crear comunidad (el creador queda como responsable) | 004 | Hecho |
+| Registrar huerto básico: nombre, provincia, parroquia y coordenadas (GPS del navegador o manual) | 010 (parcial) | Hecho |
+| Registrar plantas (sin fotos) | 014 (parcial) | Hecho |
+| Registrar actividad: preparación de tierra, siembra, riego y cosecha, con errores y advertencias | 018, 021, 023, 025 | Hecho |
+| Puntos por actividad y bono por seguir la recomendación | 030 | Hecho |
+| Huerto virtual (etapas 0 a 4 y porcentaje de progreso) | 016 | Hecho |
+| Inicio con recomendación del día según la fase lunar | 017 (parcial) | Hecho |
+| Consejos ancestrales (orientación al Este, cercas vivas) como texto de ayuda | — | Hecho |
 | Pruebas: reglas de dominio, API, flujo e2e con revisión de accesibilidad (axe) | — | Pendiente |
 | README, CHANGELOG y release v1.0.0 en GitHub | — | Pendiente |
 
@@ -62,3 +62,4 @@ Objetivo: flujo mínimo de punta a punta, ejecutable con `docker compose up --bu
 |---|---|
 | 05/11/2026 | Revisión del repositorio: al día con `origin/main` (6c5b552); solo documentación y `schema.prisma`, sin código. Se definió el alcance de v1, v2 y v3. Se inició la base del monorepo. |
 | 05/11/2026 | `@nexo/shared`: fase lunar (1900–2100), recomendación del día, consejos ancestrales, validación de las 4 actividades de v1, puntos (HU-030) y huerto virtual (HU-016). 29 pruebas en verde, incluida la sincronía de enums con `schema.prisma`. |
+| 05/11/2026 | Backend NestJS + Prisma (migración inicial con consentimiento LOPDP, seed de 24 provincias y cuenta demo), frontend React + Tailwind con las 8 pantallas de v1, Docker Compose funcionando (`docker compose up --build`). 13 pruebas de API de punta a punta en verde. |
