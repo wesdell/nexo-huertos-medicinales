@@ -10,8 +10,7 @@ export class ComunidadesService {
 
   /** HU-004: quien crea la comunidad queda como responsable. En v1 cada voluntario pertenece a una sola comunidad. */
   async crear(usuarioId: string, d: ComunidadDto) {
-    if (await this.db.membresia.findFirst({ where: { usuarioId } }))
-      throw new ConflictException('Ya perteneces a una comunidad.');
+    if (await this.db.membresia.findFirst({ where: { usuarioId } })) throw new ConflictException('Ya perteneces a una comunidad.');
     return this.db.comunidad.create({
       data: { ...d, membresias: { create: { usuarioId, esResponsable: true } } },
       select: { id: true, nombre: true },

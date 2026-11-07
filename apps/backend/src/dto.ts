@@ -18,23 +18,30 @@ import {
 } from 'class-validator';
 import { CicloPlanta, CualidadPlanta, Genero } from '@nexo/shared';
 
-const requerido = (campo: string) => ({ message: `${campo} es obligatorio.` });
+const requerido = (campo: string, predicado = 'es obligatorio') => ({ message: `${campo} ${predicado}.` });
 
 export class RegistroDto {
-  @ApiProperty() @IsString() @IsNotEmpty(requerido('El nombre')) @MaxLength(120)
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty(requerido('El nombre'))
+  @MaxLength(120)
   nombre: string;
 
-  @ApiProperty() @IsEmail({}, { message: 'Escribe un correo válido, por ejemplo nombre@correo.com.' })
+  @ApiProperty()
+  @IsEmail({}, { message: 'Escribe un correo válido, por ejemplo nombre@correo.com.' })
   email: string;
 
-  @ApiProperty({ minLength: 8 }) @IsString() @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
+  @ApiProperty({ minLength: 8 })
+  @IsString()
+  @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
   password: string;
 
   @ApiProperty({ example: '1990-05-20' })
   @IsDateString({ strict: true }, { message: 'Usa una fecha válida (dd/mm/aaaa).' })
   fechaNacimiento: string;
 
-  @ApiProperty({ enum: Object.values(Genero) }) @IsIn(Object.values(Genero), { message: 'Elige una opción de género.' })
+  @ApiProperty({ enum: Object.values(Genero) })
+  @IsIn(Object.values(Genero), { message: 'Elige una opción de género.' })
   genero: string;
 
   @ApiProperty({ description: 'Debe ser true: acepta la política de tratamiento de datos.' })
@@ -44,7 +51,7 @@ export class RegistroDto {
 
 export class LoginDto {
   @ApiProperty() @IsString() @IsNotEmpty(requerido('El correo')) email: string;
-  @ApiProperty() @IsString() @IsNotEmpty(requerido('La contraseña')) password: string;
+  @ApiProperty() @IsString() @IsNotEmpty(requerido('La contraseña', 'es obligatoria')) password: string;
 }
 
 export class ComunidadDto {
@@ -69,12 +76,13 @@ export class HuertoDto {
 export class PlantaDto {
   @ApiProperty() @IsString() @IsNotEmpty(requerido('El nombre común')) @MaxLength(120) nombreComun: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(120) nombreCientifico?: string;
-  @ApiProperty({ enum: Object.values(CicloPlanta) }) @IsIn(Object.values(CicloPlanta), { message: 'Elige el ciclo.' })
+  @ApiProperty({ enum: Object.values(CicloPlanta) })
+  @IsIn(Object.values(CicloPlanta), { message: 'Elige el ciclo.' })
   ciclo: string;
   @ApiProperty({ enum: Object.values(CualidadPlanta) })
   @IsIn(Object.values(CualidadPlanta), { message: 'Elige la cualidad.' })
   cualidad: string;
-  @ApiProperty() @IsString() @IsNotEmpty(requerido('Los usos medicinales')) @MaxLength(500) usosMedicinales: string;
+  @ApiProperty() @IsString() @IsNotEmpty(requerido('Los usos medicinales', 'son obligatorios')) @MaxLength(500) usosMedicinales: string;
 }
 
 export class ActividadDto {

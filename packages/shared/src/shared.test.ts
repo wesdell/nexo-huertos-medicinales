@@ -108,17 +108,26 @@ describe('huertoVirtual (HU-016)', () => {
   });
 
   it('preparación lleva todas a etapa 1; riego general solo avanza sembradas', () => {
-    const r = huertoVirtual(['a', 'b'], [
-      { tipo: 'RIEGO', plantaId: null },
-      { tipo: 'PREPARACION_TIERRA', plantaId: null },
-      { tipo: 'SIEMBRA', plantaId: 'a' },
-    ]);
+    const r = huertoVirtual(
+      ['a', 'b'],
+      [
+        { tipo: 'RIEGO', plantaId: null },
+        { tipo: 'PREPARACION_TIERRA', plantaId: null },
+        { tipo: 'SIEMBRA', plantaId: 'a' },
+      ],
+    );
     expect(r.plantas.map((p) => p.etapa.nivel)).toEqual([3, 1]);
     expect(r.progreso).toBe(33); // (3 + 1) / 12
   });
 
   it('la etapa nunca retrocede', () => {
-    const r = huertoVirtual(['a'], [{ tipo: 'COSECHA', plantaId: 'a' }, { tipo: 'RIEGO', plantaId: 'a' }]);
+    const r = huertoVirtual(
+      ['a'],
+      [
+        { tipo: 'COSECHA', plantaId: 'a' },
+        { tipo: 'RIEGO', plantaId: 'a' },
+      ],
+    );
     expect(r.plantas[0].etapa.nombre).toBe('Cosechada');
   });
 });
@@ -126,7 +135,8 @@ describe('huertoVirtual (HU-016)', () => {
 describe('enums sincronizados con schema.prisma', () => {
   const schema = readFileSync(join(__dirname, '../../../apps/backend/prisma/schema.prisma'), 'utf8');
   const valores = (nombre: string) =>
-    new RegExp(`enum ${nombre} \\{([^}]*)\\}`).exec(schema)![1]
+    new RegExp(`enum ${nombre} \\{([^}]*)\\}`)
+      .exec(schema)![1]
       .split('\n')
       .map((l) => l.replace(/\/\/.*/, '').trim())
       .filter(Boolean);

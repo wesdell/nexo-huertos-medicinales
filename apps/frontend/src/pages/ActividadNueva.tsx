@@ -137,7 +137,7 @@ export function ActividadNueva() {
                     key={t}
                     className={`presionable relative flex cursor-pointer flex-col gap-2 rounded-2xl border-2 p-4 has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-oro ${tipo === t ? 'border-primary-600 bg-primary-50' : 'border-tierra-300 bg-white hover:border-luna-600'}`}
                   >
-                    <Icono aria-hidden="true" className={`size-8 ${tipo === t ? 'text-primary-700' : 'text-luna-800'}`} strokeWidth={2} />
+                    <Icono aria-hidden="true" className={`size-8 ${tipo === t ? 'text-primary-700' : 'text-luna-800'}`} />
                     <input
                       type="radio"
                       name="tipo"
@@ -281,13 +281,17 @@ export function ActividadNueva() {
       <Dialogo
         abierto={advertencias.length > 0}
         titulo="Recomendaciones del calendario ancestral"
-        onCerrar={() => setAdvertencias([])}
+        onCerrar={() => {
+          setAdvertencias([]);
+          // Al cerrar, el foco vuelve al botón que abrió el diálogo.
+          document.querySelector<HTMLElement>('form button[type="submit"]')?.focus();
+        }}
         acciones={
           <>
             <Boton variante="secundario" onClick={() => void guardar(true)} cargando={enviando}>
               Guardar de todas formas
             </Boton>
-            <Boton onClick={() => setAdvertencias([])} autoFocus>
+            <Boton onClick={() => setAdvertencias([])} data-foco>
               Corregir
             </Boton>
           </>

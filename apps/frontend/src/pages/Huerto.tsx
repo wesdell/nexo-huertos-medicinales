@@ -165,9 +165,9 @@ function ChipCualidad({ cualidad }: { cualidad: Planta['cualidad'] }) {
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full bg-tierra-100 px-3 py-1 text-sm font-bold text-luna-800">
       {cualidad === 'CALIENTE' ? (
-        <Sun aria-hidden="true" className="size-4 text-caliente" strokeWidth={2.5} />
+        <Sun aria-hidden="true" className="size-4 text-caliente" />
       ) : (
-        <Snowflake aria-hidden="true" className="size-4 text-info-800" strokeWidth={2.5} />
+        <Snowflake aria-hidden="true" className="size-4 text-info-800" />
       )}
       {CUALIDADES[cualidad]}
     </span>

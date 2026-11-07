@@ -36,7 +36,7 @@ export function Layout() {
     <div className="min-h-dvh md:flex">
       <a
         href="#contenido"
-        className="sr-only z-50 rounded-xl bg-white p-3 font-bold focus:not-sr-only focus:fixed focus:left-3 focus:top-3"
+        className="sr-only z-50 rounded-xl bg-white font-bold shadow-flotante focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:px-4 focus:py-3"
       >
         Saltar al contenido
       </a>
@@ -59,7 +59,7 @@ export function Layout() {
                 }`
               }
             >
-              <Icono aria-hidden="true" className="size-5" strokeWidth={2.25} />
+              <Icono aria-hidden="true" className="size-5" />
               {texto}
             </NavLink>
           ))}
@@ -90,7 +90,7 @@ export function Layout() {
 
         <nav
           aria-label="Principal"
-          className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-4 rounded-3xl bg-white p-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] shadow-[0_8px_30px_-6px_rgb(42_36_29/0.25)] md:hidden"
+          className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-4 rounded-3xl bg-white p-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] shadow-flotante md:hidden"
         >
           {DESTINOS.map(({ a, texto, Icono, accion }) => (
             <NavLink
@@ -103,7 +103,7 @@ export function Layout() {
                 }`
               }
             >
-              <Icono aria-hidden="true" className="size-6" strokeWidth={2.25} />
+              <Icono aria-hidden="true" className="size-6" />
               {texto}
             </NavLink>
           ))}

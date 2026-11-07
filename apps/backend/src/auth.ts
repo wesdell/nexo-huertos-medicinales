@@ -74,8 +74,7 @@ export class AuthService {
   async login(d: LoginDto) {
     const u = await this.db.usuario.findUnique({ where: { email: d.email.trim().toLowerCase() } });
     // Mensaje genérico: no revela cuál dato falló (HU-002).
-    if (!u || !(await compare(d.password, u.passwordHash)))
-      throw new UnauthorizedException('Correo o contraseña incorrectos.');
+    if (!u || !(await compare(d.password, u.passwordHash))) throw new UnauthorizedException('Correo o contraseña incorrectos.');
     return { token: this.jwt.sign({ sub: u.id, nombre: u.nombre } satisfies UsuarioJwt) };
   }
 

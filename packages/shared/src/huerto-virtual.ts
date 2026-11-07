@@ -48,8 +48,6 @@ export function huertoVirtual(plantas: string[], actividades: ActividadResumen[]
     }
   }
   const resultado = plantas.map((id) => ({ plantaId: id, etapa: ETAPAS[nivel.get(id) ?? 0] as Etapa }));
-  const progreso = plantas.length
-    ? Math.round((resultado.reduce((s, r) => s + r.etapa.nivel, 0) / (plantas.length * MAX)) * 100)
-    : 0;
+  const progreso = plantas.length ? Math.round((resultado.reduce((s, r) => s + r.etapa.nivel, 0) / (plantas.length * MAX)) * 100) : 0;
   return { plantas: resultado, progreso };
 }

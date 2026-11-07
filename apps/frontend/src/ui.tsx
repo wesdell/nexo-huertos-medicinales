@@ -77,7 +77,7 @@ interface PropsCampo {
 function MensajeError({ id, texto }: { id: string; texto: string }) {
   return (
     <p id={id} className="flex items-start gap-1.5 text-sm font-semibold text-error-800">
-      <AlertCircle aria-hidden="true" className="mt-0.5 size-4 shrink-0" strokeWidth={2.25} />
+      <AlertCircle aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
       {texto}
     </p>
   );
@@ -208,7 +208,7 @@ export function Banner({ tipo, children, enfocar }: { tipo: keyof typeof BANNER;
       role={tipo === 'error' ? 'alert' : 'status'}
       className={`flex gap-3 rounded-2xl p-4 ${clase}`}
     >
-      <Icono aria-hidden="true" className="mt-0.5 size-5 shrink-0" strokeWidth={2.25} />
+      <Icono aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
       <div>{children}</div>
     </div>
   );
@@ -297,7 +297,11 @@ export function Dialogo({
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
-    if (abierto && !d.open) d.showModal();
+    // showModal enfoca el primer botón; se mueve el foco a la acción segura marcada con data-foco.
+    if (abierto && !d.open) {
+      d.showModal();
+      d.querySelector<HTMLElement>('[data-foco]')?.focus();
+    }
     if (!abierto && d.open) d.close();
   }, [abierto]);
   return (
@@ -305,12 +309,12 @@ export function Dialogo({
       ref={ref}
       aria-labelledby={idTitulo}
       onClose={onCerrar}
-      className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-tarjeta bg-white p-0 text-luna-800 shadow-2xl"
+      className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-tarjeta bg-white p-0 text-luna-800 shadow-flotante"
     >
       <div className="space-y-4 p-6">
         <div className="flex items-start gap-3">
           <span className="grid size-10 shrink-0 place-items-center rounded-full bg-aviso-100 text-aviso-800">
-            <TriangleAlert aria-hidden="true" className="size-5" strokeWidth={2.25} />
+            <TriangleAlert aria-hidden="true" className="size-5" />
           </span>
           <h2 id={idTitulo} className="pt-1 text-xl">
             {titulo}
@@ -340,8 +344,8 @@ export function ProveedorToast({ children }: { children: ReactNode }) {
       {children}
       <div aria-live="polite" className="pointer-events-none fixed inset-x-0 top-3 z-50 flex justify-center px-4">
         {texto && (
-          <p className="aparecer pointer-events-auto flex max-w-md items-center gap-3 rounded-2xl bg-luna-800 px-5 py-3 font-bold text-white shadow-xl">
-            <Sprout aria-hidden="true" className="size-5 shrink-0 text-primary-100" />
+          <p className="aparecer pointer-events-auto flex max-w-md items-center gap-3 rounded-2xl bg-luna-800 px-5 py-3 font-bold text-white shadow-flotante">
+            <Sprout aria-hidden="true" className="size-5 shrink-0 text-tierra-300" />
             {texto}
           </p>
         )}
