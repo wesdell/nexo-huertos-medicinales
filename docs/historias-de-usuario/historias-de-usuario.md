@@ -938,3 +938,30 @@
 - Codificar el estado vacío cuando no hay comunidades (1 hora)
 - Probar con distintas cantidades de comunidades, con empates, con comunidades de una sola persona y con comunidades sin puntos (2 horas)
 - Depurar el código (0,5 horas)
+
+## 6. PROTECCIÓN DE DATOS
+
+### HU-036 · Aceptar el tratamiento de datos personales al registrarse
+
+**Prioridad:** Alta · **Estimación:** 6 horas
+
+**Historia de usuario**
+
+> **Como** persona que se registra como voluntario **quiero** conocer y aceptar de forma expresa cómo se tratarán mis datos personales, **para** decidir con información si comparto mis datos, conforme a la Ley Orgánica de Protección de Datos Personales (LOPDP) del Ecuador.
+
+**Criterios de aceptación**
+
+- **Aceptación registrada:** **Dada** una persona que completa el registro y marca la casilla de aceptación, **cuando** confirma, **entonces** el sistema crea la cuenta y guarda la fecha y hora de la aceptación y la versión de la política aceptada. *[ESCENARIO IDEAL]*
+- **Política disponible antes de aceptar:** **Dada** una persona en el formulario de registro, **cuando** abre el enlace «política de privacidad», **entonces** el sistema muestra la política en una pestaña nueva sin perder lo que ya escribió en el formulario. *[ESCENARIO IDEAL]*
+- **Sin aceptación:** **Dada** una persona que no marca la casilla de aceptación, **cuando** confirma el registro, **entonces** el sistema no crea la cuenta e indica junto a la casilla que debe aceptar el tratamiento de datos para continuar. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+- **Aceptación no implícita:** **Dada** una persona que abre el formulario de registro, **cuando** lo ve por primera vez, **entonces** la casilla aparece sin marcar. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+- **Validación en el servidor:** **Dada** una solicitud de registro que llega al servidor sin la aceptación, **cuando** el servidor la procesa, **entonces** la rechaza aunque la interfaz haya sido omitida. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Agregar al modelo del voluntario la fecha de aceptación y la versión de la política (0,5 horas)
+- Redactar la página de política de privacidad: datos que se recogen, finalidad, conservación y derechos de acceso, rectificación y eliminación (1 hora)
+- Implementar la casilla de aceptación con el enlace a la política, que se abre en una pestaña nueva (1 hora)
+- Codificar la validación en el servidor y el guardado de la fecha y la versión (1,5 horas)
+- Codificar el mensaje de error junto a la casilla (0,5 horas)
+- Probar el registro con y sin aceptación, y el enlace a la política (1,5 horas)

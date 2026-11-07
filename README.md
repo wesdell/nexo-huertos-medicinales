@@ -51,6 +51,22 @@ pnpm --filter frontend dev
 
 GitHub Actions ejecuta todo en cada pull request ([.github/workflows/ci.yml](.github/workflows/ci.yml)).
 
+## Diseño
+
+| Qué | Dónde |
+|---|---|
+| Interfaces en Figma: variables, componentes y pantallas | [Nexo — MVP v1](https://www.figma.com/design/5lN9PIqZZV9XJsqGy1yaiI) |
+| Sistema de diseño (colores, tipografía, componentes, reglas) | [apps/frontend/DESIGN.md](apps/frontend/DESIGN.md) |
+| Capturas de la app real en móvil y escritorio | [docs/capturas/](docs/capturas/) |
+
+El archivo de Figma está en el equipo del autor del repositorio. Si el enlace no te abre, pide acceso desde la misma página de Figma. Las capturas de `docs/capturas/` muestran las mismas pantallas y no requieren cuenta.
+
+## Calidad
+
+- [Casos de prueba](docs/casos-de-prueba/casos-de-prueba.md): 33 automáticos y 14 manuales, con su historia de usuario y su resultado.
+- [Informe de calidad](docs/informe/informe.md): modelo ISO/IEC 25010, resultados de Lighthouse y defectos encontrados.
+- [CHANGELOG](CHANGELOG.md) y [bitácora](docs/bitacora.md).
+
 ## Estructura
 
 ```

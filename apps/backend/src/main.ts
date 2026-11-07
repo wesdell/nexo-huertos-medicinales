@@ -16,9 +16,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
   app.enableCors({ origin: process.env.CORS_ORIGIN?.split(',') ?? true });
-  app.useGlobalPipes(
-    new ValidationPipe({ whitelist: true, transform: true, stopAtFirstError: true, exceptionFactory: aErrores }),
-  );
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true, stopAtFirstError: true, exceptionFactory: aErrores }));
 
   const doc = new DocumentBuilder().setTitle('Nexo Huertos API').setVersion('1.0.0').addBearerAuth().build();
   SwaggerModule.setup('api/docs', app, SwaggerModule.createDocument(app, doc));

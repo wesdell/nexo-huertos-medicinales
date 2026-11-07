@@ -12,13 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import {
-  huertoVirtual,
-  puntosPorActividad,
-  recomendacionDelDia,
-  validarActividad,
-  type TipoActividad,
-} from '@nexo/shared';
+import { huertoVirtual, puntosPorActividad, recomendacionDelDia, validarActividad, type TipoActividad } from '@nexo/shared';
 import { JwtGuard, Usuario, UsuarioJwt } from './auth';
 import { ActividadDto, HuertoDto, PlantaDto } from './dto';
 import { PrismaService } from './prisma.service';
@@ -86,7 +80,10 @@ export class HuertosService {
       this.db.planta.findMany({ where: { huertoId }, orderBy: { creadaEn: 'asc' }, select: { id: true, nombreComun: true } }),
       this.db.actividad.findMany({ where: { huertoId }, select: { tipo: true, plantaId: true } }),
     ]);
-    const v = huertoVirtual(plantas.map((p) => p.id), actividades);
+    const v = huertoVirtual(
+      plantas.map((p) => p.id),
+      actividades,
+    );
     return {
       progreso: v.progreso,
       plantas: v.plantas.map((r, i) => ({ ...r, nombreComun: plantas[i].nombreComun })),

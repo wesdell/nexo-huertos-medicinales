@@ -146,7 +146,7 @@ El sistema rechaza explícitamente la plantilla de jardinería con cabecera verd
 - Un solo color de acción (verde chakra), reservado para lo presionable y su estado activo.
 - Tinta y secundario cálidos; ningún gris frío.
 - Una familia tipográfica (Nunito Variable); jerarquía por peso 400 / 700 / 800 / 900.
-- Iconos Lucide de línea, siempre con texto; el color nunca es la única señal.
+- Iconos Lucide de línea con un solo trazo de 2.25 (regla `svg.lucide` en `styles.css`), siempre con texto; el color nunca es la única señal.
 - Resorte al presionar y la animación «brotar» como firma.
 
 ## Colors
@@ -223,8 +223,7 @@ Profundidad ambiental y suave: las tarjetas flotan apenas sobre la tierra con un
 ### Shadow Vocabulary
 - **Tarjeta** (`box-shadow: 0 1px 2px rgb(42 36 29 / 0.05), 0 6px 16px -4px rgb(42 36 29 / 0.08)`): toda tarjeta, tarjeta de planta y estado vacío.
 - **Tarjeta presionable en hover** (`box-shadow: 0 10px 24px -6px rgb(42 36 29 / 0.18)`): la tarjeta enlace «Tu huerto virtual».
-- **Barra flotante** (`box-shadow: 0 8px 30px -6px rgb(42 36 29 / 0.25)`): barra inferior de navegación.
-- **Capa superior** (sombras `xl` / `2xl` de Tailwind): toast y diálogo. El fondo del diálogo es tinta al 45 % (`rgb(42 36 29 / 0.45)`).
+- **Flotante** (`shadow-flotante`: `0 12px 36px -8px rgb(42 36 29 / 0.3)`): barra inferior, toast y diálogo, todos con la misma sombra cálida. El fondo del diálogo es tinta al 45 % (`rgb(42 36 29 / 0.45)`).
 
 ### Named Rules
 **The Sombra Cálida Rule.** Toda sombra propia se tiñe con la tinta `rgb(42 36 29)`; nunca negro puro ni sombras duras desplazadas.

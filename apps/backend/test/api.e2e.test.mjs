@@ -69,7 +69,12 @@ test('HU-004 y HU-010: crear comunidad (responsable) y huerto', async () => {
 });
 
 test('HU-014: registrar planta', async () => {
-  const p = await pedir(`/huertos/${huertoId}/plantas`, { nombreComun: 'Manzanilla', ciclo: 'CORTO', cualidad: 'FRIA', usosMedicinales: 'Digestivo' });
+  const p = await pedir(`/huertos/${huertoId}/plantas`, {
+    nombreComun: 'Manzanilla',
+    ciclo: 'CORTO',
+    cualidad: 'FRIA',
+    usosMedicinales: 'Digestivo',
+  });
   assert.equal(p.status, 201);
   plantaId = p.datos.id;
 });
@@ -83,7 +88,10 @@ test('HU-016: huerto sin actividades está en estado inicial', async () => {
 test('HU-018 y HU-030: datos incompletos se rechazan sin puntos', async () => {
   const r = await pedir(`/huertos/${huertoId}/actividades`, { tipo: 'PREPARACION_TIERRA', fecha: '2024-04-08', detalle: {} });
   assert.equal(r.status, 400);
-  assert.deepEqual(r.datos.errores.map((e) => e.campo), ['retiroMaleza', 'esparcido', 'remocion']);
+  assert.deepEqual(
+    r.datos.errores.map((e) => e.campo),
+    ['retiroMaleza', 'esparcido', 'remocion'],
+  );
 });
 
 test('HU-018 y HU-030: preparación en luna nueva suma base + bono', async () => {
@@ -97,7 +105,13 @@ test('HU-018 y HU-030: preparación en luna nueva suma base + bono', async () =>
 });
 
 test('HU-021: siembra fuera de fase pide confirmación y, confirmada, suma sin bono', async () => {
-  const siembra = { tipo: 'SIEMBRA', fecha: '2024-04-08', hora: '08:30', plantaId, detalle: { tecnica: 'SURCOS', tipoSiembra: 'SEMILLAS' } };
+  const siembra = {
+    tipo: 'SIEMBRA',
+    fecha: '2024-04-08',
+    hora: '08:30',
+    plantaId,
+    detalle: { tecnica: 'SURCOS', tipoSiembra: 'SEMILLAS' },
+  };
   const aviso = await pedir(`/huertos/${huertoId}/actividades`, siembra);
   assert.equal(aviso.status, 409);
   assert.equal(aviso.datos.advertencias[0].codigo, 'FASE_LUNAR');

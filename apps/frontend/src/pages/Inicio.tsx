@@ -36,9 +36,9 @@ export function Inicio() {
             </div>
           </div>
           {datos?.huerto && (
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <EnlaceBoton to="/actividades/nueva" className="w-full sm:w-auto">
-                <Plus aria-hidden="true" className="size-5" strokeWidth={2.5} />
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+              <EnlaceBoton to="/actividades/nueva" className="w-full shrink-0 lg:w-auto">
+                <Plus aria-hidden="true" className="size-5" />
                 Registrar actividad
               </EnlaceBoton>
               <p className="text-luna-600">Si sigues la recomendación de la luna, ganas 5 puntos extra.</p>

@@ -97,15 +97,13 @@ export function validarActividad(e: EntradaActividad, ctx: ContextoActividad): R
     }
     case 'SIEMBRA':
       if (!esUna(TECNICAS_SIEMBRA, d.tecnica)) errores.push({ campo: 'tecnica', mensaje: 'Elige la técnica.' });
-      if (!esUna(TIPOS_SIEMBRA, d.tipoSiembra))
-        errores.push({ campo: 'tipoSiembra', mensaje: 'Elige el tipo de siembra.' });
+      if (!esUna(TIPOS_SIEMBRA, d.tipoSiembra)) errores.push({ campo: 'tipoSiembra', mensaje: 'Elige el tipo de siembra.' });
       // ponytail: sin aviso de ritual previo hasta que exista RITUAL_SIEMBRA (v2).
       advertencias.push(...advertenciaFase(fase, ['CRECIENTE', 'LLENA'], 'sembrar'));
       break;
     case 'RIEGO':
       if (!esUna(METODOS_RIEGO, d.metodo)) errores.push({ campo: 'metodo', mensaje: 'Elige el método de riego.' });
-      if (ctx.plantasSembradas.length === 0)
-        errores.push({ campo: 'plantaId', mensaje: 'Primero registra una siembra.' });
+      if (ctx.plantasSembradas.length === 0) errores.push({ campo: 'plantaId', mensaje: 'Primero registra una siembra.' });
       else if (e.plantaId && !ctx.plantasSembradas.includes(e.plantaId))
         errores.push({ campo: 'plantaId', mensaje: 'Esa planta aún no tiene siembra registrada.' });
       break;

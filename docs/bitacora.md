@@ -1,12 +1,12 @@
 # Bitácora del proyecto
 
-Registro vivo de lo hecho y lo pendiente. Se actualiza en cada push. Rama de trabajo actual: `claude/huerto-virtual-mvp-figma-2421dc` (PR hacia `main`).
+Registro vivo de lo hecho y lo pendiente. Se actualiza en cada push. Se trabaja en ramas cortas con PR hacia `main`; al hacer merge se borra la rama.
 
 ## Versiones
 
 | Versión | Fecha objetivo | Estado |
 |---|---|---|
-| **v1.0.0 — MVP** | 10/11/2026 | En curso |
+| **v1.0.0 — MVP** | 10/11/2026 | Publicada el 06/11/2026 ([release](https://github.com/wesdell/nexo-huertos-medicinales/releases/tag/v1.0.0)) |
 | v2.0.0 | Por definir | Pendiente |
 | v3.0.0 | Por definir | Pendiente |
 
@@ -18,7 +18,7 @@ Objetivo: flujo mínimo de punta a punta, ejecutable con `docker compose up --bu
 
 | Funcionalidad | HU | Estado |
 |---|---|---|
-| Base del monorepo (pnpm, TypeScript, Docker Compose, CI) | — | Hecho salvo CI |
+| Base del monorepo (pnpm, TypeScript, Docker Compose, CI) | — | Hecho |
 | Reglas de dominio en `@nexo/shared` con pruebas | 016, 017, 018, 021, 023, 025, 030 | Hecho |
 | Interfaces en Figma de las pantallas v1 | Parcial | [Nexo — MVP v1](https://www.figma.com/design/5lN9PIqZZV9XJsqGy1yaiI): variables, estilos, componentes y 6 pantallas móvil (390). Falta escritorio (1440): se agotó el cupo de llamadas MCP del plan Starter |
 | Registro con consentimiento de protección de datos (LOPDP) | 001, 036 (nueva) | Hecho |
@@ -28,11 +28,12 @@ Objetivo: flujo mínimo de punta a punta, ejecutable con `docker compose up --bu
 | Registrar plantas (sin fotos) | 014 (parcial) | Hecho |
 | Registrar actividad: preparación de tierra, siembra, riego y cosecha, con errores y advertencias | 018, 021, 023, 025 | Hecho |
 | Puntos por actividad y bono por seguir la recomendación | 030 | Hecho |
-| Huerto virtual (etapas 0 a 4 y porcentaje de progreso) | 016 | Hecho |
+| Huerto virtual (etapas 0 a 6 y porcentaje de progreso) | 016 | Hecho |
 | Inicio con recomendación del día según la fase lunar | 017 (parcial) | Hecho |
 | Consejos ancestrales (orientación al Este, cercas vivas) como texto de ayuda | — | Hecho |
-| Pruebas: reglas de dominio, API, flujo e2e con revisión de accesibilidad (axe) | — | Pendiente |
-| README, CHANGELOG y release v1.0.0 en GitHub | — | Pendiente |
+| Pruebas: reglas de dominio, API, flujo e2e con revisión de accesibilidad (axe) | — | Hecho: 29 + 13 + 2; Lighthouse 100 en accesibilidad |
+| Prueba manual, casos de prueba e informe de calidad | — | Hecho: `docs/casos-de-prueba/`, `docs/informe/` |
+| README, CHANGELOG y release v1.0.0 en GitHub | — | Hecho |
 
 ### Simplificaciones conscientes de v1
 - Parroquias: solo cabeceras provinciales; el catálogo completo del INEC llega en v2.
@@ -66,3 +67,4 @@ Objetivo: flujo mínimo de punta a punta, ejecutable con `docker compose up --bu
 | 05/11/2026 | Prueba e2e con Playwright (móvil y escritorio) + revisión de accesibilidad axe WCAG 2.1 AA sin violaciones serias. Encontró y corrigió un error: tras crear la comunidad se volvía a Inicio en vez de ir a Mi huerto. |
 | 06/11/2026 | Sistema de diseño elegido: «App cálida de consumo» (fondo cálido, tarjetas blancas, verde solo para acciones, Nunito local, iconos Lucide, logo y favicon propios). Rediseño de las 8 pantallas; e2e + axe en verde; capturas en `docs/capturas/`. |
 | 06/11/2026 | Revisión de diseño cerrada (2 rondas): la planta muestra su etapa anterior y brota a la nueva; la línea del bono tiene tamaño de texto normal. `apps/frontend/DESIGN.md` documenta el sistema. Figma: tokens como variables, componentes (Botón, Campo, Selector, NavItem, BarraInferior, MenúLateral, MosaicoActividad, Luna, etapas) y 6 pantallas móvil. |
+| 06/11/2026 | Cierre del MVP. En la prueba manual con teclado y Lighthouse se corrigieron 5 defectos: foco del diálogo, concordancia de mensajes, enlace «Saltar al contenido», botón partido en tableta y `robots.txt`. También un solo trazo para los iconos y sombras cálidas en lo flotante. Se agregaron HU-036, los casos de prueba (33 automáticos y 14 manuales), el informe de calidad y el CHANGELOG. Release v1.0.0. Pendiente: pantallas de escritorio en Figma (cupo del plan Starter). |
