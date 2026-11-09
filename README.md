@@ -64,7 +64,8 @@ El archivo de Figma está en el equipo del autor del repositorio. Si el enlace n
 
 ## Calidad
 
-- [Casos de prueba](docs/casos-de-prueba/casos-de-prueba.md): 33 automáticos y 14 manuales, con su historia de usuario y su resultado.
+- [Estudio del dominio](docs/dominio/dominio.md): lo que aprendimos de los lineamientos del MSP y cómo se refleja en la app.
+- [Casos de prueba](docs/casos-de-prueba/casos-de-prueba.md): 33 automáticos y 14 manuales (estos en el formato de la plantilla de la asignatura), con su historia de usuario y su resultado.
 - [Informe de calidad](docs/informe/informe.md): modelo ISO/IEC 25010, resultados de Lighthouse y defectos encontrados.
 - [CHANGELOG](CHANGELOG.md) y [bitácora](docs/bitacora.md).
 
@@ -74,7 +75,7 @@ El archivo de Figma está en el equipo del autor del repositorio. Si el enlace n
 apps/backend     API REST NestJS + Prisma (PostgreSQL)
 apps/frontend    SPA React + Vite + Tailwind
 packages/shared  @nexo/shared: reglas de dominio compartidas y probadas
-docs/            historias de usuario, arquitectura, diseño y bitácora
+docs/            dominio, historias de usuario, arquitectura, diseño, pruebas y bitácora
 e2e/             pruebas Playwright
 ```
 

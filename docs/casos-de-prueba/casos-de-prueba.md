@@ -15,6 +15,8 @@ Las pruebas de API y de interfaz necesitan la aplicación corriendo (`docker com
 
 ## Casos automáticos
 
+Última ejecución: 09/11/2026, responsable GitHub Actions (CI de `main`, todos los casos en verde). Cada pull request vuelve a ejecutarlos.
+
 ### Registro, sesión y protección de datos
 
 | ID | HU | Caso | Datos o pasos | Resultado esperado | Nivel | Estado |
@@ -75,24 +77,183 @@ Las pruebas de API y de interfaz necesitan la aplicación corriendo (`docker com
 
 ## Casos manuales
 
-Ejecutados el 06/11/2026 en Chromium, con la cuenta demo de `.env.example`.
+Los casos manuales siguen la plantilla de casos de prueba de la asignatura: identificador, título, descripción, procedimiento, resultados esperados y una fila por cada ejecución, con su fecha, responsable, resultado obtenido, veredicto y capturas. Cuando un caso falló, se corrigió el defecto y se volvió a ejecutar, las dos ejecuciones quedan registradas.
 
-| ID | Característica | Caso | Pasos | Resultado esperado | Resultado |
-| --- | --- | --- | --- | --- | --- |
-| CM-01 | Accesibilidad | Enlace «Saltar al contenido» | Cargar Inicio y pulsar Tab | Aparece el enlace visible arriba a la izquierda; Enter lleva al contenido | Pasa tras corregir D-07 |
-| CM-02 | Accesibilidad | Foco visible | Recorrer cada pantalla con Tab | Anillo dorado de 3 px en cada elemento enfocado | Pasa |
-| CM-03 | Usabilidad | Resumen de errores | Enviar el inicio de sesión vacío | El foco va al resumen «Revisa estos datos»; cada campo muestra su error | Pasa tras corregir D-06 |
-| CM-04 | Usabilidad | Iniciar sesión con Enter | Escribir correo y contraseña y pulsar Enter | Se abre la sesión y se muestra Inicio | Pasa |
-| CM-05 | Accesibilidad | Foco del diálogo de advertencias | Registrar una siembra en luna nueva | El diálogo se abre con el foco en «Corregir» (acción segura) | Pasa tras corregir D-05 |
-| CM-06 | Accesibilidad | Cerrar el diálogo con Escape | Pulsar Escape con el diálogo abierto | El diálogo se cierra y el foco vuelve a «Guardar actividad» | Pasa tras corregir D-05 |
-| CM-07 | Funcional | Confirmar la advertencia | «Guardar de todas formas» | Se guarda sin bono y el toast indica los puntos | Pasa |
-| CM-08 | Usabilidad | Firma «brotar» | Guardar una siembra | En el huerto virtual, la planta muestra su etapa anterior y brota a la nueva una sola vez | Pasa |
-| CM-09 | Responsive | Móvil 390 px | Recorrer las 8 pantallas | Sin desplazamiento horizontal; barra inferior al alcance del pulgar | Pasa |
-| CM-10 | Responsive | Tableta 800 px | Inicio | El botón «Registrar actividad» se lee en una línea | Pasa tras corregir D-08 |
-| CM-11 | Responsive | Escritorio 1440 px | Recorrer las 8 pantallas | Menú lateral fijo y columna de contenido de 768 px | Pasa |
-| CM-12 | Rendimiento, accesibilidad, buenas prácticas | Lighthouse en 7 pantallas, móvil y escritorio | Ver el [informe de calidad](../informe/informe.md#lighthouse) | Accesibilidad ≥ 90 | Pasa (100 en las 14 mediciones) |
-| CM-13 | Fiabilidad | Consola sin errores inesperados | Recorrer el flujo con la consola abierta | Solo respuestas 400/409 esperadas por validación | Pasa |
-| CM-14 | Portabilidad | Arranque en limpio | El job `e2e` de GitHub Actions levanta `docker compose up --build` en una máquina nueva | Migraciones, datos semilla y cuenta demo listos sin pasos extra | Pasa (CI del PR #3) |
+Entorno: Chromium sobre `docker compose up --build`, con la cuenta demo de `.env.example`. El identificador anterior de cada caso (CM-xx) se conserva entre paréntesis para no romper las referencias del [informe de calidad](../informe/informe.md).
+
+### P-001 · Enlace «Saltar al contenido» (CM-01)
+
+| Campo | Detalle |
+| --- | --- |
+| Descripción | Se espera comprobar que una persona que navega solo con el teclado pueda saltar el menú e ir directo al contenido de la pantalla. |
+| Procedimiento | 1. Abrir la aplicación e iniciar sesión.<br>2. En Inicio, pulsar la tecla Tab una vez.<br>3. Pulsar Enter sobre el enlace que aparece. |
+| Resultados esperados | Aparece el enlace «Saltar al contenido» visible arriba a la izquierda y, al pulsar Enter, el foco pasa al contenido principal. |
+
+| Fecha | Responsable | Resultados obtenidos | Veredicto | Capturas |
+| --- | --- | --- | --- | --- |
+| 06/11/2026 | Sebastián Guerrero | El enlace aparecía pegado al borde, sin relleno, y era difícil de leer (defecto D-07). | Reprobado | — |
+| 06/11/2026 | Sebastián Guerrero | El enlace aparece con relleno y sombra, se lee bien y lleva al contenido. | Aprobado | — |
+
+### P-002 · Foco visible (CM-02)
+
+| Campo | Detalle |
+| --- | --- |
+| Descripción | Se espera comprobar que siempre se vea qué elemento está seleccionado al navegar con el teclado. |
+| Procedimiento | 1. Abrir cada una de las 8 pantallas.<br>2. Recorrer todos los elementos con la tecla Tab. |
+| Resultados esperados | Cada botón, enlace o campo enfocado muestra un anillo dorado de 3 px. |
+
+| Fecha | Responsable | Resultados obtenidos | Veredicto | Capturas |
+| --- | --- | --- | --- | --- |
+| 06/11/2026 | Sebastián Guerrero | El anillo dorado aparece en todos los elementos de las 8 pantallas. | Aprobado | — |
+
+### P-003 · Resumen de errores del formulario (CM-03)
+
+| Campo | Detalle |
+| --- | --- |
+| Descripción | Se espera comprobar que, si se envía un formulario incompleto, la persona sepa qué datos faltan y que los mensajes estén bien redactados. |
+| Procedimiento | 1. Abrir la pantalla de inicio de sesión.<br>2. Dejar el correo y la contraseña vacíos.<br>3. Pulsar «Entrar». |
+| Resultados esperados | El foco va al resumen «Revisa estos datos» y cada campo muestra su error con una redacción correcta. |
+
+| Fecha | Responsable | Resultados obtenidos | Veredicto | Capturas |
+| --- | --- | --- | --- | --- |
+| 06/11/2026 | Sebastián Guerrero | Se mostraba «La contraseña es obligatorio»: el mensaje no concordaba en género (defecto D-06). | Reprobado | — |
+| 06/11/2026 | Sebastián Guerrero | Se muestra «La contraseña es obligatoria» y el foco va al resumen de errores. | Aprobado | [login-movil.png](../capturas/login-movil.png) |
+
+### P-004 · Iniciar sesión con la tecla Enter (CM-04)
+
+| Campo | Detalle |
+| --- | --- |
+| Descripción | Se espera comprobar que se pueda iniciar sesión sin usar el ratón. |
+| Procedimiento | 1. Abrir la pantalla de inicio de sesión.<br>2. Escribir el correo y la contraseña de la cuenta demo.<br>3. Pulsar Enter. |
+| Resultados esperados | Se abre la sesión y se muestra la pantalla de Inicio. |
+
+| Fecha | Responsable | Resultados obtenidos | Veredicto | Capturas |
+| --- | --- | --- | --- | --- |
+| 06/11/2026 | Sebastián Guerrero | La sesión se abre y aparece Inicio con la recomendación del día. | Aprobado | [inicio-escritorio.png](../capturas/inicio-escritorio.png) |
+
+### P-005 · Foco del diálogo de advertencias (CM-05)
+
+| Campo | Detalle |
+| --- | --- |
+| Descripción | Se espera comprobar que, cuando la app advierte que una actividad está fuera de la fase lunar recomendada, la acción que queda seleccionada sea la segura. |
+| Procedimiento | 1. Ir a «Registrar».<br>2. Elegir «Siembra» y una fecha en luna nueva.<br>3. Completar los campos y pulsar «Guardar actividad». |
+| Resultados esperados | Se abre el diálogo de advertencias con el foco en «Corregir». |
+
+| Fecha | Responsable | Resultados obtenidos | Veredicto | Capturas |
+| --- | --- | --- | --- | --- |
+| 06/11/2026 | Sebastián Guerrero | El foco quedaba en «Guardar de todas formas»: con un Enter se guardaba sin querer (defecto D-05). | Reprobado | — |
+| 06/11/2026 | Sebastián Guerrero | El diálogo se abre con el foco en «Corregir». | Aprobado | [actividad-movil.png](../capturas/actividad-movil.png) |
+
+### P-006 · Cerrar el diálogo con Escape (CM-06)
+
+| Campo | Detalle |
+| --- | --- |
+| Descripción | Se espera comprobar que el diálogo de advertencias se pueda cerrar con el teclado sin perder el lugar en la pantalla. |
+| Procedimiento | 1. Repetir los pasos de P-005 hasta abrir el diálogo.<br>2. Pulsar Escape. |
+| Resultados esperados | El diálogo se cierra y el foco vuelve al botón «Guardar actividad». |
+
+| Fecha | Responsable | Resultados obtenidos | Veredicto | Capturas |
+| --- | --- | --- | --- | --- |
+| 06/11/2026 | Sebastián Guerrero | El diálogo se cerraba, pero el foco se perdía al inicio de la página (defecto D-05). | Reprobado | — |
+| 06/11/2026 | Sebastián Guerrero | El diálogo se cierra y el foco vuelve a «Guardar actividad». | Aprobado | — |
+
+### P-007 · Confirmar una advertencia (CM-07)
+
+| Campo | Detalle |
+| --- | --- |
+| Descripción | Se espera comprobar que una persona pueda guardar una actividad fuera de la fase recomendada si así lo decide, sin recibir el bono de puntos. |
+| Procedimiento | 1. Repetir los pasos de P-005 hasta abrir el diálogo.<br>2. Pulsar «Guardar de todas formas». |
+| Resultados esperados | La actividad se guarda sin bono y un aviso indica los puntos obtenidos. |
+
+| Fecha | Responsable | Resultados obtenidos | Veredicto | Capturas |
+| --- | --- | --- | --- | --- |
+| 06/11/2026 | Sebastián Guerrero | La actividad se guarda y el aviso muestra solo los puntos base. | Aprobado | — |
+
+### P-008 · La planta «brota» en el huerto virtual (CM-08)
+
+| Campo | Detalle |
+| --- | --- |
+| Descripción | Se espera comprobar que el huerto virtual muestre el avance de la planta después de registrar una actividad real. |
+| Procedimiento | 1. Registrar una siembra de una planta del huerto.<br>2. Ir a «Huerto virtual». |
+| Resultados esperados | La planta muestra su etapa anterior y brota a «Sembrada» una sola vez. |
+
+| Fecha | Responsable | Resultados obtenidos | Veredicto | Capturas |
+| --- | --- | --- | --- | --- |
+| 06/11/2026 | Sebastián Guerrero | La planta brota a «Sembrada» y la animación no se repite al volver a la pantalla. | Aprobado | [huerto-virtual-movil.png](../capturas/huerto-virtual-movil.png) |
+
+### P-009 · Pantallas en celular de 390 px (CM-09)
+
+| Campo | Detalle |
+| --- | --- |
+| Descripción | Se espera comprobar que la aplicación se use con comodidad en un celular. |
+| Procedimiento | 1. Ajustar el navegador a 390 px de ancho.<br>2. Recorrer las 8 pantallas. |
+| Resultados esperados | No hay desplazamiento horizontal y la barra de navegación queda abajo, al alcance del pulgar. |
+
+| Fecha | Responsable | Resultados obtenidos | Veredicto | Capturas |
+| --- | --- | --- | --- | --- |
+| 06/11/2026 | Sebastián Guerrero | Las 8 pantallas se ven completas y la barra inferior funciona. | Aprobado | [inicio-movil.png](../capturas/inicio-movil.png), [huerto-movil.png](../capturas/huerto-movil.png), [registro-movil.png](../capturas/registro-movil.png) |
+
+### P-010 · Pantalla de Inicio en tableta de 800 px (CM-10)
+
+| Campo | Detalle |
+| --- | --- |
+| Descripción | Se espera comprobar que los botones se lean bien en una tableta. |
+| Procedimiento | 1. Ajustar el navegador a 800 px de ancho.<br>2. Abrir Inicio. |
+| Resultados esperados | El botón «Registrar actividad» se lee en una sola línea. |
+
+| Fecha | Responsable | Resultados obtenidos | Veredicto | Capturas |
+| --- | --- | --- | --- | --- |
+| 06/11/2026 | Sebastián Guerrero | El texto del botón se partía en dos líneas (defecto D-08). | Reprobado | — |
+| 06/11/2026 | Sebastián Guerrero | El botón se lee en una sola línea. | Aprobado | — |
+
+### P-011 · Pantallas en escritorio de 1440 px (CM-11)
+
+| Campo | Detalle |
+| --- | --- |
+| Descripción | Se espera comprobar que la aplicación se adapte a una pantalla grande. |
+| Procedimiento | 1. Ajustar el navegador a 1440 px de ancho.<br>2. Recorrer las 8 pantallas. |
+| Resultados esperados | El menú aparece fijo a la izquierda y el contenido queda en una columna de 768 px. |
+
+| Fecha | Responsable | Resultados obtenidos | Veredicto | Capturas |
+| --- | --- | --- | --- | --- |
+| 06/11/2026 | Sebastián Guerrero | El menú lateral y la columna de contenido se muestran como se esperaba. | Aprobado | [huerto-escritorio.png](../capturas/huerto-escritorio.png), [huerto-virtual-escritorio.png](../capturas/huerto-virtual-escritorio.png) |
+
+### P-012 · Medición con Lighthouse (CM-12)
+
+| Campo | Detalle |
+| --- | --- |
+| Descripción | Se espera medir el rendimiento, la accesibilidad, las buenas prácticas y el SEO de la aplicación. |
+| Procedimiento | 1. Abrir las herramientas del navegador en cada una de las 7 pantallas.<br>2. Ejecutar Lighthouse en modo móvil y en modo escritorio. |
+| Resultados esperados | Accesibilidad de 90 o más en todas las mediciones. |
+
+| Fecha | Responsable | Resultados obtenidos | Veredicto | Capturas |
+| --- | --- | --- | --- | --- |
+| 06/11/2026 | Sebastián Guerrero | Accesibilidad 100 en las 14 mediciones, pero SEO 92 por falta de `robots.txt` (defecto D-09). | Reprobado | — |
+| 06/11/2026 | Sebastián Guerrero | Accesibilidad 100 en las 14 mediciones y SEO corregido. Detalle en el [informe de calidad](../informe/informe.md#lighthouse). | Aprobado | — |
+
+### P-013 · Consola sin errores inesperados (CM-13)
+
+| Campo | Detalle |
+| --- | --- |
+| Descripción | Se espera comprobar que la aplicación no genere errores ocultos mientras se usa. |
+| Procedimiento | 1. Abrir la consola del navegador.<br>2. Recorrer el flujo completo: registro, comunidad, huerto, planta, actividad y huerto virtual. |
+| Resultados esperados | Solo aparecen las respuestas 400 y 409 esperadas por las validaciones. |
+
+| Fecha | Responsable | Resultados obtenidos | Veredicto | Capturas |
+| --- | --- | --- | --- | --- |
+| 06/11/2026 | Sebastián Guerrero | Solo aparecen las respuestas 400 y 409 de las validaciones. | Aprobado | — |
+
+### P-014 · Arranque en una máquina limpia (CM-14)
+
+| Campo | Detalle |
+| --- | --- |
+| Descripción | Se espera comprobar que cualquier persona pueda levantar la aplicación con un solo comando, sin pasos extra. |
+| Procedimiento | 1. En una máquina nueva, clonar el repositorio.<br>2. Copiar `.env.example` como `.env`.<br>3. Ejecutar `docker compose up --build`. |
+| Resultados esperados | La base de datos, los datos iniciales y la cuenta demo quedan listos sin pasos adicionales. |
+
+| Fecha | Responsable | Resultados obtenidos | Veredicto | Capturas |
+| --- | --- | --- | --- | --- |
+| 06/11/2026 | GitHub Actions | La aplicación arranca completa en el job `e2e` del PR #3. | Aprobado | — |
 
 ## Defectos encontrados
 
