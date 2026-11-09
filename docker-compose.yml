@@ -20,15 +20,28 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-nexo}:${POSTGRES_PASSWORD:-nexo_local}@nexo-db:5432/${POSTGRES_DB:-nexo}
       JWT_SECRET: ${JWT_SECRET:-cambia-este-secreto-local}
       DEMO_EMAIL: ${DEMO_EMAIL:-demo@nexo.test}
+      TECNICO_EMAIL: ${TECNICO_EMAIL:-tecnico@nexo.test}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@nexo.test}
       DEMO_PASSWORD: ${DEMO_PASSWORD:-HuertoDemo2026}
+      SMTP_HOST: nexo-mail
+      SMTP_PORT: 1025
+      APP_URL: ${APP_URL:-http://localhost:5173}
+      UPLOADS_DIR: /data/uploads
     ports: ["3000:3000"]
+    volumes: [uploads:/data/uploads]
     depends_on:
       nexo-db: { condition: service_healthy }
+      nexo-mail: { condition: service_started }
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/salud"]
       interval: 5s
       start_period: 60s
       retries: 20
+
+  # Servidor de correo de prueba: atrapa los correos (claves temporales) y los muestra en http://localhost:8025
+  nexo-mail:
+    image: axllent/mailpit:v1.27
+    ports: ["8025:8025", "1025:1025"]
 
   nexo-frontend:
     build: { context: ., dockerfile: apps/frontend/Dockerfile }
@@ -40,3 +53,4 @@ services:
 
 volumes:
   pgdata:
+  uploads:

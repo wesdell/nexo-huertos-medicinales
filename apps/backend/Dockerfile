@@ -1,5 +1,6 @@
 FROM node:22-alpine
-RUN apk add --no-cache openssl && corepack enable
+# postgresql16-client: pg_dump para los respaldos del administrador
+RUN apk add --no-cache openssl postgresql16-client && corepack enable
 WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json ./
 COPY packages/shared/package.json packages/shared/
