@@ -31,17 +31,19 @@ export class ApiError extends Error {
   }
 }
 
+/** Llama a la API. `body` FormData se envía como multipart (archivos de evidencia). */
 export async function api<T>(ruta: string, opciones: { method?: string; body?: unknown } = {}): Promise<T> {
   const t = token.leer();
+  const formulario = opciones.body instanceof FormData;
   let res: Response;
   try {
     res = await fetch(`/api${ruta}`, {
       method: opciones.method ?? (opciones.body ? 'POST' : 'GET'),
       headers: {
-        ...(opciones.body ? { 'Content-Type': 'application/json' } : {}),
+        ...(opciones.body && !formulario ? { 'Content-Type': 'application/json' } : {}),
         ...(t ? { Authorization: `Bearer ${t}` } : {}),
       },
-      body: opciones.body ? JSON.stringify(opciones.body) : undefined,
+      body: formulario ? (opciones.body as FormData) : opciones.body ? JSON.stringify(opciones.body) : undefined,
     });
   } catch {
     throw new ApiError(0, 'No hay conexión con el servidor. Revisa tu internet e inténtalo de nuevo.');

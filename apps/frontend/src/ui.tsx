@@ -10,8 +10,9 @@ import {
   type InputHTMLAttributes,
   type ReactNode,
   type SelectHTMLAttributes,
+  type TextareaHTMLAttributes,
 } from 'react';
-import { Link } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import { AlertCircle, CheckCircle2, ChevronDown, Info, Sprout, TriangleAlert, XCircle, type LucideIcon } from 'lucide-react';
 
 // Componentes base. Alto mínimo 44 px, foco visible y estados con texto e icono (nunca solo color).
@@ -115,6 +116,22 @@ export function Campo({ etiqueta, error, ayuda, ...props }: PropsCampo & InputHT
         aria-invalid={!!error || undefined}
         aria-describedby={describe(id, { etiqueta, error, ayuda })}
         className={CLASE_INPUT(error)}
+        {...props}
+      />
+    </Envoltura>
+  );
+}
+
+export function AreaTexto({ etiqueta, error, ayuda, ...props }: PropsCampo & TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  const id = useId();
+  return (
+    <Envoltura id={id} etiqueta={etiqueta} error={error} ayuda={ayuda}>
+      <textarea
+        id={id}
+        rows={4}
+        aria-invalid={!!error || undefined}
+        aria-describedby={describe(id, { etiqueta, error, ayuda })}
+        className={`${CLASE_INPUT(error)} min-h-28 py-3`}
         {...props}
       />
     </Envoltura>
@@ -351,5 +368,158 @@ export function ProveedorToast({ children }: { children: ReactNode }) {
         )}
       </div>
     </ContextoToast.Provider>
+  );
+}
+
+/** Encabezado de página: título, texto de apoyo y acción opcional. */
+export function Encabezado({ titulo, texto, accion }: { titulo: string; texto?: ReactNode; accion?: ReactNode }) {
+  return (
+    <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 className="text-3xl sm:text-4xl">{titulo}</h1>
+        {texto && <p className="mt-1 max-w-prose text-luna-600">{texto}</p>}
+      </div>
+      {accion && <div className="shrink-0">{accion}</div>}
+    </header>
+  );
+}
+
+const TONOS = {
+  neutro: 'bg-tierra-100 text-luna-800',
+  exito: 'bg-exito-100 text-exito-800',
+  aviso: 'bg-aviso-100 text-aviso-800',
+  error: 'bg-error-100 text-error-800',
+  info: 'bg-info-100 text-info-800',
+  caliente: 'bg-error-100 text-caliente',
+  fria: 'bg-exito-100 text-exito-800',
+} as const;
+export type Tono = keyof typeof TONOS;
+
+/** Etiqueta de estado: siempre con texto, nunca solo color. */
+export function Chip({ tono = 'neutro', children, Icono }: { tono?: Tono; children: ReactNode; Icono?: LucideIcon }) {
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-sm font-bold ${TONOS[tono]}`}>
+      {Icono && <Icono aria-hidden="true" className="size-3.5" />}
+      {children}
+    </span>
+  );
+}
+
+export const TONO_ESTADO: Record<string, { tono: Tono; texto: string }> = {
+  PENDIENTE: { tono: 'aviso', texto: 'Pendiente' },
+  APROBADA: { tono: 'exito', texto: 'Aprobada' },
+  RECHAZADA: { tono: 'error', texto: 'Rechazada' },
+  SIN_EVIDENCIA: { tono: 'neutro', texto: 'No cumplida' },
+  ACTIVO: { tono: 'info', texto: 'En curso' },
+  COMPLETADO: { tono: 'exito', texto: 'Completado' },
+  FALLIDO: { tono: 'error', texto: 'Fallido' },
+};
+export const Estado = ({ estado }: { estado: string }) => <Chip tono={TONO_ESTADO[estado]?.tono}>{TONO_ESTADO[estado]?.texto ?? estado}</Chip>;
+
+/** Filtros como enlaces (cambian la URL, se pueden compartir y volver atrás). */
+export function Filtros({ opciones, etiqueta }: { opciones: { a: string; texto: string; cuenta?: number }[]; etiqueta: string }) {
+  return (
+    <nav aria-label={etiqueta} className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+      {opciones.map((o) => (
+        <NavLink
+          key={o.a}
+          to={o.a}
+          end
+          className={({ isActive }) =>
+            `presionable inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border-2 px-4 font-bold ${
+              isActive ? 'border-primary-600 bg-primary-50 text-primary-700' : 'border-tierra-300 bg-white text-luna-600 hover:border-luna-600'
+            }`
+          }
+        >
+          {o.texto}
+          {o.cuenta !== undefined && <span className="tabular-nums">({o.cuenta})</span>}
+        </NavLink>
+      ))}
+    </nav>
+  );
+}
+
+/** Cifra destacada. */
+export function Cifra({ valor, etiqueta, Icono }: { valor: ReactNode; etiqueta: string; Icono?: LucideIcon }) {
+  return (
+    <div className="rounded-tarjeta bg-white p-4 shadow-tarjeta">
+      <div className="flex items-center gap-2 text-luna-600">
+        {Icono && <Icono aria-hidden="true" className="size-5" />}
+        <span className="text-sm font-bold">{etiqueta}</span>
+      </div>
+      <p className="mt-1 font-display text-3xl font-black tabular-nums">{valor}</p>
+    </div>
+  );
+}
+
+/** Pide un motivo antes de una acción (rechazar, retirar…). El motivo se envía a quien corresponde. */
+export function DialogoMotivo({
+  abierto,
+  titulo,
+  texto,
+  accion,
+  onCerrar,
+  onConfirmar,
+}: {
+  abierto: boolean;
+  titulo: string;
+  texto: string;
+  accion: string;
+  onCerrar: () => void;
+  onConfirmar: (motivo: string) => Promise<void>;
+}) {
+  const [motivo, setMotivo] = useState('');
+  const [error, setError] = useState('');
+  const [enviando, setEnviando] = useState(false);
+  useEffect(() => {
+    if (abierto) {
+      setMotivo('');
+      setError('');
+    }
+  }, [abierto]);
+  async function confirmar() {
+    if (motivo.trim().length < 5) return setError('Escribe el motivo (al menos 5 caracteres).');
+    setEnviando(true);
+    try {
+      await onConfirmar(motivo.trim());
+    } finally {
+      setEnviando(false);
+    }
+  }
+  return (
+    <Dialogo
+      abierto={abierto}
+      titulo={titulo}
+      onCerrar={onCerrar}
+      acciones={
+        <>
+          <Boton variante="secundario" onClick={onCerrar} data-foco>
+            Cancelar
+          </Boton>
+          <Boton onClick={() => void confirmar()} cargando={enviando} textoCargando="Enviando…">
+            {accion}
+          </Boton>
+        </>
+      }
+    >
+      <p>{texto}</p>
+      <AreaTexto etiqueta="Motivo" value={motivo} error={error} onChange={(e) => setMotivo(e.target.value)} maxLength={500} />
+    </Dialogo>
+  );
+}
+
+/** Lista de pasos «Cómo hacerlo» de los lineamientos del MSP. */
+export function Guia({ cuando, como }: { cuando: string; como: string[] }) {
+  return (
+    <div className="space-y-2">
+      <p>
+        <strong>Cuándo:</strong> {cuando}
+      </p>
+      <ul className="list-disc space-y-1 pl-5">
+        {como.map((c) => (
+          <li key={c}>{c}</li>
+        ))}
+      </ul>
+    </div>
   );
 }

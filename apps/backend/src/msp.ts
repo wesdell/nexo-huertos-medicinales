@@ -236,7 +236,7 @@ export class MspService {
    * Actualiza las que ya existen (por nombre científico) y reporta las líneas con error.
    */
   async importar(d: ImportarPlantasDto) {
-    const lineas = d.csv.replace(/^﻿/, '').split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    const lineas = d.csv.replace(/^\uFEFF/, '').split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
     if (/nombreComun/i.test(lineas[0] ?? '')) lineas.shift();
     const errores: { linea: number; mensaje: string }[] = [];
     let creadas = 0;
@@ -379,7 +379,7 @@ export class MspService {
       if (!h.voluntarios.length) filas.push([...base, '', '', ''].map(String));
       for (const v of h.voluntarios) filas.push([...base, v.nombre, v.cedula ?? '', NOMBRE_NIVEL[v.nivel]].map(String));
     }
-    return '﻿' + filas.map((f) => f.map(csv).join(';')).join('\r\n');
+    return '\uFEFF' + filas.map((f) => f.map(csv).join(';')).join('\r\n');
   }
 }
 
