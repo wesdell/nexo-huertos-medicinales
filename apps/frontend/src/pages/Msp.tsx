@@ -256,12 +256,17 @@ export function Evidencias() {
   const toast = useToast();
   const [rechazar, setRechazar] = useState<Evidencia | null>(null);
   const [ocupado, setOcupado] = useState<string | null>(null);
+  const [error, setError] = useState('');
 
   async function aprobar(e: Evidencia) {
     setOcupado(e.id);
+    setError('');
     try {
       const r = await api<{ puntos: number }>(`/msp/evidencias/${e.id}/aprobar`, { method: 'POST' });
       toast(`Evidencia aprobada: +${r.puntos} puntos para ${e.huerto.nombre}.`);
+      void recargar();
+    } catch (x) {
+      setError(x instanceof ApiError ? x.message : 'No se pudo aprobar.');
       void recargar();
     } finally {
       setOcupado(null);
@@ -279,6 +284,7 @@ export function Evidencias() {
           { a: '/panel/evidencias/RECHAZADA', texto: 'Rechazadas' },
         ]}
       />
+      {error && <Banner tipo="error">{error}</Banner>}
       {cargando && !datos ? (
         <Cargando />
       ) : !datos?.length ? (

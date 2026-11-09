@@ -61,7 +61,7 @@ function Reenviar({ a, onListo }: { a: ActividadCiclo; onListo: () => void }) {
   }
   return (
     <div className="space-y-1">
-      <input ref={ref} type="file" accept="image/*,video/*" multiple className="sr-only" id={`reenviar-${a.id}`} onChange={(e) => void subir(e.target.files)} />
+      <input ref={ref} type="file" accept="image/*,video/*" multiple className="sr-only" tabIndex={-1} aria-label="Nueva evidencia" id={`reenviar-${a.id}`} onChange={(e) => void subir(e.target.files)} />
       <Boton variante="secundario" cargando={enviando} textoCargando="Subiendo…" onClick={() => ref.current?.click()}>
         <Upload aria-hidden="true" className="size-5" />
         Subir nueva evidencia (vale el 50 %)
