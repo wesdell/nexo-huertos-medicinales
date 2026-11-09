@@ -37,6 +37,8 @@ interface Resumen {
 }
 
 /** Portada pública: qué es, cómo participar, cifras y el día lunar. */
+const cifra = (n?: number) => (n === undefined ? '…' : numero(n));
+
 export function Portada() {
   const r = useDatos<Resumen>('/publico/resumen');
   const mapa = useDatos<PinHuerto[]>('/publico/huertos');
@@ -56,32 +58,33 @@ export function Portada() {
             </EnlaceBoton>
           </div>
         </div>
-        {r.datos?.recomendacion && (
-          <Tarjeta className="flex items-center gap-5">
-            <Luna fase={r.datos.recomendacion.fase} className="size-24 shrink-0" />
-            <div>
-              <p className="text-sm font-bold uppercase tracking-wide text-luna-600">Hoy en el huerto</p>
-              <h2 className="text-2xl">{r.datos.recomendacion.nombre}</h2>
-              <p className="mt-1">{r.datos.recomendacion.texto}</p>
-            </div>
-          </Tarjeta>
-        )}
+        {/* Espacio reservado para que la tarjeta no empuje el contenido al cargar (CLS). */}
+        <div className="min-h-36">
+          {r.datos?.recomendacion && (
+            <Tarjeta className="flex items-center gap-5">
+              <Luna fase={r.datos.recomendacion.fase} className="size-24 shrink-0" />
+              <div>
+                <p className="text-sm font-bold uppercase tracking-wide text-luna-600">Hoy en el huerto</p>
+                <h2 className="text-2xl">{r.datos.recomendacion.nombre}</h2>
+                <p className="mt-1">{r.datos.recomendacion.texto}</p>
+              </div>
+            </Tarjeta>
+          )}
+        </div>
       </section>
 
-      {r.datos && (
-        <section aria-labelledby="cifras" className="space-y-4">
-          <h2 id="cifras" className="text-2xl">
-            El país que siembra
-          </h2>
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
-            <Cifra valor={numero(r.datos.huertos)} etiqueta="Huertos activos" Icono={Sprout} />
-            <Cifra valor={numero(r.datos.voluntarios)} etiqueta="Voluntarios" Icono={Users} />
-            <Cifra valor={numero(r.datos.provincias)} etiqueta="Provincias" Icono={MapPin} />
-            <Cifra valor={numero(r.datos.paquetes)} etiqueta="Paquetes entregados" Icono={Package} />
-            <Cifra valor={numero(r.datos.plantas)} etiqueta="Plantas en el catálogo" Icono={Leaf} />
-          </div>
-        </section>
-      )}
+      <section aria-labelledby="cifras" className="space-y-4" aria-busy={!r.datos}>
+        <h2 id="cifras" className="text-2xl">
+          El país que siembra
+        </h2>
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
+          <Cifra valor={cifra(r.datos?.huertos)} etiqueta="Huertos activos" Icono={Sprout} />
+          <Cifra valor={cifra(r.datos?.voluntarios)} etiqueta="Voluntarios" Icono={Users} />
+          <Cifra valor={cifra(r.datos?.provincias)} etiqueta="Provincias" Icono={MapPin} />
+          <Cifra valor={cifra(r.datos?.paquetes)} etiqueta="Paquetes entregados" Icono={Package} />
+          <Cifra valor={cifra(r.datos?.plantas)} etiqueta="Plantas en el catálogo" Icono={Leaf} />
+        </div>
+      </section>
 
       <section aria-labelledby="pasos" className="space-y-4">
         <h2 id="pasos" className="text-2xl">

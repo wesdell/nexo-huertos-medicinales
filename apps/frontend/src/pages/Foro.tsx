@@ -173,7 +173,7 @@ export function Foro() {
             </ul>
           )}
         </div>
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+        <aside className="order-first lg:sticky lg:top-24 lg:order-none lg:self-start">
           <Reglas />
         </aside>
       </div>

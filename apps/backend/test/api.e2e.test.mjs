@@ -14,7 +14,8 @@ const ctx = {};
 
 /** Cédula válida aleatoria (provincia 17, módulo 10). */
 function cedula() {
-  const base = `17${String(Math.floor(Math.random() * 1e7)).padStart(7, '0')}`;
+  // El tercer dígito debe ser menor que 6 (personas naturales).
+  const base = `17${Math.floor(Math.random() * 6)}${String(Math.floor(Math.random() * 1e6)).padStart(6, '0')}`;
   const suma = [...base].reduce((s, c, i) => {
     const n = Number(c) * (i % 2 === 0 ? 2 : 1);
     return s + (n > 9 ? n - 9 : n);

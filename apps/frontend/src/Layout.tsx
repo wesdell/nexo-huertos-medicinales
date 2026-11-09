@@ -293,7 +293,7 @@ export function LayoutPublico() {
           </div>
         )}
       </header>
-      <main id="contenido" className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:py-12">
+      <main id="contenido" className="mx-auto min-h-dvh w-full max-w-6xl flex-1 px-4 py-8 sm:py-12">
         <Outlet />
       </main>
       <footer className="border-t border-tierra-300 bg-white">
