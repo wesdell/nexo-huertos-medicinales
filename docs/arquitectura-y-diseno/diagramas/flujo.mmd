@@ -1,0 +1,19 @@
+flowchart TB
+    subgraph ALTA["Alta del huerto"]
+        direction LR
+        A["Paso 1<br/>Una persona llena<br/>«Solicitar huerto»<br/>sin cuenta"] --> B{"Paso 2<br/>El técnico del MSP<br/>revisa"}
+        B -->|Aprueba| C["Paso 3<br/>Se crea el huerto y<br/>llega un correo con<br/>la clave temporal"]
+        C --> D["Paso 4<br/>El responsable ingresa<br/>y cambia la clave"]
+        D --> E["Paso 5<br/>Registra voluntarios y<br/>elige plantas por altitud"]
+        B -->|Rechaza con motivo| X["Solicitud archivada<br/>y aviso por correo"]
+    end
+    subgraph CICLO["Ciclo de cultivo y puntos"]
+        direction LR
+        F["Paso 6<br/>Registra cada paso en<br/>orden con voluntarios,<br/>horas y evidencia"] --> G{"Paso 7<br/>El técnico del MSP<br/>valida la evidencia"}
+        G -->|Aprueba| I["Paso 8<br/>Puntos por hora, niveles,<br/>misiones y ranking"]
+        I --> J["Paso 9<br/>Empaquetado:<br/>producción y<br/>ciclo completo"]
+        J --> K["Paso 10<br/>El público ve mapa,<br/>ficha, ranking y<br/>estadísticas"]
+        G -->|Rechaza| H["Segundo intento<br/>al 50 % de puntos"]
+        H --> G
+    end
+    ALTA --> CICLO

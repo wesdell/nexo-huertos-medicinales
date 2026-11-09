@@ -1,0 +1,31 @@
+sequenceDiagram
+    actor R as Responsable
+    participant FE as Frontend (React)
+    participant API as API (NestJS)
+    participant DOM as Reglas (@nexo/shared)
+    participant DB as PostgreSQL
+    actor T as Técnico MSP
+
+    R->>FE: Elige el paso que sigue, voluntarios, horas y fotos
+    FE->>API: POST /api/ciclos/{id}/actividades (multipart)
+    API->>API: AuthGuard: rol RESPONSABLE y huerto propio
+    API->>DB: Lee ciclo, pasos previos y horas del día
+    API->>DOM: puedeRegistrar() y validarActividad()
+    alt Error (paso fuera de orden, más de 24 h, fecha futura)
+        API-->>FE: 400 con los errores por campo
+    else Advertencias (fase lunar, horario)
+        API-->>FE: 409 con advertencias
+        FE-->>R: Diálogo «¿Guardar de todas formas?»
+        R->>FE: Confirma
+        FE->>API: Reenvía con confirmarAdvertencias
+    end
+    API->>DB: Guarda actividad, participaciones y archivos (evidencia PENDIENTE)
+    API-->>FE: 201, se muestra el paso siguiente
+    T->>FE: Abre la bandeja de evidencias
+    FE->>API: POST /api/msp/evidencias/{id}/aprobar
+    API->>DB: BEGIN
+    API->>DOM: puntosParticipacion() por voluntario
+    API->>DB: Movimientos de puntos, niveles y ranking
+    API->>DB: COMMIT
+    API-->>FE: Puntos otorgados
+    Note over T,API: Si rechaza con motivo, el responsable reenvía la evidencia (2.º intento al 50 %)

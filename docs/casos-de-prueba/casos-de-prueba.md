@@ -10,10 +10,12 @@ Casos de prueba de la versión 2.0.0 de Nexo, que integra el modelo acordado con
 | API de punta a punta | `node:test` + `fetch` contra la API en Docker (lee los correos en Mailpit) | `pnpm --filter backend test:e2e` | 13 |
 | Interfaz de punta a punta + accesibilidad | Playwright + axe-core (WCAG 2.1 AA) | `pnpm e2e` | 4 flujos × 2 vistas (móvil 412 px y escritorio 1440 px) |
 | Estáticas | TypeScript estricto y ESLint con `jsx-a11y` | `pnpm typecheck` y `pnpm lint` | — |
+| Auditoría de calidad web | Lighthouse 12 (rendimiento, accesibilidad, buenas prácticas y SEO) | ver P-019 | 13 pantallas × 2 vistas |
+| Recorrido del flujo básico con capturas | Playwright | `node e2e/capturas-flujo.mjs` | 35 capturas |
 
 Las pruebas de API y de interfaz necesitan la aplicación corriendo con los datos demo (`docker compose up --build -d --wait`).
 
-**Última ejecución:** 09/11/2026 sobre `docker compose up --build`: 66/66 unitarias, 13/13 de API y 8/8 de interfaz, sin violaciones serias ni críticas de axe.
+**Última ejecución:** 09/11/2026 sobre `docker compose up --build`: 66/66 unitarias, 13/13 de API y 8/8 de interfaz, sin violaciones serias ni críticas de axe; Lighthouse entre 96 y 100 en las cuatro categorías; recorrido completo del flujo básico sin errores.
 
 ## Casos
 
@@ -230,3 +232,28 @@ Las pruebas de API y de interfaz necesitan la aplicación corriendo con los dato
   1. Ejecutar `pnpm e2e` con la aplicación corriendo.
 - **Resultados esperados:** 0 violaciones serias o críticas en 23 pantallas, en 412 px y 1440 px.
 - **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · 8/8 pruebas en verde. En la primera ejecución axe encontró un campo de archivo sin etiqueta en «Actividades»; se corrigió y se volvió a ejecutar.
+
+### P-019 · Rendimiento, accesibilidad y buenas prácticas con Lighthouse
+
+- **HU:** Todas
+- **Nivel:** Auditoría (Lighthouse 12)
+- **Descripción:** Se espera que las pantallas principales obtengan al menos 90 en rendimiento, accesibilidad, buenas prácticas y SEO, en móvil y en escritorio.
+- **Procedimiento:**
+  1. Levantar la aplicación con `docker compose up --build`.
+  2. Auditar con Lighthouse 9 pantallas públicas y 4 con sesión (responsable, técnico del MSP y administrador), en modo móvil y escritorio.
+  3. Corregir lo que baje de 90 y volver a medir.
+- **Resultados esperados:** Las cuatro categorías en 90 o más en las 26 mediciones.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · Accesibilidad y SEO 100 en todas; rendimiento entre 99 y 100; buenas prácticas 100, salvo 96 en «Mapa» y «Solicitar huerto» en móvil por la resolución de los mosaicos de OpenStreetMap. En la primera medición el rendimiento móvil bajó a 92–95 en 5 pantallas por saltos de diseño (CLS de hasta 0,87) al cargar los datos; se corrigió y se volvió a medir.
+
+### P-020 · Flujo básico completo en la interfaz
+
+- **HU:** HU-037 a HU-049, HU-051
+- **Nivel:** e2e (Playwright, recorrido con capturas)
+- **Descripción:** Se espera que el flujo completo funcione en la interfaz, de la solicitud pública a los puntos validados y lo que ve el público.
+- **Procedimiento:**
+  1. Ejecutar `node e2e/capturas-flujo.mjs` con la aplicación corriendo.
+  2. El script llena «Solicitar huerto», ingresa como técnico y aprueba la solicitud, lee la contraseña temporal en Mailpit, ingresa como el nuevo responsable y la cambia.
+  3. Intenta agregar una planta de otra altitud, registra un riego con evidencia en el huerto demo y, como técnico, valida la evidencia.
+  4. Recorre las pantallas del responsable, del técnico, del público y del administrador.
+- **Resultados esperados:** Cada paso termina en la pantalla esperada y deja una captura en `docs/informe/img/`.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · 35 capturas; la evidencia aprobada otorgó los puntos y el correo llegó con la contraseña temporal.

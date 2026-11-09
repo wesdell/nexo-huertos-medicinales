@@ -1,5 +1,7 @@
 # Informe de calidad · Nexo v2.0.0
 
+> El informe completo de la entrega, con la plantilla de la materia, está en [Proyecto-Version1-Nexo.docx](Proyecto-Version1-Nexo.docx) y [.pdf](Proyecto-Version1-Nexo.pdf).
+
 **Versión evaluada:** v2.0.0 · **Fecha de corte:** 09/11/2026 · **Materia:** Calidad de Software
 
 ## 1. Resumen
@@ -14,7 +16,9 @@ La v2.0.0 integra el modelo acordado con el MSP el 06/11/2026 ([detalle y trazab
 | Accesibilidad con axe (WCAG 2.1 AA) en 23 pantallas × 2 vistas | 0 violaciones serias o críticas |
 | TypeScript estricto y ESLint con `jsx-a11y` | Sin errores |
 | Historias de usuario | 52 (HU-037 a HU-052 nuevas; las de v1 reemplazadas están marcadas) |
-| Casos de prueba documentados con la plantilla | 18 (P-001 a P-018), todos aprobados |
+| Casos de prueba documentados con la plantilla | 20 (P-001 a P-020), todos aprobados |
+| Lighthouse (13 pantallas × móvil y escritorio) | Accesibilidad y SEO 100; rendimiento 99–100; buenas prácticas 96–100 |
+| Recorrido del flujo básico en la interfaz (`e2e/capturas-flujo.mjs`) | Sin errores, 35 capturas en `img/` |
 
 ## 2. Calidad según ISO/IEC 25010
 
@@ -25,7 +29,8 @@ La v2.0.0 integra el modelo acordado con el MSP el 06/11/2026 ([detalle y trazab
 | Seguridad | Guardia por rol en cada ruta, cuenta activa verificada en cada petición, clave temporal obligatoria de cambiar, contraseñas con bcrypt, archivos con nombre aleatorio y tipo y tamaño validados. |
 | Privacidad (LOPDP) | Consentimiento al solicitar el huerto; lo público no muestra cédula, correo ni celular y redondea la ubicación a unos 1 km. |
 | Usabilidad | El sistema muestra el paso siguiente con «cuándo» y «cómo»; errores por campo con resumen enfocado; advertencias del calendario confirmables; diálogos con foco en la opción segura. |
-| Accesibilidad | axe sin violaciones serias en todas las pantallas; objetivos táctiles de 44 px; estados con texto e icono, nunca solo color. |
+| Accesibilidad | axe sin violaciones serias en todas las pantallas y 100 en Lighthouse en las 26 mediciones; objetivos táctiles de 44 px; estados con texto e icono, nunca solo color. |
+| Eficiencia de desempeño | Lighthouse 99–100 en rendimiento, en móvil con red lenta simulada y en escritorio. |
 | Mantenibilidad | Un esquema Prisma, enums sincronizados y probados entre la base y `@nexo/shared`, un archivo por dominio en la API. |
 | Portabilidad | `docker compose up --build` levanta base, API, interfaz y servidor de correo de prueba. |
 
@@ -40,10 +45,22 @@ La v2.0.0 integra el modelo acordado con el MSP el 06/11/2026 ([detalle y trazab
 | 5 | Carácter invisible (BOM) literal en el código del CSV | ESLint `no-irregular-whitespace` | Se escribe como `\uFEFF` |
 | 6 | Dos pruebas en paralelo validaban la misma evidencia | Playwright | Pruebas en serie y mensaje de error visible si otra persona ya la revisó |
 | 7 | En los datos demo solo los primeros voluntarios tenían horas | Revisión de la pantalla de voluntarios | El seed reparte las participaciones |
+| 8 | Saltos de diseño al cargar datos en el celular (CLS hasta 0,87; rendimiento 92–95 en 5 pantallas) | Lighthouse | Espacio reservado en la portada, `main` con `min-h-dvh` para que el pie empiece fuera de la pantalla, reglas del foro antes de la lista en móvil |
+| 9 | La prueba de API fallaba a veces: generaba cédulas con tercer dígito ≥ 6, que no son válidas | Ejecución repetida de las pruebas | El generador usa un tercer dígito de 0 a 5; tres ejecuciones seguidas en verde |
+
+## Lighthouse en v2.0.0
+
+Lighthouse 12.8 sobre la app compilada en Docker, 09/11/2026. Las pantallas con sesión se midieron con la cuenta de cada rol. Resultados por pantalla en [`lighthouse-2026-11-09.json`](lighthouse-2026-11-09.json).
+
+| Pantalla | Rendimiento (móvil / escritorio) | Accesibilidad | Buenas prácticas | SEO |
+|---|---|---|---|---|
+| 9 públicas (portada, mapa, ranking, estadísticas, plantas, saberes, foro, solicitar, login) | 99–100 / 100 | 100 / 100 | 96–100 / 100 | 100 / 100 |
+| 4 con sesión (responsable inicio y registrar, evidencias del MSP, estado del administrador) | 100 / 100 | 100 / 100 | 100 / 100 | 100 / 100 |
+
+El 96 en buenas prácticas es de «Mapa» y «Solicitar huerto» en móvil: los mosaicos de OpenStreetMap son de 256 px y se ven con poca resolución en pantallas de alta densidad.
 
 ## 4. Limitaciones conocidas
 
-- Lighthouse no se volvió a medir en v2.0.0; la accesibilidad se verificó con axe en cada pantalla.
 - Las fotos de evidencia de los datos demo son ilustraciones; en uso real son fotos y videos del huerto.
 - La detección de imágenes generadas con IA la hace el técnico a mano.
 - Solo están las parroquias cabecera de cada provincia y algunas de ejemplo.

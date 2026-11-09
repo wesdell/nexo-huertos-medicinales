@@ -30,6 +30,12 @@ Versión completa con el modelo acordado con el MSP en la reunión del 06/11/202
 ### Calidad
 
 - 66 pruebas unitarias, 13 de API y 4 flujos de interfaz por rol en móvil y escritorio con axe, todas en verde.
+- Lighthouse en 13 pantallas, móvil y escritorio: accesibilidad y SEO 100, rendimiento 99–100.
+
+### Corregido
+
+- Saltos de diseño (CLS) en móvil al cargar los datos de la portada, el foro y las páginas públicas.
+- Prueba de API intermitente por cédulas de prueba con tercer dígito inválido.
 
 ## [Sin publicar antes de 2.0.0]
 

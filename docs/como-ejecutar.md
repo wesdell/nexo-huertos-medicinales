@@ -120,3 +120,4 @@ Los comandos de pruebas y el frontend con recarga en vivo están en el [README](
 |---|---|
 | Revisar el estilo del código | `pnpm lint` |
 | Capturas de pantalla para presentar (con la app levantada) | `node e2e/capturas.mjs docs/capturas` |
+| Recorrido del flujo básico con capturas para el informe (sobre datos demo recién cargados) | `node e2e/capturas-flujo.mjs` |

@@ -1,0 +1,18 @@
+flowchart TB
+    subgraph HOST["Equipo con Docker Desktop"]
+        subgraph NET["Red interna de Docker Compose (proyecto nexo-huertos)"]
+            C1["nexo-frontend<br/>node:22-alpine, vite preview<br/>puerto 5173"]
+            C2["nexo-backend<br/>node:22-alpine, NestJS + pg_dump<br/>puerto 3000"]
+            C3["nexo-db<br/>postgres:16-alpine<br/>puerto 5432"]
+            C4["nexo-mail<br/>axllent/mailpit<br/>puertos 1025 y 8025"]
+        end
+        V1[("volumen pgdata")]
+        V2[("volumen uploads")]
+    end
+    NAV["Navegador"] -->|":5173"| C1
+    NAV -->|":3000/api y /api/docs"| C2
+    NAV -->|":8025 bandeja de correo"| C4
+    C2 -->|"DATABASE_URL<br/>migraciones y seed al iniciar"| C3
+    C2 -->|"SMTP_HOST:1025"| C4
+    C3 --- V1
+    C2 --- V2

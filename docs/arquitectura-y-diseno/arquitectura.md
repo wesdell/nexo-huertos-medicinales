@@ -13,6 +13,8 @@ Este documento describe la arquitectura objetivo de las tres versiones. Lo que y
 > - **Dominio en `@nexo/shared`:** `pasos.ts` (13 pasos y su orden), `actividades.ts` (validación de cada paso y de los participantes), `gamificacion.ts` (puntos por hora, niveles, talentos, ranking, misiones), `validaciones.ts` (cédula, celular, coordenadas, altitud), `catalogos.ts` y `lunar.ts`.
 > - **Flujo de puntos:** el responsable registra el paso con horas y evidencia → queda `PENDIENTE` → el técnico aprueba → en una transacción se crean los movimientos de puntos por voluntario, se actualizan los cachés, el nivel y el ranking. Si rechaza, el responsable tiene una segunda oportunidad al 50 %.
 > - **Roles:** `RESPONSABLE`, `TECNICO_MSP` y `ADMIN`; los voluntarios no tienen cuenta. El público usa `/api/publico/*` y `/api/foro` sin token.
+>
+> Los diagramas de v2.0.0 (contenedores, modelo de datos, secuencia, despliegue, flujo básico y navegación por rol) están en [`diagramas/`](diagramas/) como fuentes Mermaid y, renderizados, en [`docs/informe/img/`](../informe/img/). Los diagramas de abajo describen la v1.
 
 Tres principios guían el diseño:
 
