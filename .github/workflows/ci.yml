@@ -20,6 +20,7 @@ jobs:
       - run: pnpm --filter @nexo/shared build
       - run: pnpm --filter backend exec prisma generate
       - run: pnpm typecheck
+      - run: pnpm lint
       - run: pnpm --filter @nexo/shared test
       - run: pnpm --filter frontend build
 

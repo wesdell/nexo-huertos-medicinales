@@ -16,7 +16,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { CicloPlanta, CualidadPlanta, Genero } from '@nexo/shared';
+import { CicloPlanta, CONTRASENA_MIN, CualidadPlanta, Genero } from '@nexo/shared';
 
 const requerido = (campo: string, predicado = 'es obligatorio') => ({ message: `${campo} ${predicado}.` });
 
@@ -31,13 +31,13 @@ export class RegistroDto {
   @IsEmail({}, { message: 'Escribe un correo válido, por ejemplo nombre@correo.com.' })
   email: string;
 
-  @ApiProperty({ minLength: 8 })
+  @ApiProperty({ minLength: CONTRASENA_MIN })
   @IsString()
-  @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
+  @MinLength(CONTRASENA_MIN, { message: `La contraseña debe tener al menos ${CONTRASENA_MIN} caracteres.` })
   password: string;
 
   @ApiProperty({ example: '1990-05-20' })
-  @IsDateString({ strict: true }, { message: 'Usa una fecha válida (dd/mm/aaaa).' })
+  @IsDateString({ strict: true }, { message: 'Usa una fecha válida.' })
   fechaNacimiento: string;
 
   @ApiProperty({ enum: Object.values(Genero) })

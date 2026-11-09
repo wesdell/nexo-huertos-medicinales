@@ -1,6 +1,6 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router';
-import { Genero } from '@nexo/shared';
+import { CONTRASENA_MIN, Genero } from '@nexo/shared';
 import { api } from '../api';
 import { useEnvio } from '../formulario';
 import { Marca } from '../Layout';
@@ -130,7 +130,7 @@ export function Registro() {
     const faltan: Record<string, string> = {};
     if (!d.nombre.trim()) faltan.nombre = 'El nombre es obligatorio.';
     if (!d.email.trim()) faltan.email = 'El correo es obligatorio.';
-    if (d.password.length < 8) faltan.password = 'La contraseña debe tener al menos 8 caracteres.';
+    if (d.password.length < CONTRASENA_MIN) faltan.password = `La contraseña debe tener al menos ${CONTRASENA_MIN} caracteres.`;
     if (!d.fechaNacimiento) faltan.fechaNacimiento = 'La fecha de nacimiento es obligatoria.';
     else if (d.fechaNacimiento > hoy()) faltan.fechaNacimiento = 'La fecha de nacimiento no puede ser futura.';
     if (!d.genero) faltan.genero = 'Elige una opción de género.';
@@ -166,7 +166,7 @@ export function Registro() {
         />
         <CampoContrasena
           autoComplete="new-password"
-          ayuda="Mínimo 8 caracteres."
+          ayuda={`Mínimo ${CONTRASENA_MIN} caracteres.`}
           value={d.password}
           error={errores.password}
           onChange={(v) => setD({ ...d, password: v })}

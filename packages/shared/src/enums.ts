@@ -56,3 +56,6 @@ export const Region = {
   GALAPAGOS: 'GALAPAGOS',
 } as const;
 export type Region = (typeof Region)[keyof typeof Region];
+
+/** HU-001: longitud mínima de la contraseña (la validan la interfaz y la API). */
+export const CONTRASENA_MIN = 8;

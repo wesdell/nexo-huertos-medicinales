@@ -90,16 +90,6 @@ export class HuertosService {
     };
   }
 
-  async actividades(usuarioId: string, huertoId: string) {
-    await this.huerto(usuarioId, huertoId);
-    return this.db.actividad.findMany({
-      where: { huertoId },
-      orderBy: [{ fecha: 'desc' }, { creadaEn: 'desc' }],
-      take: 20,
-      include: { planta: { select: { nombreComun: true } }, usuario: { select: { nombre: true } } },
-    });
-  }
-
   /**
    * HU-018 a HU-030: valida con @nexo/shared, pide confirmación si hay advertencias,
    * guarda y acredita puntos en una sola transacción.
@@ -184,11 +174,6 @@ export class HuertosController {
   @Get(':id/virtual')
   virtual(@Usuario() u: UsuarioJwt, @Param('id') id: string) {
     return this.svc.virtual(u.sub, id);
-  }
-
-  @Get(':id/actividades')
-  actividades(@Usuario() u: UsuarioJwt, @Param('id') id: string) {
-    return this.svc.actividades(u.sub, id);
   }
 
   @Post(':id/actividades')
