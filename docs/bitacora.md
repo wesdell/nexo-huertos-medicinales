@@ -7,8 +7,8 @@ Registro vivo de lo hecho y lo pendiente. Se actualiza en cada push. Se trabaja 
 | Versión | Fecha objetivo | Estado |
 |---|---|---|
 | **v1.0.0 — MVP** | 10/11/2026 | Publicada el 06/11/2026 ([release](https://github.com/wesdell/nexo-huertos-medicinales/releases/tag/v1.0.0)) |
-| v2.0.0 | Por definir | Pendiente |
-| v3.0.0 | Por definir | Pendiente |
+| **v2.0.0 — Versión completa** | 10/11/2026 | Lista el 09/11/2026 en la rama `feat/version-completa` (PR a `main`) |
+| v3.0.0 | — | Su alcance se adelantó a v2.0.0 |
 
 ## v1.0.0 — MVP
 
@@ -40,21 +40,35 @@ Objetivo: flujo mínimo de punta a punta, ejecutable con `docker compose up --bu
 - Siembra: no exige ritual previo (el ritual de siembra entra en v2).
 - Sin fotos ni videos; sin mapa interactivo.
 
-## v2.0.0 — Pendiente
-- Mapa Leaflet/OpenStreetMap y georreferenciación del huerto (HU-010 completa).
-- Diseño, cerca y recursos del huerto (HU-011, HU-012, HU-013).
-- Calendario lunar mensual (HU-017 completa).
-- Fotos de plantas y archivos de actividades (HU-014 completa, HU-028). Con el secado y el empaquetado, el huerto virtual alcanza sus etapas 5 y 6 (ya dibujadas en v1).
-- Actividades restantes: estructura, rituales, señalética, cuidados, baño, limpieza, secado, empaquetado (HU-019, 020, 022, 024, 026, 027).
-- Ranking de comunidades (HU-035), perfil (HU-003), editar comunidad y miembros (HU-005 a HU-007).
-- Catálogo completo de parroquias del INEC.
+## v2.0.0 — Versión completa
 
-## v3.0.0 — Pendiente
-- Foro de prácticas y saberes y moderación (HU-008, HU-009).
-- Insignias, misiones y retos, talentos y niveles (HU-031 a HU-034).
-- Bodega y almacenaje (HU-015), historia visual de la planta (pantalla que reúne los archivos de HU-028).
-- Calendario de actividades (HU-029).
-- Notificaciones (correo o push) de actividades recomendadas.
+Cambio de plan: había que presentar el proyecto terminado el 10/11/2026, así que el alcance de v2 y v3 se hizo en una sola versión, integrando la reunión con el MSP del 06/11/2026 ([trazabilidad](reunion-msp-2026-11-06.md)).
+
+| Funcionalidad | HU | Estado |
+|---|---|---|
+| Solicitud pública de huerto con mapa y GPS | 037 | Hecho |
+| Aprobación del MSP con clave temporal por correo (Mailpit) y cambio obligatorio | 038, 039 | Hecho |
+| Voluntarios sin cuenta, en varios huertos, inactivos; nivel por experiencia | 040, 041 | Hecho |
+| Catálogo del MSP por altitud, carga CSV y propuestas de plantas | 042, 043 | Hecho |
+| 13 pasos secuenciales con evidencia, horas y validaciones | 018 a 029, 044 | Hecho |
+| Validación de evidencias, segunda oportunidad, puntos por hora | 045 | Hecho |
+| Paso no cumplido y ciclo fallido con causa | 046 | Hecho |
+| Niveles automáticos, talentos, misiones e insignias | 031 a 034, 047 | Hecho |
+| Ranking por tipo normalizado y ranking de producción | 048 | Hecho |
+| Parte pública: mapa, ficha, espejo digital, estadísticas, catálogo, saberes, calendario lunar | 049, 052 | Hecho |
+| Registro centralizado, CSV, cambio de responsable, restablecer clave | 050 | Hecho |
+| Foro moderado | 008, 009 | Hecho |
+| Bodega, producción y datos operativos | 011 a 015 | Hecho |
+| Administración: estado, respaldo, técnicos | 051 | Hecho |
+| Pruebas: 66 unitarias, 13 de API, 8 e2e con axe | — | Hecho |
+| HU y casos de prueba en Word con las plantillas | — | Hecho |
+
+### Fuera de alcance
+
+- Catálogo completo de parroquias del INEC.
+- Detección automática de imágenes con IA (la hace el técnico).
+- Notificaciones push.
+- Pantallas de escritorio en Figma (sigue pendiente desde v1).
 
 ## Registro de avances
 
@@ -68,3 +82,5 @@ Objetivo: flujo mínimo de punta a punta, ejecutable con `docker compose up --bu
 | 06/11/2026 | Revisión de diseño cerrada (2 rondas): la planta muestra su etapa anterior y brota a la nueva; la línea del bono tiene tamaño de texto normal. `apps/frontend/DESIGN.md` documenta el sistema. Figma: tokens como variables, componentes (Botón, Campo, Selector, NavItem, BarraInferior, MenúLateral, MosaicoActividad, Luna, etapas) y 6 pantallas móvil. |
 | 06/11/2026 | Cierre del MVP. En la prueba manual con teclado y Lighthouse se corrigieron 5 defectos: foco del diálogo, concordancia de mensajes, enlace «Saltar al contenido», botón partido en tableta y `robots.txt`. También un solo trazo para los iconos y sombras cálidas en lo flotante. Se agregaron HU-036, los casos de prueba (33 automáticos y 14 manuales), el informe de calidad y el CHANGELOG. Release v1.0.0. Pendiente: pantallas de escritorio en Figma (cupo del plan Starter). |
 | 09/11/2026 | Revisión de una auditoría externa de inconsistencias. Se corrigieron: `pnpm test` (el frontend tenía Vitest sin pruebas) y `pnpm lint` (faltaba `eslint.config.mjs`; ahora corre en CI con reglas de accesibilidad); se quitó un endpoint sin uso (`GET /huertos/:id/actividades`); la contraseña mínima vive en `@nexo/shared`. Documentos alineados con lo construido: `diseno.md` apunta a `DESIGN.md` como fuente única y su inventario indica la versión de cada pantalla; `arquitectura.md` muestra el estado de cada módulo en v1; `herramientas-y-tecnologias.md` sin estados «por confirmar»; `DESIGN.md` y `PRODUCT.md` traducidos al español; licencia MIT. Hallazgos descartados por no ser ciertos: `.env` no está en el repositorio (solo `.env.example`) y no existe `seed-plantas.js`. |
+| 09/11/2026 | Integración de la reunión con el MSP (06/11/2026) y cierre del alcance completo en v2.0.0: nuevo modelo de datos y migración, reglas de dominio (pasos, puntos por hora, niveles, ranking, cédula), API por rol (público, responsable, MSP, administrador, foro), interfaz pública y paneles, Mailpit, respaldo con `pg_dump`. Pruebas: 66 unitarias, 13 de API y 8 e2e con axe en verde. Se corrigieron 7 defectos (ver el informe). Documentos: HU-037 a HU-052, casos P-001 a P-018, versiones en Word, informe, CHANGELOG y trazabilidad de la reunión. |
+| 09/11/2026 | Verificación final para la demo: entorno limpio con `docker compose down -v` y `up --build`; tipos, lint, 66 unitarias, 13 de API (3 ejecuciones) y 8 e2e en verde. Lighthouse en 13 pantallas × 2 vistas: se corrigieron saltos de diseño en móvil (rendimiento de 92–95 a 99–100). Se corrigió una prueba de API intermitente (cédulas generadas inválidas). Recorrido completo del flujo básico con 35 capturas (`e2e/capturas-flujo.mjs`), diagramas v2 en `docs/arquitectura-y-diseno/diagramas/`, casos P-019 y P-020, e informe Word completo (`docs/informe/Proyecto-Version1-Nexo.docx` y `.pdf`). |

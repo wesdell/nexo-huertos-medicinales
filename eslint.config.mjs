@@ -9,6 +9,8 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   { languageOptions: { globals: { ...globals.node, ...globals.browser } } },
+  // `const { campo: _, ...resto } = x` quita un campo a propósito.
+  { rules: { '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true, varsIgnorePattern: '^_' }] } },
   {
     files: ['apps/frontend/src/**/*.tsx'],
     plugins: { 'react-hooks': reactHooks },

@@ -1,0 +1,25 @@
+flowchart LR
+    P["Público sin cuenta<br/>(invitado)"]
+    R["Responsable del huerto"]
+    T["Técnico del MSP"]
+    A["Administrador técnico"]
+
+    subgraph DOCKER["Docker Compose (red interna)"]
+        FE["nexo-frontend<br/>React 19 + Tailwind 4<br/>:5173"]
+        BE["nexo-backend<br/>NestJS 11, API REST<br/>:3000, prefijo /api"]
+        DB[("nexo-db<br/>PostgreSQL 16<br/>:5432")]
+        MAIL["nexo-mail<br/>Mailpit (SMTP de prueba)<br/>:1025 y bandeja :8025"]
+        FS[/"Volumen uploads<br/>fotos y videos de evidencia"/]
+    end
+
+    SH["@nexo/shared<br/>enums y reglas de dominio"]
+    OSM["OpenStreetMap<br/>mosaicos del mapa"]
+
+    P & R & T & A -->|HTTP| FE
+    FE -->|"JSON + JWT"| BE
+    FE -->|"mosaicos"| OSM
+    BE -->|"Prisma (SQL)"| DB
+    BE -->|"SMTP: credenciales"| MAIL
+    BE -->|"guarda y sirve /api/archivos"| FS
+    FE -. usa .-> SH
+    BE -. usa .-> SH

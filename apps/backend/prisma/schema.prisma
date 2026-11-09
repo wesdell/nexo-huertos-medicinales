@@ -1,6 +1,6 @@
-// Nexo - Huertos Medicinales Comunitarios
+// Nexo - Huertos Medicinales Comunitarios (v2: modelo acordado con el MSP el 06/11/2026)
 // Requiere Prisma 6 (NO usar Prisma 7: ya no admite `url` dentro del schema).
-
+// Los enums se replican en packages/shared/src/enums.ts (una prueba verifica que coincidan).
 
 generator client {
   provider = "prisma-client-js"
@@ -14,8 +14,9 @@ datasource db {
 // ═════════════════════════ ENUMS ═════════════════════════
 
 enum Rol {
-  VOLUNTARIO
-  MODERADOR   // rol global; "responsable" NO es un rol global: es un atributo de la membresía
+  RESPONSABLE // único que registra datos de su huerto
+  TECNICO_MSP // aprueba solicitudes, valida evidencias, modera el foro
+  ADMIN       // respaldos, cuentas de técnicos y soporte
 }
 
 enum NivelMiembro {
@@ -136,236 +137,385 @@ enum TipoArchivo {
   VIDEO
 }
 
-// ═════════════════════════ GEOGRAFÍA (HU-010) ═════════════════════════
-// Se cargan con el seed a partir del clasificador DPA del INEC. La región se guarda en la provincia.
+enum EstadoSolicitud {
+  PENDIENTE
+  APROBADA
+  RECHAZADA
+}
+
+enum EstadoCiclo {
+  ACTIVO
+  COMPLETADO
+  FALLIDO
+}
+
+enum EstadoEvidencia {
+  PENDIENTE
+  APROBADA
+  RECHAZADA
+  SIN_EVIDENCIA
+}
+
+enum CausaFracaso {
+  HELADA
+  SEQUIA
+  EXCESO_LLUVIA
+  PLAGA
+  ENFERMEDAD
+  ANIMALES
+  DESCUIDO
+  ROBO_DANO
+  OTRA
+}
+
+enum CategoriaAporte {
+  PRACTICAS
+  SABERES
+  SENTIRES
+}
+
+// ═════════════════════════ GEOGRAFÍA ═════════════════════════
 
 model Provincia {
-  id         Int         @id
-  nombre     String      @unique
-  region     Region
-  parroquias Parroquia[]
-  huertos    Huerto[]
+  id          Int               @id
+  nombre      String            @unique
+  region      Region
+  parroquias  Parroquia[]
+  huertos     Huerto[]
+  solicitudes SolicitudHuerto[]
 
   @@map("provincias")
 }
 
 model Parroquia {
-  id          Int       @id
+  id          Int               @id
   nombre      String
   provinciaId Int
-  provincia   Provincia @relation(fields: [provinciaId], references: [id])
+  provincia   Provincia         @relation(fields: [provinciaId], references: [id])
   huertos     Huerto[]
+  solicitudes SolicitudHuerto[]
 
   @@unique([provinciaId, nombre])
   @@map("parroquias")
 }
 
-// ═════════════════════════ USUARIOS Y COMUNIDADES (HU-001 a HU-007) ═════════════════════════
+// ═════════════════════════ CUENTAS ═════════════════════════
 
+/// Solo tienen cuenta el responsable de huerto, el técnico del MSP y el administrador.
+/// Los voluntarios no tienen cuenta: los registra el responsable (modelo Voluntario).
 model Usuario {
-  id              String       @id @default(uuid())
-  nombre          String
-  email           String       @unique
-  passwordHash    String
-  fechaNacimiento DateTime     @db.Date
-  genero          Genero
-  rol             Rol          @default(VOLUNTARIO)
-  nivel           NivelMiembro @default(APRENDIZ) // lo actualiza el sistema (HU-033), no el usuario
-  puntos          Int          @default(0)        // caché del total; la fuente de verdad es MovimientoPuntos
-  // HU-036: consentimiento de tratamiento de datos personales (LOPDP Ecuador)
-  consentimientoDatosEn DateTime
-  versionPolitica       String
-  creadoEn        DateTime     @default(now())
+  id               String   @id @default(uuid())
+  nombre           String
+  email            String   @unique
+  cedula           String?  @unique
+  celular          String?
+  passwordHash     String
+  rol              Rol
+  /// La clave inicial llega por correo y debe cambiarse en el primer ingreso.
+  debeCambiarClave Boolean  @default(false)
+  activo           Boolean  @default(true)
+  /// Consentimiento LOPDP (se acepta al enviar la solicitud de huerto).
+  consentimientoDatosEn DateTime?
+  versionPolitica       String?
+  creadoEn         DateTime @default(now())
 
-  membresias      Membresia[]
-  talentos        TalentoMiembro[]
-  insignias       InsigniaMiembro[]
-  misiones        MisionMiembro[]
-  actividades     Actividad[]
-  movimientos     MovimientoPuntos[]
-  aportes         Aporte[]         @relation("AutorAporte")
-  aportesRetirados Aporte[]        @relation("RetiradoPor")
+  huertos          Huerto[]               @relation("Responsable")
+  historial        HistorialResponsable[]
+  actividades      Actividad[]            @relation("RegistradaPor")
+  revisiones       Actividad[]            @relation("RevisadaPor")
+  solicitudesRevisadas SolicitudHuerto[]
+  aportes          Aporte[]               @relation("AutorAporte")
+  aportesRetirados Aporte[]               @relation("RetiradoPor")
 
   @@map("usuarios")
 }
 
-model Comunidad {
-  id                 String   @id @default(uuid())
-  nombre             String
-  contactoNombre     String?
-  contactoTelefono   String?
-  contactoCorreo     String?
-  puntosTotales      Int      @default(0)  // caché; fuente de verdad: MovimientoPuntos
-  ultimoCambioPuntos DateTime?              // desempate del ranking (HU-035)
-  creadaEn           DateTime @default(now())
+// ═════════════════════════ SOLICITUD Y HUERTO ═════════════════════════
 
-  membresias         Membresia[]
-  huertos            Huerto[]
-  movimientos        MovimientoPuntos[]
+/// Formulario público «Solicitar crear huerto». El MSP contacta a la persona fuera del sistema y decide.
+model SolicitudHuerto {
+  id                String          @id @default(uuid())
+  nombreHuerto      String
+  tipo              TipoDiseno
+  subtipos          VarianteDiseno[]
+  provinciaId       Int
+  parroquiaId       Int
+  direccion         String?
+  latitud           Decimal         @db.Decimal(9, 6)
+  longitud          Decimal         @db.Decimal(9, 6)
+  altitud           Int             // msnm, para filtrar plantas del catálogo
+  nombreResponsable String
+  cedula            String
+  email             String
+  celular           String
+  consentimientoDatosEn DateTime
+  versionPolitica   String
+  estado            EstadoSolicitud @default(PENDIENTE)
+  motivo            String?         // obligatorio al rechazar
+  revisadaPorId     String?
+  revisadaEn        DateTime?
+  huertoId          String?         @unique
+  creadaEn          DateTime        @default(now())
 
-  @@index([puntosTotales(sort: Desc)])
-  @@map("comunidades")
+  provincia         Provincia       @relation(fields: [provinciaId], references: [id])
+  parroquia         Parroquia       @relation(fields: [parroquiaId], references: [id])
+  revisadaPor       Usuario?        @relation(fields: [revisadaPorId], references: [id])
+  huerto            Huerto?         @relation(fields: [huertoId], references: [id])
+
+  @@index([estado, creadaEn])
+  @@map("solicitudes_huerto")
 }
 
-/// Relación voluntario–comunidad. El responsable es quien la crea (HU-004).
-model Membresia {
-  usuarioId     String
-  comunidadId   String
-  esResponsable Boolean   @default(false)
-  desde         DateTime  @default(now())
-
-  usuario       Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  comunidad     Comunidad @relation(fields: [comunidadId], references: [id], onDelete: Cascade)
-
-  @@id([usuarioId, comunidadId])
-  @@index([comunidadId])
-  @@map("membresias")
-}
-
-// ═════════════════════════ HUERTO REAL (HU-010 a HU-015) ═════════════════════════
-
+/// El huerto es la comunidad de siembra: un responsable a la vez y de 0 a n voluntarios.
 model Huerto {
-  id            String      @id @default(uuid())
-  comunidadId   String
-  nombre        String?
+  id            String           @id @default(uuid())
+  nombre        String
+  tipo          TipoDiseno
+  /// Hasta 3 subtipos (surcos, vertical, macetas…) con el mismo responsable y voluntarios.
+  subtipos      VarianteDiseno[]
+  responsableId String
+  activo        Boolean          @default(true)
 
-  // HU-010 ubicación (obligatorios: provincia, parroquia y coordenadas)
   provinciaId   Int
   parroquiaId   Int
   direccion     String?
-  latitud       Decimal     @db.Decimal(9, 6)
-  longitud      Decimal     @db.Decimal(9, 6)
+  latitud       Decimal          @db.Decimal(9, 6)
+  longitud      Decimal          @db.Decimal(9, 6)
+  altitud       Int
 
-  // HU-012 cerca
+  // Información operativa (la completa el responsable después de la aprobación)
   tipoCerca     TipoCerca?
-  materialCerca String?     // material o especie, validado contra MATERIALES_POR_CERCA
-
-  // HU-013 recursos
-  areaM2        Decimal?    @db.Decimal(10, 2)
+  materialCerca String?
+  areaM2        Decimal?         @db.Decimal(10, 2)
   tipoSuelo     TipoSuelo?
   tipoAgua      TipoAgua?
-  detalleAgua   String?     // cuando tipoAgua = OTRO
+  detalleAgua   String?
   tipoAbono     TipoAbono?
 
-  creadoEn      DateTime    @default(now())
+  puntosTotales      Int         @default(0) // caché; fuente de verdad: MovimientoPuntos
+  ultimoCambioPuntos DateTime?               // desempate del ranking
+  creadoEn      DateTime         @default(now())
 
-  comunidad     Comunidad   @relation(fields: [comunidadId], references: [id], onDelete: Cascade)
-  provincia     Provincia   @relation(fields: [provinciaId], references: [id])
-  parroquia     Parroquia   @relation(fields: [parroquiaId], references: [id])
-
-  disenos       HuertoDiseno[]
-  bodega        BodegaEspacio[]
-  plantas       Planta[]
+  responsable   Usuario          @relation("Responsable", fields: [responsableId], references: [id])
+  provincia     Provincia        @relation(fields: [provinciaId], references: [id])
+  parroquia     Parroquia        @relation(fields: [parroquiaId], references: [id])
+  solicitud     SolicitudHuerto?
+  historial     HistorialResponsable[]
+  voluntarios   VoluntarioHuerto[]
+  plantas       HuertoPlanta[]
+  plantasPropuestas Planta[]
+  ciclos        Ciclo[]
   actividades   Actividad[]
+  bodega        BodegaItem[]
+  movimientos   MovimientoPuntos[]
+  solicitudesNivel SolicitudNivel[]
 
-  @@index([comunidadId])
+  @@index([tipo, puntosTotales(sort: Desc)])
   @@map("huertos")
 }
 
-/// HU-011: un huerto puede combinar varios diseños, cada uno con al menos una variante.
-model HuertoDiseno {
-  id       String         @id @default(uuid())
-  huertoId String
-  tipo     TipoDiseno
-  variante VarianteDiseno
+model HistorialResponsable {
+  id        String    @id @default(uuid())
+  huertoId  String
+  usuarioId String
+  desde     DateTime  @default(now())
+  hasta     DateTime?
+  motivo    String?
 
-  huerto   Huerto         @relation(fields: [huertoId], references: [id], onDelete: Cascade)
+  huerto    Huerto    @relation(fields: [huertoId], references: [id], onDelete: Cascade)
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id])
 
-  @@unique([huertoId, tipo, variante])
-  @@map("huerto_disenos")
+  @@index([huertoId])
+  @@map("historial_responsables")
 }
 
-/// HU-015: tres espacios posibles por huerto; la descripción del lugar es obligatoria.
-model BodegaEspacio {
-  id          String        @id @default(uuid())
-  huertoId    String
-  espacio     EspacioBodega
-  descripcion String
-  contenido   String?
+// ═════════════════════════ VOLUNTARIOS (sin cuenta) ═════════════════════════
 
-  huerto      Huerto        @relation(fields: [huertoId], references: [id], onDelete: Cascade)
+/// Un voluntario puede estar en varios huertos y vivir en cualquier lugar. Se identifica por cédula si la tiene.
+model Voluntario {
+  id              String       @id @default(uuid())
+  nombre          String
+  cedula          String?      @unique
+  fechaNacimiento DateTime     @db.Date
+  genero          Genero
+  /// Lo sube el sistema automáticamente; un nivel inicial mayor lo aprueba el MSP.
+  nivel           NivelMiembro @default(APRENDIZ)
+  horasValidadas  Decimal      @default(0) @db.Decimal(8, 1) // caché
+  puntos          Int          @default(0)                   // caché
+  creadoEn        DateTime     @default(now())
 
-  @@unique([huertoId, espacio])
-  @@map("bodega_espacios")
+  huertos         VoluntarioHuerto[]
+  participaciones Participacion[]
+  movimientos     MovimientoPuntos[]
+  solicitudesNivel SolicitudNivel[]
+
+  @@map("voluntarios")
 }
 
-/// HU-014: las plantas las registra el responsable POR HUERTO (no hay catálogo global).
+model VoluntarioHuerto {
+  voluntarioId String
+  huertoId     String
+  activo       Boolean    @default(true)
+  desde        DateTime   @default(now())
+
+  voluntario   Voluntario @relation(fields: [voluntarioId], references: [id], onDelete: Cascade)
+  huerto       Huerto     @relation(fields: [huertoId], references: [id], onDelete: Cascade)
+
+  @@id([voluntarioId, huertoId])
+  @@index([huertoId])
+  @@map("voluntarios_huerto")
+}
+
+/// El responsable pide que un voluntario con experiencia entre como Oficial o Maestro; el MSP decide.
+model SolicitudNivel {
+  id            String          @id @default(uuid())
+  voluntarioId  String
+  huertoId      String
+  nivel         NivelMiembro
+  justificacion String
+  estado        EstadoSolicitud @default(PENDIENTE)
+  motivo        String?
+  creadaEn      DateTime        @default(now())
+  revisadaEn    DateTime?
+
+  voluntario    Voluntario      @relation(fields: [voluntarioId], references: [id], onDelete: Cascade)
+  huerto        Huerto          @relation(fields: [huertoId], references: [id], onDelete: Cascade)
+
+  @@index([estado])
+  @@map("solicitudes_nivel")
+}
+
+// ═════════════════════════ CATÁLOGO DE PLANTAS (MSP) ═════════════════════════
+
+/// Catálogo global que precarga y administra el MSP. Solo plantas medicinales.
+/// Un responsable puede proponer una planta nueva (estado PENDIENTE) y el MSP la analiza.
 model Planta {
-  id               String         @id @default(uuid())
-  huertoId         String
-  nombreCientifico String?
+  id               String          @id @default(uuid())
   nombreComun      String
+  nombreCientifico String
   otrosNombres     String[]
   familiaBotanica  String?
   altitudMin       Int?
   altitudMax       Int?
-  provincias       String[]       // distribución geográfica en Ecuador
+  provincias       String[]
   ciclo            CicloPlanta
   cualidad         CualidadPlanta
   usosMedicinales  String
-  creadaEn         DateTime       @default(now())
+  parteUsada       String?
+  dosificacion     String?
+  contraindicaciones String?
+  fotoUrl          String?
+  estado           EstadoSolicitud @default(APROBADA)
+  motivo           String?
+  propuestaPorId   String?         // huerto que la propuso
+  creadaEn         DateTime        @default(now())
 
-  huerto           Huerto         @relation(fields: [huertoId], references: [id], onDelete: Cascade)
-  fotos            FotoPlanta[]
-  actividades      Actividad[]
-  paquetes         Paquete[]
+  propuestaPor     Huerto?         @relation(fields: [propuestaPorId], references: [id])
+  huertos          HuertoPlanta[]
+  ciclos           Ciclo[]
 
-  @@index([huertoId])
+  @@unique([nombreCientifico])
+  @@index([estado])
   @@map("plantas")
 }
 
-model FotoPlanta {
-  id       String @id @default(uuid())
-  plantaId String
-  url      String
-  mime     String
-  bytes    Int
+model HuertoPlanta {
+  huertoId       String
+  plantaId       String
+  /// El responsable confirmó una planta fuera del rango de altitud («¿está seguro?»).
+  fueraDeAltitud Boolean  @default(false)
+  desde          DateTime @default(now())
 
-  planta   Planta @relation(fields: [plantaId], references: [id], onDelete: Cascade)
+  huerto         Huerto   @relation(fields: [huertoId], references: [id], onDelete: Cascade)
+  planta         Planta   @relation(fields: [plantaId], references: [id])
 
-  @@map("fotos_planta")
+  @@id([huertoId, plantaId])
+  @@map("huerto_plantas")
 }
 
-// ═════════════════════════ ACTIVIDADES (HU-018 a HU-029) ═════════════════════════
+// ═════════════════════════ CICLOS Y ACTIVIDADES ═════════════════════════
 
-/// Una sola tabla para las 13 actividades. Lo específico de cada tipo va en `detalle` (JSON),
-/// validado por validarActividad() de @nexo/shared.
+/// Las plantas de un mismo tipo se siembran y cosechan juntas: un ciclo por planta.
+/// Si la cosecha se daña, el ciclo queda FALLIDO con su causa y se empieza otro.
+model Ciclo {
+  id            String        @id @default(uuid())
+  huertoId      String
+  plantaId      String
+  estado        EstadoCiclo   @default(ACTIVO)
+  causaFracaso  CausaFracaso?
+  justificacion String?
+  iniciadoEn    DateTime      @default(now())
+  cerradoEn     DateTime?
+
+  huerto        Huerto        @relation(fields: [huertoId], references: [id], onDelete: Cascade)
+  planta        Planta        @relation(fields: [plantaId], references: [id])
+  actividades   Actividad[]
+
+  @@index([huertoId, estado])
+  @@map("ciclos")
+}
+
+/// Un paso del ciclo, registrado después de hacerlo. Los puntos se otorgan cuando el MSP aprueba la evidencia.
 model Actividad {
-  id             String         @id @default(uuid())
-  huertoId       String
-  usuarioId      String
-  plantaId       String?
-  tipo           TipoActividad
-  fecha          DateTime       @db.Date  // fecha local de Ecuador
-  hora           String?                  // "HH:mm" local
-  faseLunar      FaseLunar?
-  detalle        Json
-  /// Códigos de advertencia que el usuario confirmó; vacío = actividad sin advertencias.
-  advertencias   String[]
-  puntosBase     Int            @default(0)
-  puntosBono     Int            @default(0)
-  creadaEn       DateTime       @default(now())
+  id              String          @id @default(uuid())
+  huertoId        String
+  cicloId         String
+  registradaPorId String
+  tipo            TipoActividad
+  fecha           DateTime        @db.Date
+  hora            String?
+  faseLunar       FaseLunar?
+  detalle         Json
+  /// Códigos de advertencia que el responsable confirmó; vacío = siguió el calendario (bono).
+  advertencias    String[]
+  /// false = paso saltado (no cumplido): 0 puntos.
+  cumplida        Boolean         @default(true)
+  estadoEvidencia EstadoEvidencia @default(PENDIENTE)
+  intento         Int             @default(1)
+  motivoRechazo   String?
+  revisadaPorId   String?
+  revisadaEn      DateTime?
+  puntosOtorgados Int             @default(0)
+  creadaEn        DateTime        @default(now())
 
-  huerto         Huerto         @relation(fields: [huertoId], references: [id], onDelete: Cascade)
-  usuario        Usuario        @relation(fields: [usuarioId], references: [id])
-  planta         Planta?        @relation(fields: [plantaId], references: [id])
+  huerto          Huerto          @relation(fields: [huertoId], references: [id], onDelete: Cascade)
+  ciclo           Ciclo           @relation(fields: [cicloId], references: [id], onDelete: Cascade)
+  registradaPor   Usuario         @relation("RegistradaPor", fields: [registradaPorId], references: [id])
+  revisadaPor     Usuario?        @relation("RevisadaPor", fields: [revisadaPorId], references: [id])
 
-  archivos       ArchivoActividad[]
-  paquete        Paquete?
-  movimientos    MovimientoPuntos[]
+  participaciones Participacion[]
+  archivos        ArchivoActividad[]
+  paquete         Paquete?
+  movimientos     MovimientoPuntos[]
 
   @@index([huertoId, fecha])
-  @@index([usuarioId, tipo])
-  @@index([plantaId, tipo])
+  @@index([cicloId])
+  @@index([estadoEvidencia, creadaEn])
   @@map("actividades")
 }
 
-/// HU-028: fotos (JPG/PNG, 5 MB) y videos (MP4, 50 MB); máximo 5 por actividad.
+/// Qué voluntarios hicieron la actividad y cuántas horas (máximo 24 por día).
+model Participacion {
+  actividadId  String
+  voluntarioId String
+  horas        Decimal    @db.Decimal(4, 1)
+
+  actividad    Actividad  @relation(fields: [actividadId], references: [id], onDelete: Cascade)
+  voluntario   Voluntario @relation(fields: [voluntarioId], references: [id])
+
+  @@id([actividadId, voluntarioId])
+  @@index([voluntarioId])
+  @@map("participaciones")
+}
+
+/// Evidencia: fotos o videos reales del huerto. Cada intento sube sus propios archivos.
 model ArchivoActividad {
   id          String      @id @default(uuid())
   actividadId String
+  intento     Int         @default(1)
   tipo        TipoArchivo
   url         String
+  nombre      String
   mime        String
   bytes       Int
   creadoEn    DateTime    @default(now())
@@ -376,12 +526,11 @@ model ArchivoActividad {
   @@map("archivos_actividad")
 }
 
-/// HU-027: paquete etiquetado de una planta seca (nace de una actividad EMPAQUETADO).
+/// Producción: paquetes etiquetados de planta seca. El financiamiento depende de este histórico.
 model Paquete {
   id                 String         @id @default(uuid())
   actividadId        String         @unique
-  plantaId           String
-  nombre             String
+  cantidad           Int
   indicacionesUso    String
   dosificacion       String
   contraindicaciones String
@@ -390,82 +539,71 @@ model Paquete {
   cualidad           CualidadPlanta
 
   actividad          Actividad      @relation(fields: [actividadId], references: [id], onDelete: Cascade)
-  planta             Planta         @relation(fields: [plantaId], references: [id])
 
   @@map("paquetes")
 }
 
-// ═════════════════════════ GAMIFICACIÓN (HU-030 a HU-035) ═════════════════════════
-// Los catálogos de insignias, misiones y talentos viven en @nexo/shared (código versionado y probado).
-// En la base solo se guarda lo que cada miembro ya logró, identificado por su código.
+// ═════════════════════════ BODEGA ═════════════════════════
 
-/// Libro de puntos: toda acreditación queda registrada. Los totales de usuario y comunidad son cachés.
+model BodegaItem {
+  id         String        @id @default(uuid())
+  huertoId   String
+  espacio    EspacioBodega
+  nombre     String
+  cantidad   Decimal       @db.Decimal(10, 2)
+  unidad     String
+  nota       String?
+  actualizadoEn DateTime   @updatedAt
+
+  huerto     Huerto        @relation(fields: [huertoId], references: [id], onDelete: Cascade)
+
+  @@index([huertoId])
+  @@map("bodega_items")
+}
+
+// ═════════════════════════ PUNTOS ═════════════════════════
+
+/// Libro de puntos: toda acreditación queda registrada. Los totales de voluntario y huerto son cachés.
 model MovimientoPuntos {
-  id          String     @id @default(uuid())
-  usuarioId   String
-  comunidadId String
-  puntos      Int
-  motivo      String     // "ACTIVIDAD" | "MISION"
-  actividadId String?
-  codigoRef   String?    // código de misión
-  creadoEn    DateTime   @default(now())
+  id           String     @id @default(uuid())
+  voluntarioId String
+  huertoId     String
+  actividadId  String?
+  puntos       Int
+  horas        Decimal    @db.Decimal(4, 1)
+  creadoEn     DateTime   @default(now())
 
-  usuario     Usuario    @relation(fields: [usuarioId], references: [id])
-  comunidad   Comunidad  @relation(fields: [comunidadId], references: [id])
-  actividad   Actividad? @relation(fields: [actividadId], references: [id])
+  voluntario   Voluntario @relation(fields: [voluntarioId], references: [id])
+  huerto       Huerto     @relation(fields: [huertoId], references: [id], onDelete: Cascade)
+  actividad    Actividad? @relation(fields: [actividadId], references: [id], onDelete: Cascade)
 
-  @@index([usuarioId])
-  @@index([comunidadId])
+  @@index([huertoId, creadoEn])
+  @@index([voluntarioId])
   @@map("movimientos_puntos")
 }
 
-model TalentoMiembro {
-  usuarioId     String
-  codigo        String   // CodigoTalento
-  certificadoEn DateTime @default(now())
-
-  usuario       Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-
-  @@id([usuarioId, codigo])
-  @@map("talentos_miembro")
-}
-
-model InsigniaMiembro {
-  usuarioId  String
-  codigo     String   // CodigoInsignia
-  otorgadaEn DateTime @default(now())
-
-  usuario    Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-
-  @@id([usuarioId, codigo])
-  @@map("insignias_miembro")
-}
-
-model MisionMiembro {
-  usuarioId    String
-  codigo       String   // CodigoMision
-  completadaEn DateTime @default(now())
-
-  usuario      Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-
-  @@id([usuarioId, codigo])
-  @@map("misiones_miembro")
-}
-
-// ═════════════════════════ FORO (HU-008, HU-009) ═════════════════════════
+// ═════════════════════════ FORO ═════════════════════════
 
 model Aporte {
-  id           String    @id @default(uuid())
-  autorId      String
-  contenido    String
-  creadoEn     DateTime  @default(now())
-  retirado     Boolean   @default(false)
+  id            String          @id @default(uuid())
+  autorId       String
+  padreId       String?         // respuesta a otro aporte
+  categoria     CategoriaAporte
+  titulo        String?
+  contenido     String
+  reportes      Int             @default(0)
+  retirado      Boolean         @default(false)
+  motivoRetiro  String?
   retiradoPorId String?
-  retiradoEn   DateTime?
+  retiradoEn    DateTime?
+  creadoEn      DateTime        @default(now())
 
-  autor        Usuario   @relation("AutorAporte", fields: [autorId], references: [id])
-  retiradoPor  Usuario?  @relation("RetiradoPor", fields: [retiradoPorId], references: [id])
+  autor         Usuario         @relation("AutorAporte", fields: [autorId], references: [id])
+  retiradoPor   Usuario?        @relation("RetiradoPor", fields: [retiradoPorId], references: [id])
+  padre         Aporte?         @relation("Respuestas", fields: [padreId], references: [id], onDelete: Cascade)
+  respuestas    Aporte[]        @relation("Respuestas")
 
   @@index([creadoEn(sort: Desc)])
+  @@index([padreId])
   @@map("aportes")
 }

@@ -1,0 +1,236 @@
+[
+ {
+  "modo": "mobile",
+  "nombre": "Portada",
+  "ruta": "/",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "mobile",
+  "nombre": "Mapa de huertos",
+  "ruta": "/mapa",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 96,
+  "seo": 100
+ },
+ {
+  "modo": "mobile",
+  "nombre": "Ranking",
+  "ruta": "/ranking",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "mobile",
+  "nombre": "Estadísticas",
+  "ruta": "/estadisticas",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "mobile",
+  "nombre": "Catálogo de plantas",
+  "ruta": "/plantas",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "mobile",
+  "nombre": "Saberes y calendario lunar",
+  "ruta": "/saberes",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "mobile",
+  "nombre": "Foro",
+  "ruta": "/foro",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "mobile",
+  "nombre": "Solicitar huerto",
+  "ruta": "/solicitar",
+  "perf": 99,
+  "a11y": 100,
+  "bp": 96,
+  "seo": 100
+ },
+ {
+  "modo": "mobile",
+  "nombre": "Inicio de sesión",
+  "ruta": "/login",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "mobile",
+  "nombre": "Responsable: inicio",
+  "ruta": "/panel",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "mobile",
+  "nombre": "Responsable: registrar",
+  "ruta": "/panel/registrar",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "mobile",
+  "nombre": "Técnico MSP: evidencias",
+  "ruta": "/panel/evidencias",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "mobile",
+  "nombre": "Administrador: estado",
+  "ruta": "/panel",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "desktop",
+  "nombre": "Portada",
+  "ruta": "/",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "desktop",
+  "nombre": "Mapa de huertos",
+  "ruta": "/mapa",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "desktop",
+  "nombre": "Ranking",
+  "ruta": "/ranking",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "desktop",
+  "nombre": "Estadísticas",
+  "ruta": "/estadisticas",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "desktop",
+  "nombre": "Catálogo de plantas",
+  "ruta": "/plantas",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "desktop",
+  "nombre": "Saberes y calendario lunar",
+  "ruta": "/saberes",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "desktop",
+  "nombre": "Foro",
+  "ruta": "/foro",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "desktop",
+  "nombre": "Solicitar huerto",
+  "ruta": "/solicitar",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "desktop",
+  "nombre": "Inicio de sesión",
+  "ruta": "/login",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "desktop",
+  "nombre": "Responsable: inicio",
+  "ruta": "/panel",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "desktop",
+  "nombre": "Responsable: registrar",
+  "ruta": "/panel/registrar",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "desktop",
+  "nombre": "Técnico MSP: evidencias",
+  "ruta": "/panel/evidencias",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ },
+ {
+  "modo": "desktop",
+  "nombre": "Administrador: estado",
+  "ruta": "/panel",
+  "perf": 100,
+  "a11y": 100,
+  "bp": 100,
+  "seo": 100
+ }
+]

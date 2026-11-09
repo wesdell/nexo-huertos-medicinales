@@ -1,0 +1,54 @@
+erDiagram
+    PROVINCIA ||--o{ PARROQUIA : contiene
+    PARROQUIA ||--o{ HUERTO : ubica
+    SOLICITUD_HUERTO |o--o| HUERTO : "origina"
+    USUARIO ||--o{ HUERTO : "es responsable"
+    HUERTO ||--o{ HISTORIAL_RESPONSABLE : registra
+    HUERTO ||--o{ VOLUNTARIO_HUERTO : agrupa
+    VOLUNTARIO ||--o{ VOLUNTARIO_HUERTO : participa
+    VOLUNTARIO ||--o{ SOLICITUD_NIVEL : pide
+    PLANTA ||--o{ HUERTO_PLANTA : "se elige en"
+    HUERTO ||--o{ HUERTO_PLANTA : cultiva
+    HUERTO ||--o{ CICLO : tiene
+    PLANTA ||--o{ CICLO : "se cultiva en"
+    CICLO ||--o{ ACTIVIDAD : "13 pasos"
+    ACTIVIDAD ||--o{ PARTICIPACION : "horas por voluntario"
+    VOLUNTARIO ||--o{ PARTICIPACION : trabaja
+    ACTIVIDAD ||--o{ ARCHIVO_ACTIVIDAD : evidencia
+    ACTIVIDAD ||--o| PAQUETE : genera
+    VOLUNTARIO ||--o{ MOVIMIENTO_PUNTOS : acumula
+    HUERTO ||--o{ MOVIMIENTO_PUNTOS : acumula
+    HUERTO ||--o{ BODEGA_ITEM : guarda
+    USUARIO ||--o{ APORTE : escribe
+
+    USUARIO { uuid id PK
+        string email
+        enum rol
+        bool debeCambiarClave
+        bool activo }
+    HUERTO { uuid id PK
+        string nombre
+        enum tipo
+        enum_array subtipos
+        int altitud
+        int puntosTotales }
+    VOLUNTARIO { uuid id PK
+        string cedula
+        enum nivel
+        int horasValidadas
+        int puntos }
+    PLANTA { uuid id PK
+        string nombreCientifico
+        int altitudMin
+        int altitudMax
+        enum estado }
+    CICLO { uuid id PK
+        enum estado
+        enum causaFracaso }
+    ACTIVIDAD { uuid id PK
+        enum tipo
+        date fecha
+        bool cumplida
+        enum estadoEvidencia
+        int intento
+        int puntosOtorgados }

@@ -58,9 +58,26 @@ La primera vez tarda unos minutos porque descarga imágenes e instala dependenci
 | Qué | Dirección |
 |---|---|
 | Aplicación | <http://localhost:5173> |
+| Bandeja de correos de prueba (Mailpit) | <http://localhost:8025> |
 | Documentación de la API (Swagger) | <http://localhost:3000/api/docs> |
 
-Para entrar sin registrarte, usa la **cuenta de demostración**: el correo y la contraseña están en tu archivo `.env` (`DEMO_EMAIL` y `DEMO_PASSWORD`). También puedes crear tu propia cuenta desde «Regístrate». La cuenta de demostración ya tiene una comunidad, un huerto y plantas de ejemplo (cargadas desde `apps/backend/prisma/seed-plantas.sample.json`).
+La parte pública no necesita cuenta. Para entrar a los paneles usa las **cuentas de demostración** de tu archivo `.env`, todas con la contraseña `DEMO_PASSWORD`:
+
+| Rol | Correo |
+|---|---|
+| Responsable del «Huerto Sumak Kawsay» | `demo@nexo.test` |
+| Técnico del MSP | `tecnico@nexo.test` |
+| Administrador del sistema | `admin@nexo.test` |
+
+Los datos demo incluyen 8 huertos en 8 provincias, 28 plantas del catálogo, ciclos en distintos pasos, evidencias por validar, solicitudes pendientes y aportes en el foro.
+
+### Recorrido sugerido para la presentación
+
+1. Sin iniciar sesión: portada, mapa, ranking, estadísticas, saberes y «Solicitar huerto» (envía una solicitud).
+2. Ingresa como técnico: en «Solicitudes» aprueba la tuya; abre <http://localhost:8025> y copia la contraseña temporal del correo.
+3. Ingresa con ese correo: el sistema pide cambiar la contraseña. Agrega voluntarios, elige plantas (prueba una de otra altitud), empieza un ciclo y registra la preparación de la tierra con horas y una foto.
+4. Vuelve como técnico: en «Evidencias» apruébala (los puntos llegan) o recházala para ver la segunda oportunidad.
+5. Revisa el ranking, la ficha pública del huerto y, como administrador, descarga un respaldo.
 
 ## 6. Detén la aplicación
 
@@ -85,7 +102,9 @@ docker compose down -v
 | La página no carga en <http://localhost:5173> | La aplicación aún está arrancando | Espera un minuto y recarga; revisa la terminal |
 | `container nexo-huertos-nexo-backend-1 is unhealthy` | La base de datos tardó en arrancar | Ejecuta `docker compose up` otra vez |
 | Cambiaste código y no ves el cambio | La imagen no se reconstruyó | Ejecuta `docker compose up --build` |
-| La cuenta demo no entra | Cambiaste `.env` después de crear la base | Ejecuta `docker compose down -v` y luego `docker compose up --build` |
+| La cuenta demo no entra | Cambiaste `.env` después de crear la base, o vienes de la v1 | Ejecuta `docker compose down -v` y luego `docker compose up --build` |
+| No llega el correo con la contraseña | Mailpit no está corriendo | Revisa <http://localhost:8025>; ejecuta `docker compose up -d nexo-mail` |
+| `port is already allocated` en 8025 o 1025 | Otro Mailpit o servidor de correo local | Detén ese programa y repite el paso 4 |
 
 ## Para quienes desarrollan
 
@@ -101,3 +120,4 @@ Los comandos de pruebas y el frontend con recarga en vivo están en el [README](
 |---|---|
 | Revisar el estilo del código | `pnpm lint` |
 | Capturas de pantalla para presentar (con la app levantada) | `node e2e/capturas.mjs docs/capturas` |
+| Recorrido del flujo básico con capturas para el informe (sobre datos demo recién cargados) | `node e2e/capturas-flujo.mjs` |

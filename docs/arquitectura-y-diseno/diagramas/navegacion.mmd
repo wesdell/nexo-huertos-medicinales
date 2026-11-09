@@ -1,0 +1,24 @@
+flowchart LR
+    subgraph PUB["Parte pública (sin cuenta)"]
+        P0["Portada"] --- P1["Mapa"] --- P2["Ficha del huerto<br/>y espejo digital"]
+        P0 --- P3["Ranking"] --- P4["Estadísticas"]
+        P0 --- P5["Plantas"] --- P6["Saberes y<br/>calendario lunar"]
+        P0 --- P7["Foro"] --- P8["Solicitar huerto"]
+    end
+    L["/login"] --> CL["Cambio de clave<br/>(primer ingreso)"]
+    CL --> RES & MSP & ADM
+    subgraph RES["Responsable"]
+        R0["Inicio: paso siguiente"] --- R1["Actividades"] --- R2["Registrar"]
+        R0 --- R3["Voluntarios"] --- R4["Plantas"]
+        R0 --- R5["Huerto virtual"] --- R6["Misiones y puntos"]
+        R0 --- R7["Bodega"] --- R8["Producción"] --- R9["Datos del huerto"]
+    end
+    subgraph MSP["Técnico del MSP"]
+        T0["Resumen"] --- T1["Solicitudes"] --- T2["Evidencias"]
+        T0 --- T3["Catálogo"] --- T4["Niveles"]
+        T0 --- T5["Registro de huertos"] --- T6["Moderación"]
+    end
+    subgraph ADM["Administrador"]
+        A0["Estado y respaldo"] --- A1["Cuentas"]
+    end
+    PUB --> L
