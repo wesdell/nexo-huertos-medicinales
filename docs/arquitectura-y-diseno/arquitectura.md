@@ -4,9 +4,11 @@
 
 **Arquitectura Cliente-Servidor desacoplada (SPA + API REST)** con backend modular en capas, dentro de un monorepo en contenedores Docker Compose.
 
+Este documento describe la arquitectura objetivo de las tres versiones. Lo que ya existe en v1.0.0 se indica en cada sección.
+
 Tres principios guían el diseño:
 
-1. **Las reglas del dominio viven en `@nexo/shared`** — validación de actividades, fase lunar, gamificación, huerto virtual y ranking. Backend y frontend consumen el mismo paquete; el backend es la autoridad.
+1. **Las reglas del dominio viven en `@nexo/shared`** — validación de actividades, fase lunar, puntos y huerto virtual (v1); gamificación y ranking se suman en v2 y v3. Backend y frontend consumen el mismo paquete; el backend es la autoridad.
 2. **Advertir, confirmar y guardar** — las actividades fuera de la práctica recomendada generan advertencias que el usuario confirma; los errores de datos sí bloquean.
 3. **Lo derivado no se guarda** — el huerto virtual, el progreso de misiones y el ranking se calculan al consultar.
 
@@ -20,7 +22,7 @@ flowchart LR
         FE["Frontend (Vista)<br/>React + Tailwind<br/>:5173"]
         BE["Backend (Controlador + Modelo)<br/>NestJS API REST<br/>:3000, prefijo /api"]
         DB[("PostgreSQL<br/>:5432")]
-        FS[/"Volumen uploads<br/>fotos y videos"/]
+        FS[/"Volumen uploads (v2)<br/>fotos y videos"/]
     end
 
     SH["@nexo/shared<br/>enums y reglas de dominio"]
@@ -76,20 +78,22 @@ flowchart TB
     COM --> PRI
 ```
 
-| Módulo | Responsabilidad |
-|---|---|
-| `auth` | Registro, inicio y cierre de sesión; JWT; guards de rol y pertenencia |
-| `usuarios` | Perfil editable; nivel y talentos de solo lectura; progreso personal |
-| `comunidades` | Crear y editar comunidad; membresías; ficha con ranking |
-| `geografia` | Catálogo de provincias (con región) y parroquias |
-| `huertos` | Ubicación, diseño, cerca, recursos y huerto virtual derivado |
-| `plantas` | Plantas del huerto con información botánica y fotos |
-| `bodega` | Tres espacios: herramientas, semillas/plántulas y abonos |
-| `calendario-lunar` | Fase de una fecha o de un mes; actividades recomendadas por fase |
-| `actividades` | Un solo servicio para los 13 tipos: valida, guarda, adjunta archivos y dispara gamificación |
-| `archivos` | Validación y almacenamiento de fotos y videos |
-| `gamificacion` | Puntos, insignias, misiones, talentos, niveles y ranking |
-| `foro` | Aportes y moderación |
+| Módulo | Responsabilidad | En v1.0.0 |
+|---|---|---|
+| `auth` | Registro, inicio y cierre de sesión; JWT; guards de rol y pertenencia | `auth.ts` |
+| `usuarios` | Perfil editable; nivel y talentos de solo lectura; progreso personal | v2 |
+| `comunidades` | Crear y editar comunidad; membresías; ficha con ranking | `comunidades.ts` (solo crear) |
+| `geografia` | Catálogo de provincias (con región) y parroquias | `comunidades.ts` (`GeografiaController`) |
+| `huertos` | Ubicación, diseño, cerca, recursos y huerto virtual derivado | `huertos.ts` (ubicación y huerto virtual) |
+| `plantas` | Plantas del huerto con información botánica y fotos | `huertos.ts` (sin fotos) |
+| `bodega` | Tres espacios: herramientas, semillas/plántulas y abonos | v3 |
+| `calendario-lunar` | Fase de una fecha o de un mes; actividades recomendadas por fase | `@nexo/shared` (fase del día) |
+| `actividades` | Un solo servicio para los 13 tipos: valida, guarda, adjunta archivos y dispara gamificación | `huertos.ts` (4 tipos) |
+| `archivos` | Validación y almacenamiento de fotos y videos | v2 |
+| `gamificacion` | Puntos, insignias, misiones, talentos, niveles y ranking | `huertos.ts` (solo puntos) |
+| `foro` | Aportes y moderación | v3 |
+
+**Estado en v1.0.0.** El backend es un solo `AppModule` con un archivo por dominio (`auth.ts`, `comunidades.ts`, `huertos.ts`), cada uno con su controlador y su servicio, más `dto.ts` y `prisma.service.ts`. Las capas se respetan: los controladores llaman a servicios y los servicios usan `PrismaService`. La única excepción es `GeografiaController`, que lee directamente el catálogo estático de provincias; pasa a un servicio si gana lógica. Los módulos de la tabla se separan en carpetas cuando un dominio crezca (v2).
 
 ## 4. Modelo de datos
 
@@ -173,12 +177,12 @@ Decisiones de datos relevantes:
 - **`esResponsable` en membresía**, no un rol global. El único rol global adicional es `MODERADOR`.
 - **Una sola tabla `ACTIVIDAD`** para los 13 tipos; lo específico de cada una va en `detalle` (JSON). Las advertencias confirmadas se guardan en `advertencias[]`.
 - **`MovimientoPuntos`** es el libro de auditoría; `Usuario.puntos` y `Comunidad.puntosTotales` son cachés actualizados en la misma transacción.
-- **Catálogos en código** (`@nexo/shared`): insignias, misiones y talentos. La base solo guarda lo ya logrado por cada miembro.
+- **Catálogos en código** (`@nexo/shared`, v3): insignias, misiones y talentos. La base solo guarda lo ya logrado por cada miembro.
 - **`fecha`** es `@db.Date` local Ecuador y **`hora`** es texto `HH:mm`, para evitar errores de zona horaria.
 
 ## 5. Flujo de comunicación entre capas: registrar actividad
 
-El mismo endpoint y flujo sirven para los 13 tipos de actividades. Si existen advertencias sin confirmar, el servidor solicita confirmación antes de persistir la transacción:
+El mismo endpoint y flujo sirven para los 13 tipos de actividades. En v1 el pipeline de gamificación solo suma puntos y no hay paquetes (llegan con el empaquetado en v2). Si existen advertencias sin confirmar, el servidor solicita confirmación antes de persistir la transacción:
 
 ```mermaid
 sequenceDiagram
@@ -224,7 +228,7 @@ flowchart TB
             C3["nexo-db<br/>postgres:16-alpine<br/>puerto 5432"]
         end
         V1[("volumen pgdata")]
-        V2[("volumen uploads")]
+        V2[("volumen uploads (v2)")]
     end
     NAV["Navegador"] -->|":5173"| C1
     NAV -->|":3000/api"| C2

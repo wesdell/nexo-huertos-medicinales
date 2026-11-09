@@ -6,9 +6,10 @@
 | --- | --- |
 | 1. Registro | HU-001 a HU-003 |
 | 2. Comunidades | HU-004 a HU-009 |
-| 3. Huerto | HU-0010 a HU-016 |
+| 3. Huerto | HU-010 a HU-016 |
 | 4. Actividades | HU-017 a HU-029 |
 | 5. Puntos | HU-030 a HU-035 |
+| 6. Protección de datos | HU-036 |
 
 ## 1. REGISTRO
 

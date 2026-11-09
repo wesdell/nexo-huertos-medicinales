@@ -44,16 +44,15 @@ Objetivo: flujo mínimo de punta a punta, ejecutable con `docker compose up --bu
 - Mapa Leaflet/OpenStreetMap y georreferenciación del huerto (HU-010 completa).
 - Diseño, cerca y recursos del huerto (HU-011, HU-012, HU-013).
 - Calendario lunar mensual (HU-017 completa).
-- Fotos de plantas y archivos de actividades (HU-014 completa, HU-028).
+- Fotos de plantas y archivos de actividades (HU-014 completa, HU-028). Con el secado y el empaquetado, el huerto virtual alcanza sus etapas 5 y 6 (ya dibujadas en v1).
 - Actividades restantes: estructura, rituales, señalética, cuidados, baño, limpieza, secado, empaquetado (HU-019, 020, 022, 024, 026, 027).
-- Huerto virtual etapas 5 y 6.
 - Ranking de comunidades (HU-035), perfil (HU-003), editar comunidad y miembros (HU-005 a HU-007).
 - Catálogo completo de parroquias del INEC.
 
 ## v3.0.0 — Pendiente
 - Foro de prácticas y saberes y moderación (HU-008, HU-009).
 - Insignias, misiones y retos, talentos y niveles (HU-031 a HU-034).
-- Bodega y almacenaje (HU-015), historia visual de la planta (HU-028).
+- Bodega y almacenaje (HU-015), historia visual de la planta (pantalla que reúne los archivos de HU-028).
 - Calendario de actividades (HU-029).
 - Notificaciones (correo o push) de actividades recomendadas.
 
@@ -68,3 +67,4 @@ Objetivo: flujo mínimo de punta a punta, ejecutable con `docker compose up --bu
 | 06/11/2026 | Sistema de diseño elegido: «App cálida de consumo» (fondo cálido, tarjetas blancas, verde solo para acciones, Nunito local, iconos Lucide, logo y favicon propios). Rediseño de las 8 pantallas; e2e + axe en verde; capturas en `docs/capturas/`. |
 | 06/11/2026 | Revisión de diseño cerrada (2 rondas): la planta muestra su etapa anterior y brota a la nueva; la línea del bono tiene tamaño de texto normal. `apps/frontend/DESIGN.md` documenta el sistema. Figma: tokens como variables, componentes (Botón, Campo, Selector, NavItem, BarraInferior, MenúLateral, MosaicoActividad, Luna, etapas) y 6 pantallas móvil. |
 | 06/11/2026 | Cierre del MVP. En la prueba manual con teclado y Lighthouse se corrigieron 5 defectos: foco del diálogo, concordancia de mensajes, enlace «Saltar al contenido», botón partido en tableta y `robots.txt`. También un solo trazo para los iconos y sombras cálidas en lo flotante. Se agregaron HU-036, los casos de prueba (33 automáticos y 14 manuales), el informe de calidad y el CHANGELOG. Release v1.0.0. Pendiente: pantallas de escritorio en Figma (cupo del plan Starter). |
+| 09/11/2026 | Revisión de una auditoría externa de inconsistencias. Se corrigieron: `pnpm test` (el frontend tenía Vitest sin pruebas) y `pnpm lint` (faltaba `eslint.config.mjs`; ahora corre en CI con reglas de accesibilidad); se quitó un endpoint sin uso (`GET /huertos/:id/actividades`); la contraseña mínima vive en `@nexo/shared`. Documentos alineados con lo construido: `diseno.md` apunta a `DESIGN.md` como fuente única y su inventario indica la versión de cada pantalla; `arquitectura.md` muestra el estado de cada módulo en v1; `herramientas-y-tecnologias.md` sin estados «por confirmar»; `DESIGN.md` y `PRODUCT.md` traducidos al español; licencia MIT. Hallazgos descartados por no ser ciertos: `.env` no está en el repositorio (solo `.env.example`) y no existe `seed-plantas.js`. |

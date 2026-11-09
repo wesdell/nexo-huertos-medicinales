@@ -60,7 +60,7 @@ La primera vez tarda unos minutos porque descarga imágenes e instala dependenci
 | Aplicación | <http://localhost:5173> |
 | Documentación de la API (Swagger) | <http://localhost:3000/api/docs> |
 
-Para entrar sin registrarte, usa la **cuenta de demostración**: el correo y la contraseña están en tu archivo `.env` (`DEMO_EMAIL` y `DEMO_PASSWORD`). También puedes crear tu propia cuenta desde «Regístrate».
+Para entrar sin registrarte, usa la **cuenta de demostración**: el correo y la contraseña están en tu archivo `.env` (`DEMO_EMAIL` y `DEMO_PASSWORD`). También puedes crear tu propia cuenta desde «Regístrate». La cuenta de demostración ya tiene una comunidad, un huerto y plantas de ejemplo (cargadas desde `apps/backend/prisma/seed-plantas.sample.json`).
 
 ## 6. Detén la aplicación
 
@@ -95,11 +95,9 @@ Requisitos adicionales: Node.js 22 y pnpm (`corepack enable`).
 pnpm install
 ```
 
+Los comandos de pruebas y el frontend con recarga en vivo están en el [README](../README.md#pruebas). Además:
+
 | Para | Comando |
 |---|---|
-| Probar las reglas de dominio | `pnpm --filter @nexo/shared test` |
-| Revisar tipos | `pnpm typecheck` |
-| Probar la API (con la app levantada) | `pnpm --filter backend test:e2e` |
-| Flujo completo y accesibilidad (con la app levantada) | `pnpm exec playwright install chromium` y luego `pnpm e2e` |
-| Frontend con recarga en vivo | `docker compose up -d nexo-db nexo-backend` y luego `pnpm --filter frontend dev` |
-| Capturas de pantalla para presentar | `node e2e/capturas.mjs docs/capturas` |
+| Revisar el estilo del código | `pnpm lint` |
+| Capturas de pantalla para presentar (con la app levantada) | `node e2e/capturas.mjs docs/capturas` |

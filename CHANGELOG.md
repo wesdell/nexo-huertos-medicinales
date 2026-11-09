@@ -2,6 +2,28 @@
 
 Todos los cambios importantes de Nexo se registran aquí. El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
+## [Sin publicar]
+
+### Corregido
+
+- `pnpm test` ya no falla: se quitó del frontend la configuración de Vitest, que no tenía pruebas.
+- `pnpm lint` ya no falla: se agregó `eslint.config.mjs` (TypeScript, React Hooks y accesibilidad con `jsx-a11y`) y se ejecuta en CI.
+- El mensaje de fecha inválida de la API ya no cita un formato que no acepta.
+- Documentación alineada con lo construido: diseño, arquitectura, herramientas, índice de historias y bitácora.
+
+### Cambiado
+
+- La longitud mínima de la contraseña se define una sola vez en `@nexo/shared` (`CONTRASENA_MIN`).
+- `DESIGN.md` y `PRODUCT.md` están en español.
+
+### Eliminado
+
+- `GET /api/huertos/:id/actividades`, que ninguna pantalla usaba; vuelve con el calendario de actividades (HU-029).
+
+### Agregado
+
+- Licencia MIT.
+
 ## [1.0.0] · 2026-11-06
 
 Primera versión: el MVP para la entrega del 10/11/2026.

@@ -480,32 +480,32 @@
     ],
     "rules": [
       {
-        "name": "The Lo Que Se Toca Rule",
+        "name": "Regla de lo que se toca",
         "body": "El verde chakra saturado (`primary-600` / `primary-700`) aparece solo en elementos presionables: botones, enlaces, destinos de navegación, opciones y casillas. Una barra de progreso, un número o un título nunca son verdes; el progreso se pinta en tinta cálida.",
         "section": "colors"
       },
       {
-        "name": "The Tierra Cálida Rule",
+        "name": "Regla de la tierra cálida",
         "body": "Todo neutro sale de la familia `tierra` / `luna`. Ningún gris frío (slate, zinc, gray), ni en texto ni en bordes ni en sombras; las sombras se tiñen con la tinta `rgb(42 36 29 / …)`.",
         "section": "colors"
       },
       {
-        "name": "The Oro Es Foco Rule",
+        "name": "Regla del oro es foco",
         "body": "El oro marca dónde está el foco del teclado y nada más.",
         "section": "colors"
       },
       {
-        "name": "The Una Familia Rule",
+        "name": "Regla de una familia",
         "body": "Una sola familia; la jerarquía la hacen el peso (400 / 700 / 800 / 900) y el tamaño. Sin versalitas, sin mayúsculas sostenidas, sin rótulos sobre los títulos.",
         "section": "typography"
       },
       {
-        "name": "The Número Tabular Rule",
+        "name": "Regla del número tabular",
         "body": "Puntos y porcentajes usan cifras tabulares para que no bailen al cambiar.",
         "section": "typography"
       },
       {
-        "name": "The Sombra Cálida Rule",
+        "name": "Regla de la sombra cálida",
         "body": "Toda sombra propia se tiñe con la tinta `rgb(42 36 29)`; nunca negro puro ni sombras duras desplazadas.",
         "section": "elevation"
       }

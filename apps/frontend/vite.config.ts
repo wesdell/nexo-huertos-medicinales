@@ -1,4 +1,3 @@
-/// <reference types="vitest/config" />
 import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
@@ -12,5 +11,4 @@ export default defineConfig({
   resolve: { alias: { '@nexo/shared': fileURLToPath(new URL('../../packages/shared/src/index.ts', import.meta.url)) } },
   server: { host: true, port: 5173, proxy },
   preview: { host: true, port: 5173, proxy },
-  test: { environment: 'jsdom', setupFiles: ['src/test-setup.ts'] },
 });
