@@ -19,7 +19,7 @@ Resultado de las mediciones:
 
 - **Pruebas automáticas:** 44 casos (29 unitarios, 13 de API y 2 de interfaz en móvil y escritorio), todos en verde en local y en GitHub Actions.
 - **Accesibilidad:** cero violaciones serias o críticas con axe (WCAG 2.1 AA) y 100 en Lighthouse en las 7 pantallas, tanto en móvil como en escritorio.
-- **Defectos:** se encontraron 9 grupos de defectos durante el desarrollo y la prueba manual; todos están corregidos.
+- **Defectos:** se encontraron 11 grupos de defectos durante el desarrollo, la prueba manual y una auditoría externa; todos están corregidos.
 
 El detalle de cada caso está en [casos-de-prueba.md](../casos-de-prueba/casos-de-prueba.md).
 
@@ -53,7 +53,7 @@ Se tomó como referencia la norma ISO/IEC 25010. Para cada característica se fi
 | Eficiencia de desempeño | Lighthouse ≥ 90 en rendimiento | Lighthouse | Cumple: 94–100 |
 | Fiabilidad | El sistema arranca limpio y valida en el servidor | Healthchecks de Docker; validación con class-validator; pruebas de API | Cumple |
 | Seguridad | Contraseñas cifradas; mensajes de error que no revelan cuentas; rutas protegidas | bcrypt, JWT, pruebas CP-04 y CP-05 | Cumple |
-| Mantenibilidad | TypeScript estricto, formato uniforme y CI en cada cambio | `pnpm typecheck`, Prettier, GitHub Actions | Cumple |
+| Mantenibilidad | TypeScript estricto, formato uniforme, lint y CI en cada cambio | `pnpm typecheck`, `pnpm lint` (con `jsx-a11y`), Prettier, GitHub Actions | Cumple |
 | Portabilidad | Cualquiera lo corre con un comando | `docker compose up --build`; [guía para ejecutarlo](../como-ejecutar.md) | Cumple; verificado en CI sobre una máquina nueva |
 
 ## 4. Resultados de las pruebas
@@ -90,6 +90,7 @@ El SEO de 92 se debía a la falta de `robots.txt`; se agregó después de la med
 | Revisión de diseño (2 rondas) | 10 hallazgos | 10 |
 | Prueba manual (teclado y Lighthouse) | 5 | 5 |
 | Capturas | 1 | 1 |
+| Auditoría externa de inconsistencias (09/11) | 2 | 2 |
 
 Los defectos con más impacto en la calidad percibida fueron estos:
 

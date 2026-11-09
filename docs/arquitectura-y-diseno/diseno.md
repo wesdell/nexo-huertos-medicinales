@@ -10,58 +10,13 @@
 
 ## 2. Sistema de diseño
 
-### 2.1 Paleta
+La fuente única del sistema de diseño es [`apps/frontend/DESIGN.md`](../../apps/frontend/DESIGN.md): paleta, tipografía, sombras, formas, componentes y reglas de marca, con los mismos valores que `apps/frontend/src/styles.css`. Este documento no repite esos valores para que no se desactualicen.
 
-| Familia | Uso | Tonos clave |
-|---|---|---|
-| **primary** | Acciones principales, navegación, progreso | 600 `#2d6e45` botón · 700 hover · 800 barra superior |
-| **tierra** | Fondo, bordes, tarjetas cálidas | 50 `#faf6f1` fondo · 100 · 300 bordes |
-| **luna** | Texto y superficies neutras | 800 `#1f2937` texto · 600 `#4b5563` secundario |
-| **exito / aviso / error / info** | Mensajes: fondo 100 y texto 800 | aviso `#fef3c7` sobre `#7c2d12` |
-| **caliente / fria** | Cualidad de la planta (señalética) | caliente `#b42318` · fría `#dcfce7` |
-| **nivel-aprendiz / oficial / maestro** | Niveles del voluntario | bronce `#b87333` · plata `#9ca3af` · oro `#d4a017` |
+Resumen de las decisiones:
 
-**Contraste verificado (WCAG, mínimo 4,5:1):**
-
-| Par | Relación |
-|---|---:|
-| Texto principal sobre fondo crema | 13,6 |
-| Texto secundario sobre fondo crema | 7,0 |
-| Blanco sobre botón primario | 6,1 |
-| Blanco sobre botón primario (hover) | 8,2 |
-| Aviso (texto sobre fondo) | 8,4 |
-| Error (texto sobre fondo) | 6,8 |
-| Éxito (texto sobre fondo) | 8,3 |
-| Blanco sobre chip «caliente» | 6,6 |
-| Blanco sobre barra superior | 10,5 |
-| Oro sobre verde oscuro | 6,5 |
-
-### 2.2 Tipografía
-
-| Uso | Fuente | Alternativa si no carga |
-|---|---|---|
-| Títulos (`font-display`) | Fraunces | Georgia, serif |
-| Cuerpo y formularios (`font-sans`) | Inter | system-ui, Segoe UI |
-
-### 2.3 Componentes base
-
-| Componente | Variantes y reglas |
-|---|---|
-| **Botón** | Primario (verde), secundario (borde verde), peligro (rojo), texto. Alto mínimo 44 px. Estado de carga con texto «Guardando…» |
-| **Campo de formulario** | Etiqueta visible arriba, ayuda en `text-sm`, error debajo en rojo con icono. Tipos: texto, correo, contraseña (con mostrar/ocultar), fecha, hora, número, área de texto, lista, casillas, selección múltiple |
-| **Mensaje (Banner)** | Éxito, aviso, error, información: icono, texto y borde del mismo color; nunca solo color |
-| **Diálogo de advertencias** | Modal ámbar: lista de advertencias, botón «Corregir» (primario) y «Guardar de todas formas» (secundario) |
-| **Toast de logro** | Aparece arriba, 6 s, con `aria-live="polite"`: puntos, insignia, misión, talento o nivel |
-| **Tarjeta** | Fondo blanco, radio `rounded-tarjeta`, sombra `shadow-tarjeta` |
-| **Pestañas** | Para el huerto (ubicación, diseño, cerca, recursos, plantas, bodega) y el progreso |
-| **Tabla de datos** | Miembros y ranking; en móvil se convierte en lista de tarjetas |
-| **Barra de progreso** | Porcentaje del huerto y avance de misiones (con valor numérico visible) |
-| **Chip** | Cualidad de la planta (texto «Caliente» o «Fría» + color) y nivel |
-| **Estado vacío** | Ilustración, una frase que explica y un botón de acción |
-| **Cargador de archivos** | Vista previa, validación de formato, tamaño y cantidad antes de subir |
-| **Selector de mapa** | Leaflet con OpenStreetMap y botón «Usar mi ubicación actual» |
-| **Calendario** | Vista mensual para la luna (HU-017) y para las actividades (HU-029) |
-| **Emblema de nivel / Tarjeta de insignia** | Insignia desbloqueada a color; bloqueada en gris con su condición |
+- **Color:** fondo de tierra clara (`tierra-50 #fbf6ee`), tarjetas blancas y tinta café cálida (`luna-800 #2a241d`). El verde chakra (`primary-600 #1f7a4d`) se reserva para lo que se puede presionar. El oro (`#c98a12`) solo marca el foco del teclado. No se usan grises fríos.
+- **Tipografía:** una sola familia, Nunito Variable, incluida en la app (sin depender de internet). La jerarquía la dan el peso y el tamaño; el cuerpo es de 17 px.
+- **Componentes:** botón, campo, selector, casilla, aviso (banner), diálogo de advertencias, toast de logro, tarjeta, chip de cualidad, barra de progreso, estado vacío, navegación y luna. Los componentes de versiones futuras (cargador de archivos, mapa, calendario, tabla, insignias) se diseñan cuando llegue su historia.
 
 ## 3. Mapa de navegación
 
@@ -109,85 +64,47 @@ flowchart TB
 - Sin sesión, cualquier ruta protegida redirige a `/login` (HU-002).
 - Un voluntario sin comunidad ve en Inicio una tarjeta grande «Crea o únete a una comunidad»; las demás secciones del huerto muestran un estado vacío que lo explica.
 - Las acciones de edición del huerto y de la comunidad solo aparecen para el **responsable**; «Retirar» en el foro solo para el **moderador**. El servidor igualmente verifica cada permiso.
-- **Móvil:** barra inferior con 5 destinos (Inicio, Huerto, **Registrar +**, Ranking, Más). **Escritorio:** menú lateral.
+- **Móvil (v1):** barra inferior con 4 destinos: Inicio, Mi huerto, **Registrar** y Huerto virtual. **Escritorio:** menú lateral con los mismos destinos. Las secciones de v2 y v3 se suman al menú cuando existan.
+
+El diagrama muestra el mapa completo de las tres versiones; la columna «Versión» del inventario indica cuándo llega cada pantalla.
 
 ## 4. Inventario de pantallas
 
-| # | Pantalla | Ruta | Historia | Quién | Ola | Estados a diseñar |
+| # | Pantalla | Ruta | Historia | Quién | Versión | Estados a diseñar |
 |---|---|---|---|---|:-:|---|
-| 1 | Registro | `/registro` | 001 | Sin sesión | 1 | Campos obligatorios, correo inválido o repetido, contraseña corta, fecha inválida, éxito |
-| 2 | Inicio de sesión | `/login` | 002 | Sin sesión | 1 | Campos vacíos, credenciales incorrectas (mensaje genérico) |
-| 3 | Inicio | `/` | 002, 016, 017 | Con sesión | 1 | Sin comunidad; con comunidad (resumen) |
-| 4 | Crear comunidad | `/comunidad/nueva` | 004 | Voluntario | 1 | Campos faltantes, contacto inválido |
-| 5 | Ficha de comunidad | `/comunidad/:id` | 007 | Con sesión | 2 | Sin miembros adicionales; no encontrada |
-| 6 | Editar comunidad | `/comunidad/:id/editar` | 005 | Responsable | 2 | Ranking de solo lectura; sin permiso |
-| 7 | Agregar miembros | `/comunidad/:id/miembros` | 006 | Responsable | 2 | No registrado; ya es miembro |
-| 8 | Huerto · Ubicación | `/huerto/ubicacion` | 010 | Responsable | 1 | Listas provincia → parroquia, mapa, permiso de ubicación denegado |
-| 9 | Huerto · Diseño | `/huerto/diseno` | 011 | Responsable | 2 | Sin selección; tipo sin variante |
-| 10 | Huerto · Cerca | `/huerto/cerca` | 012 | Responsable | 3 | Sin selección |
-| 11 | Huerto · Recursos | `/huerto/recursos` | 013 | Responsable | 2 | Área inválida; falta suelo, agua o abono |
-| 12 | Huerto · Plantas | `/huerto/plantas` | 014 | Responsable | 1 | Listado vacío; foto inválida; campos obligatorios |
-| 13 | Huerto · Bodega | `/huerto/bodega` | 015 | Responsable | 3 | Sin espacios; falta descripción |
-| 14 | **Huerto virtual** | `/huerto/virtual` | 016 | Miembro | 1 | Sin actividades; sin plantas; progreso |
-| 15 | Calendario lunar | `/lunar` | 017 | Con sesión | 1 | Fase no disponible |
-| 16 | **Registrar actividad** | `/actividades/nueva` | 018–027 | Miembro | 1 | Errores por campo; **diálogo de advertencias**; logros |
-| 17 | Calendario de actividades | `/actividades` | 029 | Miembro | 3 | Sin actividades |
-| 18 | Historia visual de la planta | `/plantas/:id/historia` | 028 | Miembro | 3 | Sin archivos; archivo inválido |
-| 19 | Mi progreso | `/progreso` | 033, 034 | Con sesión | 2 | Sin progreso (cero puntos, aprendiz) |
-| 20 | Insignias | `/progreso/insignias` | 031 | Con sesión | 3 | Todas bloqueadas con su condición |
-| 21 | Misiones | `/progreso/misiones` | 032 | Con sesión | 3 | Pendiente, en progreso, completada |
-| 22 | Ranking | `/ranking` | 035 | Con sesión | 1 | Sin comunidades; comunidad propia destacada |
-| 23 | Foro | `/foro` | 008, 009 | Con sesión | 3 | Sin aportes; aporte vacío; vista del moderador |
-| 24 | Perfil | `/perfil` | 003 | Con sesión | 2 | Campos de solo lectura (nivel y talentos) |
+| 1 | Registro | `/registro` | 001, 036 | Sin sesión | v1 | Campos obligatorios, correo inválido o repetido, contraseña corta, fecha inválida, consentimiento sin marcar, éxito |
+| 2 | Inicio de sesión | `/login` | 002 | Sin sesión | v1 | Campos vacíos, credenciales incorrectas (mensaje genérico) |
+| 3 | Política de privacidad | `/privacidad` | 036 | Todos | v1 | Solo lectura |
+| 4 | Inicio | `/` | 002, 017, 030 | Con sesión | v1 | Sin comunidad; con comunidad (recomendación del día, puntos, consejos) |
+| 5 | Crear comunidad | `/comunidad/nueva` | 004 | Voluntario | v1 | Campos faltantes, contacto inválido |
+| 6 | Ficha de comunidad | `/comunidad/:id` | 007 | Con sesión | v2 | Sin miembros adicionales; no encontrada |
+| 7 | Editar comunidad | `/comunidad/:id/editar` | 005 | Responsable | v2 | Ranking de solo lectura; sin permiso |
+| 8 | Agregar miembros | `/comunidad/:id/miembros` | 006 | Responsable | v2 | No registrado; ya es miembro |
+| 9 | Mi huerto: ubicación y plantas | `/huerto` | 010, 014 | Responsable | v1 | Provincia → parroquia, ubicación del navegador o manual, permiso denegado; plantas vacías y campos obligatorios. El mapa y las fotos llegan en v2 |
+| 10 | Huerto · Diseño | `/huerto/diseno` | 011 | Responsable | v2 | Sin selección; tipo sin variante |
+| 11 | Huerto · Cerca | `/huerto/cerca` | 012 | Responsable | v2 | Sin selección |
+| 12 | Huerto · Recursos | `/huerto/recursos` | 013 | Responsable | v2 | Área inválida; falta suelo, agua o abono |
+| 13 | Huerto · Bodega | `/huerto/bodega` | 015 | Responsable | v3 | Sin espacios; falta descripción |
+| 14 | **Huerto virtual** | `/huerto/virtual` | 016 | Miembro | v1 | Sin actividades; sin plantas; progreso |
+| 15 | Calendario lunar mensual | `/lunar` | 017 | Con sesión | v2 | Fase no disponible. En v1 la fase del día se muestra en Inicio |
+| 16 | **Registrar actividad** | `/actividades/nueva` | 018, 021, 023, 025 (v1); 019–027 | Miembro | v1 | Errores por campo; **diálogo de advertencias**; puntos. Los demás tipos llegan en v2 |
+| 17 | Calendario de actividades | `/actividades` | 029 | Miembro | v3 | Sin actividades |
+| 18 | Historia visual de la planta | `/plantas/:id/historia` | 028 | Miembro | v3 | Sin archivos; archivo inválido |
+| 19 | Mi progreso | `/progreso` | 033, 034 | Con sesión | v3 | Sin progreso (cero puntos, aprendiz) |
+| 20 | Insignias | `/progreso/insignias` | 031 | Con sesión | v3 | Todas bloqueadas con su condición |
+| 21 | Misiones | `/progreso/misiones` | 032 | Con sesión | v3 | Pendiente, en progreso, completada |
+| 22 | Ranking | `/ranking` | 035 | Con sesión | v2 | Sin comunidades; comunidad propia destacada |
+| 23 | Foro | `/foro` | 008, 009 | Con sesión | v3 | Sin aportes; aporte vacío; vista del moderador |
+| 24 | Perfil | `/perfil` | 003 | Con sesión | v2 | Campos de solo lectura (nivel y talentos) |
 
-## 5. Wireframes de baja fidelidad
+## 5. Interfaces
 
-Los wireframes muestran estructura y contenido, no el acabado visual. Todos se diseñan para móvil (360 px) y se reacomodan en escritorio.
+Las pantallas de v1 están en dos lugares, en lugar de wireframes de baja fidelidad:
 
-### 5.1 Registro y acceso (HU-001, HU-002)
-```
+- **Figma:** [Nexo — MVP v1](https://www.figma.com/design/5lN9PIqZZV9XJsqGy1yaiI), con variables, estilos, componentes y las 6 pantallas móviles (390 px). Las pantallas de escritorio (1440 px) están pendientes.
+- **Capturas de la app real** en móvil y escritorio: [`docs/capturas/`](../capturas/).
 
-```
-
-### 5.2 Inicio
-```
-
-```
-
-### 5.3 Ubicación del huerto (HU-010)
-```
-
-```
-
-### 5.4 Registrar actividad (HU-018 a HU-028) — la pantalla central
-```
-
-```
-
-### 5.5 Calendario lunar (HU-017)
-```
-
-```
-
-### 5.6 Huerto virtual (HU-016)
-```
-
-```
-
-### 5.7 Mi progreso (HU-034, HU-033)
-```
-
-```
-
-### 5.8 Ranking (HU-035)
-```
-
-```
-
-### 5.9 Foro (HU-008, HU-009) — ola 3
-```
-
-```
+Las pantallas de v2 y v3 se diseñan en Figma al empezar cada versión.
 
 ## 6. Huerto virtual: especificación visual
 
@@ -198,12 +115,13 @@ Los wireframes muestran estructura y contenido, no el acabado visual. Todos se d
 | Sembrada | `etapa-2-sembrada.svg` | Siembra |
 | En cuidado | `etapa-3-en-cuidado.svg` | Cuidado o riego |
 | Cosechada | `etapa-4-cosechada.svg` | Cosecha |
-| En secado | `etsapa-5-en-secado.svg` | Secado |
+| En secado | `etapa-5-en-secado.svg` | Secado |
 | Empaquetada | `etapa-6-empaquetada.svg` | Empaquetado |
 
 - **Diseño de la parcela:** una tarjeta por planta (2 columnas en móvil, 4 en escritorio) con el dibujo de su etapa, el nombre común y el nombre de la etapa en texto.
 - **Barra superior:** porcentaje del huerto con `ProgressBar` (valor numérico siempre visible).
-- **Transición:** al cambiar de etapa, el dibujo anterior se desvanece y el nuevo entra con una escala breve (300 ms). Con `prefers-reduced-motion` se cambia sin animación.
+- **Transición («brotar»):** tras registrar una actividad, la planta trabajada muestra 600 ms el dibujo de su etapa anterior y luego la nueva etapa entra con un salto breve (520 ms). Con `prefers-reduced-motion` se cambia sin animación. Detalle en `DESIGN.md`.
+- **Etapas:** v1 ya dibuja las 7; las etapas 5 y 6 se alcanzan cuando existan el secado y el empaquetado (v2).
 - **Estados:** *sin actividades* (todas en estado inicial, sin errores); *sin plantas* (parcela vacía con el mensaje «Registra tus plantas» y botón de acción).
 
 
@@ -221,14 +139,14 @@ Los wireframes muestran estructura y contenido, no el acabado visual. Todos se d
 | **Credenciales incorrectas** | Mensaje genérico que no indica cuál dato falló | 002 |
 | **Permiso de ubicación denegado** | Mensaje y se habilitan los campos de coordenadas manuales | 010 |
 | **Archivo inválido** | El cargador rechaza y explica el motivo (formato, tamaño o máximo de 5) antes de subir | 014, 028 |
-| **Carga** | Esqueletos grises; botones con texto «Guardando…» y deshabilitados | Todas |
+| **Carga** | Esqueletos en tono tierra; botones con texto «Guardando…» y deshabilitados | Todas |
 
-**Textos de las advertencias** (para el diálogo; ya están en `@nexo/shared`): fase lunar, espera de 15 días, falta de preparación, ritual previo, horario del ritual de gratitud (5:00 a 7:00), rocío (cosecha antes de las 8:00) y duración del secado (10 a 15 días).
+**Advertencias del diálogo.** En v1, `@nexo/shared` genera dos: fase lunar (`FASE_LUNAR`) y rocío, cuando se cosecha antes de las 8:00 (`ROCIO`). Las demás llegan con sus actividades en v2: espera de 15 días, falta de preparación, ritual previo, horario del ritual de gratitud (5:00 a 7:00) y duración del secado (10 a 15 días).
 
 ## 8. Responsive y accesibilidad
 
-- **Móvil primero (360 px):** una columna, barra inferior de navegación, botones de 44 px como mínimo, tablas convertidas en tarjetas.
-- **Tablet y escritorio:** menú lateral, formularios en dos columnas cuando son largos, huerto virtual en 4 columnas.
+- **Móvil primero (360 px):** una columna, barra inferior de navegación, objetivos táctiles de 44 px como mínimo (botones y campos de 48 px), tablas convertidas en tarjetas.
+- **Escritorio (desde 768 px):** menú lateral, formularios en dos columnas cuando son largos, huerto virtual en 4 columnas.
 - **Accesibilidad:** foco visible en todos los elementos (`:focus-visible`), etiquetas en todos los campos, mensajes de error asociados al campo, `aria-live` en los toasts, contraste verificado, el color nunca es la única señal (la cualidad lleva texto «Caliente» o «Fría», la insignia bloqueada lleva su condición escrita), y animaciones desactivadas con `prefers-reduced-motion`.
 - **Idioma:** español; fechas se muestran `dd/mm/aaaa` y viajan como `AAAA-MM-DD`.
 

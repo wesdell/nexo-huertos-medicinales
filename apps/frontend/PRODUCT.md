@@ -1,56 +1,56 @@
-# Product
+# Producto
 
 <!-- impeccable:product-schema 1 -->
 
-## Platform
+## Plataforma
 
 web
 
-## Users
+## Usuarios
 
-Mixed garden communities in Ecuador: volunteers from urban neighborhoods and rural communities, of varied ages, many with little digital experience. They use the app on a phone outdoors, in the garden, often in bright sun and with busy or dirty hands. A community can be a single person or a whole neighborhood.
+Comunidades de huertos mixtas del Ecuador: voluntarios de barrios urbanos y de comunidades rurales, de edades variadas y muchos con poca experiencia digital. Usan la app en el teléfono, al aire libre, en el huerto, a menudo bajo sol fuerte y con las manos ocupadas o sucias. Una comunidad puede ser una sola persona o un barrio entero.
 
-## Product Purpose
+## Propósito del producto
 
-Motivate people to start and keep medicinal gardens by bridging ancestral knowledge (lunar calendar, rituals, hot/cold plant qualities, natural fences, orientation to the East) with digital tools. Users register their real garden, plants and activities (land preparation, sowing, watering, harvest), and see a virtual "mirror garden" that reflects the real one. Success: communities keep registering activities and their virtual garden advances.
+Motivar a las personas a empezar y mantener huertos medicinales uniendo los saberes ancestrales (calendario lunar, rituales, cualidad caliente o fría de las plantas, cercas vivas, orientación al Este) con herramientas digitales. Los usuarios registran su huerto real, sus plantas y sus actividades (preparación de la tierra, siembra, riego, cosecha) y ven un «huerto espejo» virtual que refleja el real. Éxito: las comunidades siguen registrando actividades y su huerto virtual avanza.
 
-## Positioning
+## Posicionamiento
 
-Not a generic gardening tracker: every recommendation comes from Andean ancestral practice (moon phase per activity, harvest after the dew, rituals), and the app warns gently instead of blocking ("save anyway"). The virtual garden is a mirror of the real, community-owned garden.
+No es un registro genérico de jardinería: cada recomendación viene de la práctica ancestral andina (fase lunar por actividad, cosecha después del rocío, rituales), y la app advierte con suavidad en lugar de bloquear («guardar de todas formas»). El huerto virtual es el espejo del huerto real de la comunidad.
 
-## Operating Context
+## Contexto de uso
 
-- Main loop: open app in the garden → see the day's moon-phase recommendation → register an activity → see points and the virtual garden advance.
-- Roles: volunteer, community member, community responsible (creates community, garden, plants), moderator (v3).
-- Language: Spanish (Ecuador). Dates shown dd/mm/aaaa.
-- Evaluated as a university project for the course Calidad de Software: usability, accessibility, responsive behavior and test evidence are graded.
-- Releases: v1.0.0 MVP (2026-11-10), then v2.0.0 and v3.0.0 (see docs/bitacora.md).
+- Recorrido principal: abrir la app en el huerto → ver la recomendación del día según la fase lunar → registrar una actividad → ver los puntos y el avance del huerto virtual.
+- Roles: voluntario, miembro de la comunidad, responsable de la comunidad (crea la comunidad, el huerto y las plantas) y moderador (v3).
+- Idioma: español (Ecuador). Las fechas se muestran como dd/mm/aaaa.
+- Se evalúa como proyecto universitario de la materia Calidad de Software: se califican la usabilidad, la accesibilidad, el comportamiento responsive y la evidencia de pruebas.
+- Versiones: v1.0.0 MVP (publicada el 06/11/2026), luego v2.0.0 y v3.0.0 (ver `docs/bitacora.md`).
 
-## Capabilities and Constraints
+## Capacidades y restricciones
 
-- v1: registration with personal-data consent (LOPDP Ecuador), login, create community, register garden (province, parish, coordinates), plants, 4 activity types with errors vs. confirmable warnings, points, virtual garden stages 0–4, daily moon recommendation, ancestral tips.
-- Stack fixed: React + Vite + Tailwind v4 SPA, NestJS API, PostgreSQL, Docker Compose.
-- Later versions add map, forum, badges, missions, ranking, photos.
+- v1: registro con consentimiento de datos personales (LOPDP Ecuador), inicio de sesión, crear comunidad, registrar el huerto (provincia, parroquia y coordenadas), plantas, 4 tipos de actividad con errores frente a advertencias confirmables, puntos, huerto virtual con 7 etapas (0 a 6), recomendación lunar del día y consejos ancestrales.
+- Stack fijo: SPA con React + Vite + Tailwind v4, API NestJS, PostgreSQL y Docker Compose.
+- Las versiones siguientes suman mapa, foro, insignias, misiones, ranking y fotos.
 
-## Brand Commitments
+## Compromisos de marca
 
-- Name: **Nexo**. Binding.
-- Logo and favicon: none exist yet; to be designed.
-- docs/arquitectura-y-diseno/diseno.md (green/earth palette, Fraunces + Inter) is a reference only, not binding.
+- Nombre: **Nexo**. Obligatorio.
+- Logo y favicon propios: un brote de dos hojas sobre una línea de tierra en un cuadro verde raíz (`apps/frontend/public/logo.svg`).
+- El sistema de diseño vigente es `apps/frontend/DESIGN.md`; `docs/arquitectura-y-diseno/diseno.md` lo resume y remite a él.
 
-## Evidence on Hand
+## Evidencia disponible
 
-- User stories HU-001..035 in docs/historias-de-usuario.
-- No real testimonials, partner organizations, photos or metrics exist; do not fabricate them.
+- Historias de usuario HU-001 a HU-036 en `docs/historias-de-usuario/`.
+- No existen testimonios reales, organizaciones aliadas, fotos ni métricas; no se inventan.
 
-## Product Principles
+## Principios del producto
 
-1. Built for the garden: one-handed, outdoor-readable, large targets.
-2. Warn, never scold: ancestral recommendations are advice with "save anyway".
-3. The screen mirrors the soil: every registered action shows visible progress.
-4. Recognize knowledge: points and stages celebrate care, soberly.
-5. Every state counts: empty, error and loading states are designed.
+1. Hecha para el huerto: se usa con una mano, se lee al aire libre y tiene objetivos táctiles grandes.
+2. Advertir, nunca regañar: las recomendaciones ancestrales son consejos con «guardar de todas formas».
+3. La pantalla refleja la tierra: cada acción registrada muestra un avance visible.
+4. Reconocer el saber: los puntos y las etapas celebran el cuidado, con sobriedad.
+5. Cada estado cuenta: los estados vacío, de error y de carga están diseñados.
 
-## Accessibility & Inclusion
+## Accesibilidad e inclusión
 
-WCAG 2.1 AA minimum (graded). Low digital literacy: plain Spanish, text labels with icons, color never the only signal, reduced-motion respected, high contrast for sunlight.
+WCAG 2.1 AA como mínimo (se califica). Para baja alfabetización digital: español sencillo, etiquetas de texto junto a los iconos, el color nunca es la única señal, se respeta el movimiento reducido y hay alto contraste para la luz del sol.

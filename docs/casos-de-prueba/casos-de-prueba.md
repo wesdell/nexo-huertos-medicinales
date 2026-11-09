@@ -107,6 +107,8 @@ Ejecutados el 06/11/2026 en Chromium, con la cuenta demo de `.env.example`.
 | D-07 | CM-01 | El enlace «Saltar al contenido» aparecía sin relleno | Baja | Relleno y sombra al enfocarse |
 | D-08 | CM-10 | El botón de la tarjeta «Hoy» se partía en dos líneas en tableta | Baja | Botón en fila solo desde 1024 px |
 | D-09 | CM-12 | SEO 92 por falta de `robots.txt` | Baja | Se agrega `public/robots.txt` |
+| D-10 | Auditoría externa (09/11) | `pnpm test` fallaba: el frontend tenía Vitest configurado sin ninguna prueba | Baja | Se quita Vitest del frontend; las pruebas de interfaz son las de Playwright |
+| D-11 | Auditoría externa (09/11) | `pnpm lint` fallaba: ESLint estaba instalado sin archivo de configuración | Baja | Se agrega `eslint.config.mjs` con reglas de accesibilidad (`jsx-a11y`) y se ejecuta en CI |
 
 ## Pendiente conocido
 

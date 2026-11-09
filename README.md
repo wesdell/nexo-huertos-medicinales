@@ -46,6 +46,7 @@ pnpm --filter frontend dev
 |---|---|---|
 | Reglas de dominio (fase lunar, validaciones, puntos, huerto virtual) | `pnpm --filter @nexo/shared test` | Nada |
 | Tipos en todo el monorepo | `pnpm typecheck` | Nada |
+| Estilo y reglas de accesibilidad del código (ESLint) | `pnpm lint` | Nada |
 | API de punta a punta | `pnpm --filter backend test:e2e` | `docker compose up` |
 | Flujo completo en móvil y escritorio + accesibilidad (axe, WCAG 2.1 AA) | `pnpm e2e` | `docker compose up` y `pnpm exec playwright install chromium` |
 
@@ -84,3 +85,7 @@ e2e/             pruebas Playwright
 | v1.0.0 (MVP) | Registro con consentimiento de datos, comunidad, huerto, plantas, 4 actividades, puntos, huerto virtual, recomendación lunar |
 | v2.0.0 | Mapa, calendario lunar, fotos, ranking, actividades restantes |
 | v3.0.0 | Foro, insignias, misiones, bodega, notificaciones |
+
+## Licencia
+
+[MIT](LICENSE).
