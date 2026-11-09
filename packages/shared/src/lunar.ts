@@ -47,3 +47,12 @@ export function recomendacionDelDia(fecha: string) {
   if (!fase) return null;
   return { fase, nombre: NOMBRE_FASE[fase], texto: RECOMENDACION_POR_FASE[fase] };
 }
+
+/** Calendario lunar de un mes (HU-017): fase de cada día. */
+export function calendarioLunar(anio: number, mes: number) {
+  const dias = new Date(Date.UTC(anio, mes, 0)).getUTCDate();
+  return Array.from({ length: dias }, (_, i) => {
+    const fecha = `${anio}-${String(mes).padStart(2, '0')}-${String(i + 1).padStart(2, '0')}`;
+    return { fecha, fase: faseLunar(fecha) };
+  });
+}

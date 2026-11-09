@@ -1,4 +1,4 @@
-/** Consejos de saberes ancestrales mostrados como ayuda (texto fijo en v1). */
+/** Consejos de saberes ancestrales mostrados como ayuda. */
 export const CONSEJOS_ANCESTRALES = {
   ubicacion: [
     'Orienta el huerto hacia el Este para que reciba el sol de la mañana.',
