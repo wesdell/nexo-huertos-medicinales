@@ -2,7 +2,36 @@
 
 Todos los cambios importantes de Nexo se registran aquí. El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y el proyecto usa [versionado semántico](https://semver.org/lang/es/).
 
-## [Sin publicar]
+## [2.0.0] · 2026-11-09
+
+Versión completa con el modelo acordado con el MSP en la reunión del 06/11/2026.
+
+### Cambiado (incompatible con v1)
+
+- Ya no hay auto-registro ni comunidades libres: el público **solicita un huerto** y el **técnico del MSP** lo aprueba; la cuenta del responsable y su contraseña temporal llegan por correo y deben cambiarse en el primer ingreso (HU-037 a HU-039).
+- Roles `RESPONSABLE`, `TECNICO_MSP` y `ADMIN`. Los voluntarios no tienen cuenta: los registra el responsable (HU-040).
+- Las plantas pasan a un **catálogo global** del MSP filtrado por altitud (HU-042, HU-043).
+- Los puntos son **por hora trabajada** y se otorgan cuando el MSP **valida la evidencia** (HU-045).
+- La migración `20261109000000_modelo_msp` reemplaza las tablas de v1; los datos demo se vuelven a cargar.
+
+### Agregado
+
+- Parte pública: portada, mapa de huertos, ficha con espejo digital e historia visual, ranking por tipo y de producción, estadísticas por provincia, catálogo de plantas, saberes con los 13 pasos y calendario lunar mensual (HU-048, HU-049, HU-052).
+- Los 13 pasos de los lineamientos del MSP en orden, con «cuándo» y «cómo», validaciones de cada paso, evidencia obligatoria, máximo 24 horas por voluntario y día (HU-044).
+- Segunda oportunidad de evidencia al 50 %, pasos no cumplidos y ciclos fallidos con causa (HU-045, HU-046).
+- Niveles automáticos, nivel por experiencia aprobado por el MSP, talentos certificados y 10 misiones con insignia (HU-041, HU-047).
+- Técnico del MSP: bandejas de solicitudes, evidencias, plantas y niveles; carga CSV del catálogo; registro centralizado exportable; cambio de responsable; restablecer contraseña; moderación del foro (HU-050).
+- Foro con categorías, respuestas, reglas, reportes y moderación (HU-008, HU-009).
+- Bodega, producción con etiquetas y datos operativos del huerto (HU-011 a HU-015).
+- Administrador: estado del sistema, respaldo con `pg_dump` y cuentas de técnicos (HU-051).
+- Mailpit en Docker Compose para los correos de la demo.
+- Historias de usuario y casos de prueba también en Word con las plantillas de la materia (`python docs/generar-docx.py`).
+
+### Calidad
+
+- 66 pruebas unitarias, 13 de API y 4 flujos de interfaz por rol en móvil y escritorio con axe, todas en verde.
+
+## [Sin publicar antes de 2.0.0]
 
 ### Corregido
 
@@ -52,4 +81,5 @@ Primera versión: el MVP para la entrega del 10/11/2026.
 - El enlace «Saltar al contenido» se ve completo al enfocarlo.
 - El botón «Registrar actividad» de la tarjeta Hoy ya no se parte en tabletas.
 
+[2.0.0]: https://github.com/wesdell/nexo-huertos-medicinales/releases/tag/v2.0.0
 [1.0.0]: https://github.com/wesdell/nexo-huertos-medicinales/releases/tag/v1.0.0

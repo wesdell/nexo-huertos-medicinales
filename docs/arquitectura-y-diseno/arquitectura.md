@@ -6,6 +6,14 @@
 
 Este documento describe la arquitectura objetivo de las tres versiones. Lo que ya existe en v1.0.0 se indica en cada sección.
 
+> **Estado en v2.0.0 (09/11/2026).** La arquitectura objetivo está completa, con el modelo acordado con el MSP ([reunión](../reunion-msp-2026-11-06.md)):
+>
+> - **Contenedores:** PostgreSQL 16, API NestJS, SPA React y **Mailpit** (SMTP de prueba, bandeja en el puerto 8025). Las evidencias se guardan en el volumen `uploads` y se sirven en `/api/archivos/`.
+> - **API, un archivo por dominio:** `auth.ts` (JWT, `AuthGuard` con roles y clave temporal), `publico.ts` (solicitud, mapa, ficha, ranking, estadísticas, catálogo), `huertos.ts` (responsable: voluntarios, plantas, ciclos, actividades multipart, bodega, producción), `msp.ts` (técnico: solicitudes, evidencias, catálogo, niveles, registro), `admin.ts` (estado, respaldo `pg_dump`, cuentas), `foro.ts`, `gamificacion.ts` (acreditación de puntos, niveles, ranking, misiones y espejo digital), `correo.ts` y `archivos.ts`.
+> - **Dominio en `@nexo/shared`:** `pasos.ts` (13 pasos y su orden), `actividades.ts` (validación de cada paso y de los participantes), `gamificacion.ts` (puntos por hora, niveles, talentos, ranking, misiones), `validaciones.ts` (cédula, celular, coordenadas, altitud), `catalogos.ts` y `lunar.ts`.
+> - **Flujo de puntos:** el responsable registra el paso con horas y evidencia → queda `PENDIENTE` → el técnico aprueba → en una transacción se crean los movimientos de puntos por voluntario, se actualizan los cachés, el nivel y el ranking. Si rechaza, el responsable tiene una segunda oportunidad al 50 %.
+> - **Roles:** `RESPONSABLE`, `TECNICO_MSP` y `ADMIN`; los voluntarios no tienen cuenta. El público usa `/api/publico/*` y `/api/foro` sin token.
+
 Tres principios guían el diseño:
 
 1. **Las reglas del dominio viven en `@nexo/shared`** — validación de actividades, fase lunar, puntos y huerto virtual (v1); gamificación y ranking se suman en v2 y v3. Backend y frontend consumen el mismo paquete; el backend es la autoridad.

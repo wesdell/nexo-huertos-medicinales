@@ -1,6 +1,13 @@
 # Nexo · Huertos medicinales comunitarios
 
-Aplicación web que une saberes ancestrales e innovación digital para que comunidades, desde una sola persona hasta un barrio entero, cultiven huertos medicinales. Registras tu huerto, sus plantas y las actividades (preparación, siembra, riego, cosecha) y ves un huerto virtual que refleja el real, con recomendaciones según la fase lunar.
+Aplicación web educativa y gamificada del Ministerio de Salud Pública (MSP) del Ecuador para que las comunidades, desde una sola persona hasta un barrio entero, creen huertos medicinales, aprendan los saberes ancestrales y entreguen plantas secas a la población.
+
+- **Público (sin cuenta):** solicita un huerto, ve el mapa, la ficha y el huerto virtual de cada huerto, el ranking, las estadísticas por provincia, el catálogo de plantas, los 13 pasos del huerto con el calendario lunar y el foro.
+- **Responsable del huerto:** registra a sus voluntarios (sin cuenta), elige plantas del catálogo según la altitud y registra cada paso del ciclo después de hacerlo, con quién trabajó, cuántas horas y fotos o videos reales.
+- **Técnico del MSP:** aprueba huertos (la clave llega por correo), valida evidencias (así se otorgan los puntos), administra el catálogo, aprueba niveles por experiencia, mantiene el registro centralizado y modera el foro.
+- **Administrador del sistema:** respaldos, estado de la base de datos y cuentas de técnicos.
+
+El modelo sale de la reunión con el MSP del 06/11/2026: [docs/reunion-msp-2026-11-06.md](docs/reunion-msp-2026-11-06.md).
 
 Proyecto de la materia **Calidad de Software**. Estado y pendientes: [docs/bitacora.md](docs/bitacora.md).
 
@@ -24,9 +31,16 @@ Resumen. Requisito: [Docker Desktop](https://www.docker.com/products/docker-desk
 
 3. Abre:
    - Aplicación: <http://localhost:5173>
+   - Correos enviados (claves temporales), bandeja de Mailpit: <http://localhost:8025>
    - Documentación de la API (Swagger): <http://localhost:3000/api/docs>
 
-Cuenta de demostración (solo desarrollo): los valores `DEMO_EMAIL` y `DEMO_PASSWORD` de `.env.example`.
+Cuentas de demostración (solo desarrollo), todas con la contraseña `DEMO_PASSWORD` de `.env.example`:
+
+| Rol | Correo |
+|---|---|
+| Responsable de huerto | `demo@nexo.test` |
+| Técnico del MSP | `tecnico@nexo.test` |
+| Administrador del sistema | `admin@nexo.test` |
 
 Para detener: `docker compose down`. Para borrar también la base de datos: `docker compose down -v`.
 
@@ -44,11 +58,11 @@ pnpm --filter frontend dev
 
 | Qué | Comando | Requiere |
 |---|---|---|
-| Reglas de dominio (fase lunar, validaciones, puntos, huerto virtual) | `pnpm --filter @nexo/shared test` | Nada |
+| Reglas de dominio (pasos, validaciones, puntos, niveles, ranking, cédula) | `pnpm --filter @nexo/shared test` | Nada |
 | Tipos en todo el monorepo | `pnpm typecheck` | Nada |
 | Estilo y reglas de accesibilidad del código (ESLint) | `pnpm lint` | Nada |
 | API de punta a punta | `pnpm --filter backend test:e2e` | `docker compose up` |
-| Flujo completo en móvil y escritorio + accesibilidad (axe, WCAG 2.1 AA) | `pnpm e2e` | `docker compose up` y `pnpm exec playwright install chromium` |
+| Flujos de los cuatro roles en móvil y escritorio + accesibilidad (axe, WCAG 2.1 AA) | `pnpm e2e` | `docker compose up` y `pnpm exec playwright install chromium` |
 
 GitHub Actions ejecuta todo en cada pull request ([.github/workflows/ci.yml](.github/workflows/ci.yml)).
 
@@ -64,7 +78,8 @@ El archivo de Figma está en el equipo del autor del repositorio. Si el enlace n
 
 ## Calidad
 
-- [Casos de prueba](docs/casos-de-prueba/casos-de-prueba.md): 33 automáticos y 14 manuales, con su historia de usuario y su resultado.
+- [Historias de usuario](docs/historias-de-usuario/historias-de-usuario.md) ([Word](docs/historias-de-usuario/historias-de-usuario.docx)): HU-001 a HU-052.
+- [Casos de prueba](docs/casos-de-prueba/casos-de-prueba.md) ([Word](docs/casos-de-prueba/casos-de-prueba.docx)): 66 unitarias, 13 de API y 8 de interfaz automáticas, y 18 casos documentados con la plantilla de la materia. Los .docx se regeneran con `python docs/generar-docx.py`.
 - [Informe de calidad](docs/informe/informe.md): modelo ISO/IEC 25010, resultados de Lighthouse y defectos encontrados.
 - [CHANGELOG](CHANGELOG.md) y [bitácora](docs/bitacora.md).
 
@@ -83,8 +98,7 @@ e2e/             pruebas Playwright
 | Versión | Contenido |
 |---|---|
 | v1.0.0 (MVP) | Registro con consentimiento de datos, comunidad, huerto, plantas, 4 actividades, puntos, huerto virtual, recomendación lunar |
-| v2.0.0 | Mapa, calendario lunar, fotos, ranking, actividades restantes |
-| v3.0.0 | Foro, insignias, misiones, bodega, notificaciones |
+| v2.0.0 | Modelo acordado con el MSP: solicitud y aprobación de huertos, voluntarios sin cuenta, catálogo por altitud, 13 pasos secuenciales con evidencia, puntos por hora validados por el MSP, niveles, misiones, rankings, parte pública, foro, bodega, producción y administración |
 
 ## Licencia
 

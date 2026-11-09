@@ -1,116 +1,232 @@
-# Casos de prueba · v1.0.0 (MVP)
+# Casos de prueba · v2.0.0
 
-Este documento lista los casos de prueba de la versión 1.0.0 de Nexo. Cada caso remite a una historia de usuario (HU) de [historias-de-usuario.md](../historias-de-usuario/historias-de-usuario.md). Los casos automáticos se ejecutan en cada cambio con GitHub Actions; los manuales se ejecutaron el 06/11/2026 sobre `docker compose up --build`.
+Casos de prueba de la versión 2.0.0 de Nexo, que integra el modelo acordado con el MSP el 06/11/2026. Cada caso remite a una historia de usuario de [historias-de-usuario.md](../historias-de-usuario/historias-de-usuario.md). Los casos siguen la plantilla de la materia (ID, título, descripción, procedimiento, resultados esperados y ejecuciones) y también están en [casos-de-prueba.docx](casos-de-prueba.docx).
 
 ## Cómo ejecutarlas
 
 | Nivel | Herramienta | Comando | Casos |
 | --- | --- | --- | --- |
-| Unitarias (reglas de dominio) | Vitest | `pnpm --filter @nexo/shared test` | 29 |
-| API de punta a punta | `node:test` + `fetch` contra la API en Docker | `pnpm --filter backend test:e2e` | 13 |
-| Interfaz de punta a punta + accesibilidad | Playwright + axe-core (WCAG 2.1 AA) | `pnpm e2e` | 2 (móvil 412 px y escritorio 1440 px) |
-| Manuales | Navegador, teclado y Lighthouse 12 | Ver la sección «Casos manuales» | 14 |
+| Unitarias (reglas de dominio) | Vitest | `pnpm --filter @nexo/shared test` | 66 |
+| API de punta a punta | `node:test` + `fetch` contra la API en Docker (lee los correos en Mailpit) | `pnpm --filter backend test:e2e` | 13 |
+| Interfaz de punta a punta + accesibilidad | Playwright + axe-core (WCAG 2.1 AA) | `pnpm e2e` | 4 flujos × 2 vistas (móvil 412 px y escritorio 1440 px) |
+| Estáticas | TypeScript estricto y ESLint con `jsx-a11y` | `pnpm typecheck` y `pnpm lint` | — |
 
-Las pruebas de API y de interfaz necesitan la aplicación corriendo (`docker compose up --build -d --wait`).
+Las pruebas de API y de interfaz necesitan la aplicación corriendo con los datos demo (`docker compose up --build -d --wait`).
 
-## Casos automáticos
+**Última ejecución:** 09/11/2026 sobre `docker compose up --build`: 66/66 unitarias, 13/13 de API y 8/8 de interfaz, sin violaciones serias ni críticas de axe.
 
-### Registro, sesión y protección de datos
+## Casos
 
-| ID | HU | Caso | Datos o pasos | Resultado esperado | Nivel | Estado |
-| --- | --- | --- | --- | --- | --- | --- |
-| CP-01 | HU-036 | Registro sin aceptar la política | Registro con `aceptaPrivacidad: false` | 400; error en el campo `aceptaPrivacidad`; no se crea la cuenta | API | Pasa |
-| CP-02 | HU-001 | Contraseña corta | Contraseña de 5 caracteres | 400 con el mínimo de 8 caracteres | API | Pasa |
-| CP-03 | HU-001 | Registro válido y correo repetido | Mismo correo dos veces | 201 la primera vez; 409 «ya registrado» la segunda | API | Pasa |
-| CP-04 | HU-002 | Credenciales incorrectas y correctas | Contraseña errónea, luego la correcta | 401 con mensaje genérico; luego 200 con token | API | Pasa |
-| CP-05 | HU-002 | Ruta protegida sin sesión | `GET /api/auth/yo` sin token | 401 | API | Pasa |
+### P-001 · Solicitud de huerto con datos inválidos
 
-### Comunidad, huerto y plantas
+- **HU:** HU-037
+- **Nivel:** API y e2e
+- **Descripción:** Se espera que la solicitud pública rechace datos inválidos y explique cada campo, sin guardar nada.
+- **Procedimiento:**
+  1. Abrir «Solicitar huerto» sin iniciar sesión.
+  2. Escribir la cédula 1234567890 y el celular 022345678.
+  3. Elegir el tipo «En tierra» y no marcar la política de datos.
+  4. Pulsar «Enviar solicitud».
+- **Resultados esperados:** Se muestra un resumen de errores con la cédula inválida, el celular que debe empezar con 09, la ubicación faltante y el consentimiento; no se crea la solicitud.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · Respuesta 400 con los campos `cedula`, `celular` y `aceptaPrivacidad`; en pantalla, resumen de errores con el foco.
 
-| ID | HU | Caso | Datos o pasos | Resultado esperado | Nivel | Estado |
-| --- | --- | --- | --- | --- | --- | --- |
-| CP-06 | HU-004, HU-010 | Crear comunidad y huerto | Comunidad nueva; huerto con una parroquia de otra provincia y luego con una válida | El creador queda como responsable; parroquia ajena: 400; parroquia válida: 201 | API | Pasa |
-| CP-07 | HU-014 | Registrar planta | Manzanilla, ciclo corto, fría, usos | 201; aparece en el huerto | API | Pasa |
+### P-002 · Solicitud de huerto válida y duplicada
 
-### Fase lunar y actividades
+- **HU:** HU-037
+- **Nivel:** API
+- **Descripción:** Se espera que una solicitud válida quede pendiente y que la misma cédula no pueda tener dos solicitudes pendientes.
+- **Procedimiento:**
+  1. Enviar una solicitud con cédula válida, ubicación en Pichincha, altitud 300 m, subtipo «Surcos» y la política aceptada.
+  2. Enviar la misma solicitud otra vez.
+- **Resultados esperados:** La primera responde 201 y queda pendiente; la segunda responde 409 «Ya tienes una solicitud pendiente».
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · 201 y luego 409.
 
-| ID | HU | Caso | Datos o pasos | Resultado esperado | Nivel | Estado |
-| --- | --- | --- | --- | --- | --- | --- |
-| CP-08 | HU-017 | Fase lunar conocida | Fechas de lunas nuevas y llenas publicadas | Devuelve la fase correcta | Unitaria | Pasa |
-| CP-09 | HU-017 | Fecha fuera de rango o inválida | 1899-12-31, 2101-01-01, 2024-02-30, «08/04/2024» | Devuelve «no disponible» sin fallar | Unitaria | Pasa |
-| CP-10 | HU-017 | Recomendación del día | Cada una de las 4 fases | Texto de recomendación de la fase | Unitaria | Pasa |
-| CP-11 | HU-018 | Preparación en luna nueva | Todos los campos marcados | Sin errores ni advertencias | Unitaria | Pasa |
-| CP-12 | HU-018 | Preparación fuera de luna nueva | Fecha en luna llena | Advertencia que se puede confirmar | Unitaria | Pasa |
-| CP-13 | HU-018 | Preparación incompleta | Sin pasos marcados | Error en cada campo faltante | Unitaria | Pasa |
-| CP-14 | HU-018 | Fecha futura | Mañana | Error de fecha | Unitaria | Pasa |
-| CP-15 | HU-021 | Siembra de planta no registrada | `plantaId` ajeno al huerto | Error | Unitaria | Pasa |
-| CP-16 | HU-021 | Siembra sin técnica ni tipo | Campos vacíos | Un error por campo | Unitaria | Pasa |
-| CP-17 | HU-023 | Riego con aspersor y sin siembra previa | Método aspersor; planta sin sembrar | Aspersor no admitido; exige siembra previa | Unitaria | Pasa |
-| CP-18 | HU-025 | Cosecha de raíces en luna llena antes de las 8:00 | Raíz, luna llena, 06:30 | Dos advertencias (fase y hora) | Unitaria | Pasa |
-| CP-19 | HU-025 | Cosecha de planta sin siembra | Planta sin siembra registrada | Error | Unitaria | Pasa |
-| CP-20 | — | Tipo de actividad no habilitado en v1 | Secado (tipo de v2) | Error en el campo `tipo` | Unitaria | Pasa |
-| CP-21 | HU-018, HU-030 | Actividad incompleta enviada a la API | Preparación sin campos | 400; no suma puntos | API | Pasa |
-| CP-22 | HU-021 | Siembra fuera de fase | Primero sin confirmar, luego confirmada | 409 con advertencias; confirmada: 201 sin bono | API | Pasa |
+### P-003 · Aprobación con clave temporal por correo
 
-### Puntos y huerto virtual
+- **HU:** HU-038, HU-039
+- **Nivel:** API
+- **Descripción:** Se espera que al aprobar se cree el huerto y la cuenta, llegue el correo con la contraseña temporal y el sistema obligue a cambiarla.
+- **Procedimiento:**
+  1. Ingresar como técnico del MSP y abrir «Solicitudes».
+  2. Pulsar «Aprobar huerto y responsable» en la solicitud de P-002.
+  3. Abrir Mailpit (http://localhost:8025) y copiar la contraseña temporal.
+  4. Ingresar con ese correo y esa contraseña.
+  5. Intentar abrir el huerto; luego cambiar la contraseña por una de 5 caracteres y después por una válida.
+- **Resultados esperados:** El correo llega con el usuario y la clave; el ingreso lleva a «Crea tu contraseña»; el huerto responde 403 hasta cambiarla; la clave corta se rechaza; la válida se guarda y el panel se abre.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · Correo recibido en Mailpit; 403 antes del cambio y 200 después.
 
-| ID | HU | Caso | Datos o pasos | Resultado esperado | Nivel | Estado |
-| --- | --- | --- | --- | --- | --- | --- |
-| CP-23 | HU-030 | Cálculo de puntos | Con y sin advertencias, repetida | Base + 5 de bono; sin bono con advertencias; 0 si se repite el mismo día | Unitaria | Pasa |
-| CP-24 | HU-018, HU-030 | Preparación en luna nueva vía API | Actividad válida | Suma base + bono al voluntario y a la comunidad | API | Pasa |
-| CP-25 | HU-030 | Repetir la actividad el mismo día | Misma actividad y planta | Se guarda; no suma puntos | API | Pasa |
-| CP-26 | HU-016 | Huerto sin plantas | Lista vacía | Progreso 0 | Unitaria | Pasa |
-| CP-27 | HU-016 | Huerto sin actividades | Plantas sin actividades | Todas en la etapa inicial | Unitaria y API | Pasa |
-| CP-28 | HU-016 | Avance de etapas | Preparación general y riego | Preparación lleva todas a la etapa 1; el riego solo avanza las sembradas | Unitaria | Pasa |
-| CP-29 | HU-016 | La etapa no retrocede | Preparación después de una siembra | La planta sigue en la etapa 2 | Unitaria | Pasa |
-| CP-30 | HU-016 | Huerto virtual tras sembrar | Siembra confirmada | La planta pasa a «Sembrada» y los puntos se acumulan | API | Pasa |
-| CP-31 | — | Enumeraciones sincronizadas | Compara `enums.ts` con `schema.prisma` | Mismos valores | Unitaria | Pasa |
+### P-004 · Rechazo de solicitud con motivo
 
-### Interfaz de punta a punta
+- **HU:** HU-038
+- **Nivel:** API
+- **Descripción:** Se espera que no se pueda rechazar sin motivo y que la solicitud quede archivada.
+- **Procedimiento:**
+  1. En «Solicitudes», pulsar «Rechazar» en una pendiente.
+  2. Confirmar con el motivo vacío; luego escribir un motivo y confirmar.
+  3. Abrir el filtro «Rechazadas».
+- **Resultados esperados:** Con el motivo vacío aparece el error «Escribe el motivo»; con motivo, la solicitud pasa a Rechazadas con su motivo y la persona recibe un correo.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · Sin motivo: 400 «El motivo es obligatorio.»; con motivo: estado RECHAZADA.
 
-| ID | HU | Caso | Pasos | Resultado esperado | Nivel | Estado |
-| --- | --- | --- | --- | --- | --- | --- |
-| CP-32 | HU-001, 002, 004, 010, 014, 016, 018, 036 | Flujo completo en móvil | Registro con consentimiento → comunidad → huerto → planta → preparación de la tierra → huerto virtual → cerrar sesión | Cada paso navega a la pantalla esperada; axe sin violaciones serias o críticas en cada pantalla | E2E + axe | Pasa |
-| CP-33 | Mismas | Flujo completo en escritorio | Igual que CP-32 a 1440 px | Igual que CP-32 | E2E + axe | Pasa |
+### P-005 · Permisos por rol
 
-## Casos manuales
+- **HU:** HU-002, HU-051
+- **Nivel:** API
+- **Descripción:** Se espera que cada rol solo acceda a lo suyo.
+- **Procedimiento:**
+  1. Pedir `GET /api/msp/resumen` sin token.
+  2. Pedir `GET /api/admin/estado` con el token del técnico.
+  3. Retirar un aporte del foro con el token de un responsable.
+- **Resultados esperados:** 401 sin token; 403 para el técnico en administración; 403 para el responsable al moderar.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · 401, 403 y 403.
 
-Ejecutados el 06/11/2026 en Chromium, con la cuenta demo de `.env.example`.
+### P-006 · Voluntario sin cuenta y nivel por experiencia
 
-| ID | Característica | Caso | Pasos | Resultado esperado | Resultado |
-| --- | --- | --- | --- | --- | --- |
-| CM-01 | Accesibilidad | Enlace «Saltar al contenido» | Cargar Inicio y pulsar Tab | Aparece el enlace visible arriba a la izquierda; Enter lleva al contenido | Pasa tras corregir D-07 |
-| CM-02 | Accesibilidad | Foco visible | Recorrer cada pantalla con Tab | Anillo dorado de 3 px en cada elemento enfocado | Pasa |
-| CM-03 | Usabilidad | Resumen de errores | Enviar el inicio de sesión vacío | El foco va al resumen «Revisa estos datos»; cada campo muestra su error | Pasa tras corregir D-06 |
-| CM-04 | Usabilidad | Iniciar sesión con Enter | Escribir correo y contraseña y pulsar Enter | Se abre la sesión y se muestra Inicio | Pasa |
-| CM-05 | Accesibilidad | Foco del diálogo de advertencias | Registrar una siembra en luna nueva | El diálogo se abre con el foco en «Corregir» (acción segura) | Pasa tras corregir D-05 |
-| CM-06 | Accesibilidad | Cerrar el diálogo con Escape | Pulsar Escape con el diálogo abierto | El diálogo se cierra y el foco vuelve a «Guardar actividad» | Pasa tras corregir D-05 |
-| CM-07 | Funcional | Confirmar la advertencia | «Guardar de todas formas» | Se guarda sin bono y el toast indica los puntos | Pasa |
-| CM-08 | Usabilidad | Firma «brotar» | Guardar una siembra | En el huerto virtual, la planta muestra su etapa anterior y brota a la nueva una sola vez | Pasa |
-| CM-09 | Responsive | Móvil 390 px | Recorrer las 8 pantallas | Sin desplazamiento horizontal; barra inferior al alcance del pulgar | Pasa |
-| CM-10 | Responsive | Tableta 800 px | Inicio | El botón «Registrar actividad» se lee en una línea | Pasa tras corregir D-08 |
-| CM-11 | Responsive | Escritorio 1440 px | Recorrer las 8 pantallas | Menú lateral fijo y columna de contenido de 768 px | Pasa |
-| CM-12 | Rendimiento, accesibilidad, buenas prácticas | Lighthouse en 7 pantallas, móvil y escritorio | Ver el [informe de calidad](../informe/informe.md#lighthouse) | Accesibilidad ≥ 90 | Pasa (100 en las 14 mediciones) |
-| CM-13 | Fiabilidad | Consola sin errores inesperados | Recorrer el flujo con la consola abierta | Solo respuestas 400/409 esperadas por validación | Pasa |
-| CM-14 | Portabilidad | Arranque en limpio | El job `e2e` de GitHub Actions levanta `docker compose up --build` en una máquina nueva | Migraciones, datos semilla y cuenta demo listos sin pasos extra | Pasa (CI del PR #3) |
+- **HU:** HU-040, HU-041
+- **Nivel:** API
+- **Descripción:** Se espera que el responsable registre voluntarios sin cuenta y pueda pedir un nivel mayor con justificación.
+- **Procedimiento:**
+  1. En «Voluntarios», pulsar «Agregar voluntario» y guardar sin nombre.
+  2. Completar nombre, fecha de nacimiento y género; marcar «Tiene experiencia», elegir Oficial y justificar.
+  3. Ingresar como técnico y abrir «Niveles».
+- **Resultados esperados:** Sin nombre se rechaza; con datos completos el voluntario queda como Aprendiz y su solicitud aparece al técnico.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · 400 sin nombre, 201 con datos; la solicitud aparece en «Niveles».
 
-## Defectos encontrados
+### P-007 · Planta de otra altitud
 
-| ID | Encontrado por | Defecto | Severidad | Corrección |
-| --- | --- | --- | --- | --- |
-| D-01 | E2E (CP-32) | Al crear la comunidad, la app volvía a Inicio en lugar de llevar a Mi huerto | Media | Se navega antes de recargar la sesión |
-| D-02 | CI local | El backend quedaba «unhealthy» en Docker | Alta | Healthcheck con `127.0.0.1` y `start_period` |
-| D-03 | Capturas | Fechas en formato de EE. UU. | Baja | Navegador con idioma `es-EC` |
-| D-04 | Revisión de diseño | 10 hallazgos de jerarquía, color y movimiento (tarjeta «Hoy», chips, filas de plantas, firma «brotar», entre otros) | Media | Corregidos en dos rondas; ver `apps/frontend/DESIGN.md` |
-| D-05 | CM-05, CM-06 | El diálogo enfocaba «Guardar de todas formas» y al cerrarlo el foco se perdía | Media | Foco inicial en «Corregir» y retorno a «Guardar actividad» |
-| D-06 | CM-03 | «La contraseña es obligatorio» y «Los usos medicinales es obligatorio» | Baja | Mensajes con concordancia de género y número |
-| D-07 | CM-01 | El enlace «Saltar al contenido» aparecía sin relleno | Baja | Relleno y sombra al enfocarse |
-| D-08 | CM-10 | El botón de la tarjeta «Hoy» se partía en dos líneas en tableta | Baja | Botón en fila solo desde 1024 px |
-| D-09 | CM-12 | SEO 92 por falta de `robots.txt` | Baja | Se agrega `public/robots.txt` |
-| D-10 | Auditoría externa (09/11) | `pnpm test` fallaba: el frontend tenía Vitest configurado sin ninguna prueba | Baja | Se quita Vitest del frontend; las pruebas de interfaz son las de Playwright |
-| D-11 | Auditoría externa (09/11) | `pnpm lint` fallaba: ESLint estaba instalado sin archivo de configuración | Baja | Se agrega `eslint.config.mjs` con reglas de accesibilidad (`jsx-a11y`) y se ejecuta en CI |
+- **HU:** HU-042
+- **Nivel:** API
+- **Descripción:** Se espera que el sistema advierta y permita agregar una planta fuera del rango de altitud del huerto.
+- **Procedimiento:**
+  1. En un huerto a 300 m, abrir «Plantas» y marcar «Mostrar también las de otra altitud».
+  2. Agregar Manzanilla (1500–3500 m).
+  3. Confirmar «Agregar de todas formas».
+- **Resultados esperados:** Aparece «¿Estás seguro?» con el rango de la planta y la altitud del huerto; al confirmar, la planta queda en el huerto marcada como fuera de altitud.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · 409 con la advertencia `ALTITUD`; luego 201 con `fueraDeAltitud: true`.
 
-## Pendiente conocido
+### P-008 · Pasos en orden, evidencia obligatoria y 24 horas
 
-- Inicio en móvil obtiene 94 en rendimiento de Lighthouse porque la tarjeta del huerto virtual aparece después de cargar los datos (desplazamiento de diseño). Se atiende en v2 con un esqueleto de carga.
-- No hay pruebas con lectores de pantalla reales (NVDA, TalkBack); axe y Lighthouse cubren las reglas automáticas. Queda para v2.
+- **HU:** HU-044
+- **Nivel:** API
+- **Descripción:** Se espera que el registro respete el orden de los pasos y las validaciones mínimas.
+- **Procedimiento:**
+  1. En un ciclo nuevo, registrar una siembra.
+  2. Registrar la preparación de la tierra sin evidencia.
+  3. Registrarla con 25 horas para un voluntario.
+  4. Registrarla el 08/04/2024 (luna nueva) con 2 horas y una foto.
+- **Resultados esperados:** La siembra se rechaza con 409 «Ahora corresponde: Preparación de la tierra»; sin evidencia y con 25 horas, 400 con el campo a corregir; la última se registra con bono y el siguiente paso es «Surcos, terrazas, camadas o camellones».
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · 409, 400, 400 y 201.
+
+### P-009 · Segunda oportunidad de la evidencia
+
+- **HU:** HU-045
+- **Nivel:** API
+- **Descripción:** Se espera que una evidencia rechazada pueda reenviarse una vez y valga la mitad.
+- **Procedimiento:**
+  1. Como técnico, rechazar la evidencia de P-008 con el motivo «La foto no muestra el huerto».
+  2. Como responsable, subir una nueva foto desde «Actividades».
+  3. Como técnico, aprobarla.
+- **Resultados esperados:** El responsable ve el motivo y el botón para reenviar; la actividad pasa al intento 2; al aprobar, el voluntario recibe 11 puntos (2 h × 10 × 50 % × 1,1).
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · 11 puntos y 2 horas validadas para el voluntario.
+
+### P-010 · Paso no cumplido y cosecha perdida
+
+- **HU:** HU-046
+- **Nivel:** API
+- **Descripción:** Se espera que un paso saltado quede como no cumplido y que una cosecha perdida cierre el ciclo con su causa.
+- **Procedimiento:**
+  1. En el ciclo, pulsar «No lo hicimos» en el paso 2 y confirmar.
+  2. Pulsar «Se dañó la cosecha», confirmar sin causa y luego con «Helada» y una justificación.
+- **Resultados esperados:** El paso 2 queda «No cumplida» con 0 puntos y se muestra el paso 3; sin causa se pide elegirla; con causa el ciclo queda «Fallido».
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · Paso marcado como no cumplido; ciclo fallido por helada.
+
+### P-011 · Ranking normalizado por tipo
+
+- **HU:** HU-048
+- **Nivel:** Unitaria y API
+- **Descripción:** Se espera que el índice sea puntos ÷ √(voluntarios + 1) y que los empates los gane quien llegó primero.
+- **Procedimiento:**
+  1. Calcular el índice de 300 puntos con 8 voluntarios y de 100 puntos con 0.
+  2. Consultar `GET /api/publico/ranking?tipo=EN_TIERRA` y comparar el índice de un huerto.
+  3. Consultar un tipo inexistente.
+- **Resultados esperados:** Ambos índices dan 100; el índice de la API coincide con la fórmula; el tipo inexistente responde 400.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · Índices iguales a la fórmula; 400 para el tipo inválido.
+
+### P-012 · Niveles automáticos y talentos
+
+- **HU:** HU-047
+- **Nivel:** Unitaria
+- **Descripción:** Se espera que el nivel suba solo según horas, tipos y ciclos, y que nunca baje.
+- **Procedimiento:**
+  1. Evaluar 39 h con 9 tipos, 40 h con 4 tipos, 150 h con 8 tipos sin ciclo y con un ciclo.
+  2. Evaluar 0 h para alguien que ya es Oficial.
+- **Resultados esperados:** Aprendiz, Oficial, Oficial y Maestro; el Oficial sin horas sigue siendo Oficial.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · Vitest en verde.
+
+### P-013 · Validación de cada paso según los lineamientos del MSP
+
+- **HU:** HU-044, HU-052
+- **Nivel:** Unitaria
+- **Descripción:** Se espera que cada paso aplique las reglas de los saberes ancestrales.
+- **Procedimiento:**
+  1. Señalética roja para una planta fría.
+  2. Secado al sol y secado de 20 días.
+  3. Empaquetado con caducidad a 13 meses.
+  4. Cosecha de raíces en luna llena a las 7:00 sin baño dos días antes.
+  5. Riego con aspersor.
+- **Resultados esperados:** Error de color; error de lugar y advertencia de días; error de caducidad; tres advertencias (fase, rocío y baño); error de método.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · Vitest en verde.
+
+### P-014 · Información pública sin datos personales
+
+- **HU:** HU-049
+- **Nivel:** API y e2e
+- **Descripción:** Se espera que la ficha pública no exponga datos personales y que la ubicación sea aproximada.
+- **Procedimiento:**
+  1. Consultar `GET /api/publico/huertos/{id}` del huerto creado en P-003.
+  2. Abrir la ficha en el navegador desde el ranking.
+- **Resultados esperados:** No hay correo, cédula ni celular; la latitud llega redondeada a dos decimales (-0,18); la página no tiene violaciones serias de axe.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado.
+
+### P-015 · Foro con reglas y moderación
+
+- **HU:** HU-008, HU-009
+- **Nivel:** API
+- **Descripción:** Se espera que publicar exija aceptar las reglas y que el técnico pueda retirar un aporte con motivo visible.
+- **Procedimiento:**
+  1. Como responsable, publicar sin marcar las reglas; luego marcarlas.
+  2. Reportar el aporte.
+  3. Como técnico, abrir «Moderación del foro» y retirarlo con un motivo.
+- **Resultados esperados:** Sin reglas, error; con reglas se publica; el reporte llega a moderación; el aporte retirado muestra «Aporte retirado por moderación» con el motivo y sin el texto original.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado.
+
+### P-016 · Respaldo y estado del sistema
+
+- **HU:** HU-051
+- **Nivel:** API
+- **Descripción:** Se espera que el administrador descargue un respaldo completo y vea el estado de la base.
+- **Procedimiento:**
+  1. Ingresar como administrador.
+  2. Pulsar «Descargar respaldo».
+- **Resultados esperados:** Se descarga `respaldo-nexo-AAAA-MM-DD-HH-MM.sql` con la cabecera «PostgreSQL database dump»; el panel muestra latencia, tamaño y filas por tabla.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado.
+
+### P-017 · Carga masiva del catálogo
+
+- **HU:** HU-043
+- **Nivel:** API
+- **Descripción:** Se espera que el CSV cree o actualice plantas y reporte las líneas con error.
+- **Procedimiento:**
+  1. Como técnico, abrir «Catálogo» y «Cargar CSV».
+  2. Subir un archivo con una planta nueva, una existente modificada y una línea con ciclo «MEDIO».
+- **Resultados esperados:** «1 plantas nuevas, 1 actualizadas» y «Línea 3: El ciclo debe ser CORTO o LARGO».
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · `POST /api/msp/plantas/importar` devolvió 1 creada, 1 actualizada y el error de la línea 3.
+
+### P-018 · Accesibilidad y diseño adaptable
+
+- **HU:** Todas
+- **Nivel:** e2e (Playwright + axe)
+- **Descripción:** Se espera que las pantallas públicas y de los tres roles cumplan WCAG 2.1 AA en móvil y escritorio.
+- **Procedimiento:**
+  1. Ejecutar `pnpm e2e` con la aplicación corriendo.
+- **Resultados esperados:** 0 violaciones serias o críticas en 23 pantallas, en 412 px y 1440 px.
+- **Ejecución:** 09/11/2026 · Equipo Nexo · Aprobado · 8/8 pruebas en verde. En la primera ejecución axe encontró un campo de archivo sin etiqueta en «Actividades»; se corrigió y se volvió a ejecutar.

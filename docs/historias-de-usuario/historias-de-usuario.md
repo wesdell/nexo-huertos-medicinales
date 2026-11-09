@@ -10,6 +10,34 @@
 | 4. Actividades | HU-017 a HU-029 |
 | 5. Puntos | HU-030 a HU-035 |
 | 6. Protección de datos | HU-036 |
+| 7. Modelo acordado con el MSP | HU-037 a HU-052 |
+
+## Estado en v2.0.0
+
+La reunión con el MSP del 06/11/2026 cambió el modelo de cuentas. Las historias de v1 que suponían que cada voluntario tiene cuenta quedan **reemplazadas** por las del módulo 7; el resto está implementado.
+
+| HU | Estado en v2.0.0 |
+| --- | --- |
+| HU-001, HU-004 | Reemplazadas por HU-037 (solicitud) y HU-038 (aprobación): ya no hay auto-registro ni comunidades libres |
+| HU-002 | Implementada: ingreso de responsables, técnicos y administradores; cierre de sesión |
+| HU-003, HU-005 | Reemplazadas por HU-050: los datos de contacto los mantiene el MSP en el registro centralizado |
+| HU-006, HU-007 | Reemplazadas por HU-040 (voluntarios sin cuenta) y HU-049 (ficha pública) |
+| HU-008, HU-009 | Implementadas: foro público con categorías, respuestas, reglas, reportes y moderación del técnico del MSP |
+| HU-010 a HU-013 | Implementadas: georreferenciación en mapa (HU-037), subtipos, cerca, área, suelo, agua y abono |
+| HU-014 | Reemplazada por HU-042 y HU-043: catálogo global del MSP |
+| HU-015 | Implementada: bodega con herramientas, material de siembra y abonos |
+| HU-016 | Implementada: huerto virtual por ciclo (espejo digital) |
+| HU-017 | Implementada, con calendario lunar mensual (HU-052) |
+| HU-018 a HU-027 | Implementadas como los 13 pasos secuenciales de HU-044 |
+| HU-028 | Implementada: evidencia obligatoria (HU-044) e historia visual pública |
+| HU-029 | Implementada como la línea de tiempo de cada ciclo |
+| HU-030 | Reemplazada por HU-045: puntos por hora validada |
+| HU-031, HU-032 | Implementadas: 10 misiones con su insignia |
+| HU-033 | Reemplazada por HU-047 (niveles automáticos) y HU-041 (nivel por experiencia); talentos certificados por participaciones |
+| HU-034 | Implementada en «Misiones y puntos» y en la ficha de cada voluntario |
+| HU-035 | Reemplazada por HU-048: ranking por tipo normalizado |
+| HU-036 | Implementada: el consentimiento se acepta al solicitar el huerto |
+| HU-037 a HU-052 | Implementadas en v2.0.0 |
 
 ## 1. REGISTRO
 
@@ -966,3 +994,338 @@
 - Codificar la validación en el servidor y el guardado de la fecha y la versión (1,5 horas)
 - Codificar el mensaje de error junto a la casilla (0,5 horas)
 - Probar el registro con y sin aceptación, y el enlace a la política (1,5 horas)
+
+## 7. MODELO ACORDADO CON EL MSP (v2.0.0)
+
+Historias que nacen de la reunión con la Ing. Sandra Sánchez (MSP) del 06/11/2026. Reemplazan el auto-registro de voluntarios y la creación libre de comunidades de v1: ahora solo tienen cuenta el responsable del huerto, el técnico del MSP y el administrador; los voluntarios los registra el responsable. El detalle de cómo se integró cada punto de la reunión está en [reunion-msp-2026-11-06.md](../reunion-msp-2026-11-06.md).
+
+### HU-037 · Solicitar crear un huerto
+
+**Prioridad:** Alta · **Estimación:** 14 horas
+
+**Historia de usuario**
+
+> **Como** persona de la comunidad sin cuenta **quiero** solicitar la creación de un huerto con la ubicación georreferenciada, el tipo y los subtipos, mi nombre, cédula, correo y celular, **para** que el MSP lo registre y yo quede como responsable.
+
+**Criterios de aceptación**
+
+- **Solicitud válida:** **Dada** una persona en «Solicitar huerto», **cuando** marca la ubicación en el mapa (o usa el GPS), elige el tipo y de 1 a 3 subtipos, ingresa la altitud y sus datos y acepta la política de datos, **entonces** el sistema guarda la solicitud como pendiente y le informa que el MSP la contactará. *[ESCENARIO IDEAL]*
+- **Datos inválidos:** **Dada** una cédula que no cumple el módulo 10, un celular que no empieza con 09, una ubicación fuera de Ecuador o un subtipo que no corresponde al tipo, **cuando** envía, **entonces** el sistema no guarda la solicitud e indica cada campo a corregir. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+- **Solicitud duplicada:** **Dada** una cédula con una solicitud pendiente, **cuando** envía otra, **entonces** el sistema la rechaza e indica que ya hay una en revisión. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+- **Sin consentimiento:** **Dada** una persona que no acepta la política de datos, **cuando** envía, **entonces** el sistema no guarda nada. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Diseñar el modelo `SolicitudHuerto` y su estado (1 hora)
+- Implementar el formulario público con mapa Leaflet, GPS y subtipos según el tipo (4 horas)
+- Codificar la validación de cédula (módulo 10), celular, coordenadas y subtipos en `@nexo/shared` (2 horas)
+- Codificar el endpoint `POST /publico/solicitudes` con la regla de no duplicar (2 horas)
+- Probar con datos válidos e inválidos (3 horas)
+- Depurar el código (2 horas)
+
+### HU-038 · Aprobar o rechazar una solicitud de huerto
+
+**Prioridad:** Alta · **Estimación:** 14 horas
+
+**Historia de usuario**
+
+> **Como** técnico del MSP **quiero** aprobar o rechazar las solicitudes de huerto después de contactar a la persona, **para** mantener centralizado el registro de huertos y responsables que el MSP financiará.
+
+**Criterios de aceptación**
+
+- **Aprobación:** **Dada** una solicitud pendiente, **cuando** el técnico la aprueba, **entonces** el sistema crea el huerto y la cuenta del responsable y le envía por correo su usuario y una contraseña temporal. *[ESCENARIO IDEAL]*
+- **Responsable que ya tiene cuenta:** **Dada** una solicitud con el correo de un responsable existente, **cuando** se aprueba, **entonces** el huerto se asigna a esa cuenta sin crear otra. *[ESCENARIO IDEAL]*
+- **Rechazo:** **Dada** una solicitud pendiente, **cuando** el técnico la rechaza, **entonces** debe escribir el motivo, la solicitud queda archivada con él y se avisa a la persona. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+- **Falla del correo:** **Dado** que el servidor de correo no responde, **cuando** se aprueba, **entonces** no se aprueba nada y el técnico ve un mensaje para reintentar. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Implementar la bandeja de solicitudes con filtros por estado (3 horas)
+- Codificar la aprobación en una transacción: cuenta, huerto, historial y correo (3 horas)
+- Configurar el envío de correo (Mailpit en desarrollo) (2 horas)
+- Codificar el rechazo con motivo obligatorio (1 hora)
+- Probar aprobación, cuenta existente, rechazo y falla del correo (3 horas)
+- Depurar el código (2 horas)
+
+### HU-039 · Cambiar la contraseña temporal
+
+**Prioridad:** Alta · **Estimación:** 6 horas
+
+**Historia de usuario**
+
+> **Como** responsable recién aprobado **quiero** cambiar la contraseña temporal que recibí por correo, **para** que solo yo conozca mi clave.
+
+**Criterios de aceptación**
+
+- **Primer ingreso:** **Dada** una cuenta con clave temporal, **cuando** la persona ingresa, **entonces** el sistema la lleva a crear su contraseña y no le permite usar otras pantallas hasta hacerlo. *[ESCENARIO IDEAL]*
+- **Clave inválida:** **Dada** una nueva contraseña de menos de 8 caracteres, igual a la temporal o con la actual incorrecta, **cuando** guarda, **entonces** el sistema no la cambia e indica el motivo. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Codificar la marca `debeCambiarClave` y su bloqueo en el guardia de la API (2 horas)
+- Implementar la pantalla de cambio de contraseña (2 horas)
+- Probar (1 hora) y depurar (1 hora)
+
+### HU-040 · Registrar voluntarios sin cuenta
+
+**Prioridad:** Alta · **Estimación:** 12 horas
+
+**Historia de usuario**
+
+> **Como** responsable del huerto **quiero** agregar a los voluntarios o marcarlos como inactivos, **para** registrar quién trabaja en cada actividad sin que ellos necesiten una cuenta.
+
+**Criterios de aceptación**
+
+- **Agregar:** **Dado** un responsable, **cuando** ingresa nombre, fecha de nacimiento, género y (opcional) cédula, **entonces** el voluntario queda activo como Aprendiz. *[ESCENARIO IDEAL]*
+- **Varios huertos:** **Dada** una cédula que ya existe en otro huerto, **cuando** la agrega, **entonces** se reutiliza el mismo voluntario, que suma puntos en ambos. *[ESCENARIO IDEAL]*
+- **Inactivar:** **Dado** un voluntario activo, **cuando** el responsable lo marca inactivo, **entonces** ya no aparece para registrar horas, pero conserva su historial. No se expulsa a nadie. *[ESCENARIO IDEAL]*
+- **Datos inválidos:** **Dada** una fecha de nacimiento futura, una cédula inválida o un voluntario repetido en el mismo huerto, **cuando** guarda, **entonces** el sistema lo rechaza e indica el campo. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Diseñar los modelos `Voluntario` y `VoluntarioHuerto` (2 horas)
+- Implementar la pantalla de voluntarios con su nivel, horas y talentos (4 horas)
+- Codificar alta, reutilización por cédula e inactivación (3 horas)
+- Probar (2 horas) y depurar (1 hora)
+
+### HU-041 · Pedir que un voluntario con experiencia entre como Oficial o Maestro
+
+**Prioridad:** Media · **Estimación:** 7 horas
+
+**Historia de usuario**
+
+> **Como** responsable **quiero** pedir al MSP que un voluntario con experiencia entre como Oficial o Maestro, con una justificación, **para** reconocer su saber desde el inicio.
+
+**Criterios de aceptación**
+
+- **Solicitud y aprobación:** **Dada** una justificación de al menos 20 caracteres, **cuando** el responsable la envía y el técnico la aprueba, **entonces** el voluntario sube a ese nivel. *[ESCENARIO IDEAL]*
+- **Rechazo:** **Dada** una solicitud pendiente, **cuando** el técnico la rechaza con motivo, **entonces** el voluntario sigue como Aprendiz y el responsable ve el motivo. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+- **Nivel igual o menor:** **Dado** un voluntario que ya tiene ese nivel o uno mayor, **cuando** se pide, **entonces** el sistema lo rechaza. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Modelo `SolicitudNivel` y endpoints de solicitud y revisión (3 horas)
+- Pantallas del responsable y del técnico (2 horas)
+- Probar y depurar (2 horas)
+
+### HU-042 · Elegir plantas del catálogo según la altitud
+
+**Prioridad:** Alta · **Estimación:** 8 horas
+
+**Historia de usuario**
+
+> **Como** responsable **quiero** elegir las plantas de mi huerto del catálogo del MSP, filtradas por la altitud del huerto, **para** sembrar plantas medicinales que se adapten a mi lugar.
+
+**Criterios de aceptación**
+
+- **Planta apta:** **Dada** una planta cuyo rango de altitud incluye la del huerto, **cuando** el responsable la agrega, **entonces** queda en el huerto. *[ESCENARIO IDEAL]*
+- **Otra altitud:** **Dada** una planta de otra altitud, **cuando** la agrega, **entonces** el sistema advierte «¿está seguro?» y la agrega solo si confirma. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+- **Solo medicinales:** **Dado** el catálogo, **cuando** el responsable busca, **entonces** solo ve plantas medicinales aprobadas por el MSP. *[ESCENARIO IDEAL]*
+
+**Tareas de implementación**
+
+- Convertir `Planta` en catálogo global y crear `HuertoPlanta` (2 horas)
+- Codificar el filtro y la advertencia de altitud (2 horas)
+- Implementar la pantalla de plantas del huerto (2 horas)
+- Probar y depurar (2 horas)
+
+### HU-043 · Administrar el catálogo de plantas y las solicitudes de plantas nuevas
+
+**Prioridad:** Alta · **Estimación:** 12 horas
+
+**Historia de usuario**
+
+> **Como** técnico del MSP **quiero** cargar y editar el catálogo de plantas medicinales, también con un archivo CSV, y analizar las plantas que proponen los responsables, **para** mantener un catálogo confiable.
+
+**Criterios de aceptación**
+
+- **Alta y edición:** **Dada** una planta con nombre común y científico, ciclo, cualidad caliente o fría y usos, **cuando** el técnico la guarda, **entonces** queda disponible en el catálogo, con foto opcional. *[ESCENARIO IDEAL]*
+- **Carga CSV:** **Dado** un CSV con encabezado, **cuando** el técnico lo sube, **entonces** el sistema crea o actualiza cada planta y reporta las líneas con error sin detenerse. *[ESCENARIO IDEAL]*
+- **Propuesta de un responsable:** **Dada** una propuesta con toda su información y la confirmación de que es medicinal, **cuando** el técnico la aprueba o la rechaza con motivo, **entonces** entra al catálogo o queda rechazada y el responsable ve el resultado. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Endpoints de catálogo, foto e importación CSV (4 horas)
+- Pantalla del catálogo con formulario y carga (4 horas)
+- Formulario «Solicitar añadir planta» del responsable (2 horas)
+- Probar y depurar (2 horas)
+
+### HU-044 · Registrar los pasos del ciclo en orden, con voluntarios, horas y evidencia
+
+**Prioridad:** Alta · **Estimación:** 24 horas
+
+**Historia de usuario**
+
+> **Como** responsable **quiero** registrar cada paso de un ciclo de siembra después de hacerlo, con los voluntarios que participaron, sus horas y fotos o videos reales, **para** que el MSP lo valide y el sistema me muestre el paso siguiente con sus indicaciones.
+
+**Criterios de aceptación**
+
+- **Paso siguiente:** **Dado** un ciclo con el paso N registrado, **cuando** el responsable abre «Registrar», **entonces** ve el paso N+1 con cuándo y cómo hacerlo según los lineamientos del MSP. Cuidado y riego se pueden repetir entre la siembra y el baño. *[ESCENARIO IDEAL]*
+- **Registro válido:** **Dados** fecha pasada, participantes con horas y al menos una evidencia, **cuando** registra, **entonces** la actividad queda pendiente de validación y el huerto virtual avanza. *[ESCENARIO IDEAL]*
+- **Calendario ancestral:** **Dada** una fase lunar o una hora distinta a la recomendada, **cuando** registra, **entonces** el sistema advierte y permite confirmar; la actividad pierde el bono. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+- **Validaciones mínimas:** **Dado** un paso fuera de orden, una fecha futura, un voluntario con más de 24 horas en el día, sin evidencia, o una señalética de color que no corresponde a la cualidad de la planta, **cuando** registra, **entonces** el sistema lo rechaza e indica la corrección. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Definir los 13 pasos con sus indicaciones en `@nexo/shared` (3 horas)
+- Extender `validarActividad` a los 13 pasos y a los participantes (5 horas)
+- Modelos `Ciclo`, `Participacion` y `ArchivoActividad` y subida de archivos (4 horas)
+- Pantallas de actividades y de registro con subida de fotos (6 horas)
+- Probar (4 horas) y depurar (2 horas)
+
+### HU-045 · Validar evidencias y otorgar puntos
+
+**Prioridad:** Alta · **Estimación:** 12 horas
+
+**Historia de usuario**
+
+> **Como** técnico del MSP **quiero** revisar las fotos y videos de cada actividad y aprobarlas o rechazarlas, **para** otorgar los puntos solo cuando la evidencia es real y del huerto correcto.
+
+**Criterios de aceptación**
+
+- **Aprobación:** **Dada** una evidencia válida, **cuando** el técnico la aprueba, **entonces** cada voluntario recibe 10 puntos por hora (+10 % si siguió el calendario) y se recalculan su nivel y el ranking. *[ESCENARIO IDEAL]*
+- **Segunda oportunidad:** **Dada** una evidencia rechazada con motivo, **cuando** el responsable sube una nueva, **entonces** vuelve a revisión y, si se aprueba, vale el 50 %. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+- **Sin más intentos:** **Dada** una segunda evidencia rechazada, **cuando** el responsable intenta subir otra, **entonces** el sistema no lo permite: no hay puntos, pero el ciclo sigue. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Bandeja de evidencias con visor de fotos y videos (3 horas)
+- Codificar la acreditación en una transacción con el libro de puntos (3 horas)
+- Codificar rechazo y reenvío con intento (2 horas)
+- Probar y depurar (4 horas)
+
+### HU-046 · Registrar un paso no cumplido o una cosecha perdida
+
+**Prioridad:** Media · **Estimación:** 6 horas
+
+**Historia de usuario**
+
+> **Como** responsable **quiero** indicar que un paso no se hizo o que la cosecha se dañó, eligiendo la causa, **para** seguir con el ciclo o empezar otro sin penalizaciones fuertes.
+
+**Criterios de aceptación**
+
+- **Paso no cumplido:** **Dado** el paso que corresponde, **cuando** el responsable indica que no se hizo, **entonces** queda «no cumplido» con 0 puntos y se muestra el paso siguiente. *[ESCENARIO IDEAL]*
+- **Cosecha perdida:** **Dado** un ciclo activo, **cuando** el responsable elige una causa (helada, sequía, plaga…) y la justifica, **entonces** el ciclo queda fallido, deja de ganar los puntos restantes y la planta puede empezar otro ciclo. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Lista de causas en `@nexo/shared` y endpoints de omitir y fracaso (2 horas)
+- Diálogos en la pantalla de actividades (2 horas)
+- Probar y depurar (2 horas)
+
+### HU-047 · Subir de nivel automáticamente
+
+**Prioridad:** Media · **Estimación:** 6 horas
+
+**Historia de usuario**
+
+> **Como** voluntario **quiero** subir de nivel automáticamente según mis horas y la variedad de actividades, **para** ver reconocido mi aprendizaje.
+
+**Criterios de aceptación**
+
+- **Ascenso:** **Dado** un Aprendiz con 40 horas validadas en 4 tipos de actividad, **cuando** el MSP aprueba su evidencia, **entonces** pasa a Oficial; con 150 horas, 8 tipos y un ciclo completo pasa a Maestro. *[ESCENARIO IDEAL]*
+- **Nunca baja:** **Dado** un voluntario que entró como Oficial por experiencia, **cuando** aún no tiene horas, **entonces** conserva su nivel. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Reglas `nivelPorAvance`, `siguienteNivel` y talentos con pruebas (3 horas)
+- Recalcular al acreditar y mostrar la meta en la pantalla de voluntarios (3 horas)
+
+### HU-048 · Consultar los rankings por tipo de huerto y de producción
+
+**Prioridad:** Alta · **Estimación:** 8 horas
+
+**Historia de usuario**
+
+> **Como** persona del público **quiero** ver un ranking por tipo de huerto normalizado por el número de voluntarios y otro de producción, **para** conocer qué huertos destacan.
+
+**Criterios de aceptación**
+
+- **Ranking por tipo:** **Dado** un tipo de huerto, **cuando** se consulta, **entonces** se ordena por puntos de los últimos 12 meses ÷ √(voluntarios activos + 1), desempatando por quien llegó primero. *[ESCENARIO IDEAL]*
+- **Producción:** **Dado** el año, **cuando** se consulta, **entonces** se listan los paquetes con evidencia validada por huerto. *[ESCENARIO IDEAL]*
+- **Tipo inválido:** **Dado** un tipo que no existe, **cuando** se consulta, **entonces** la API responde 400. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Fórmula `indiceRanking` y `ordenarRanking` con pruebas (2 horas)
+- Endpoints de ranking y producción (2 horas)
+- Pantalla de ranking (2 horas)
+- Probar y depurar (2 horas)
+
+### HU-049 · Consultar la información pública sin iniciar sesión
+
+**Prioridad:** Alta · **Estimación:** 14 horas
+
+**Historia de usuario**
+
+> **Como** invitado sin cuenta **quiero** ver el mapa de huertos, la ficha de un huerto con su huerto virtual, las estadísticas por provincia y el catálogo de plantas, **para** conocer el alcance de los huertos medicinales y animarme a participar.
+
+**Criterios de aceptación**
+
+- **Mapa y ficha:** **Dado** un huerto activo, **cuando** el invitado lo abre, **entonces** ve su tipo, plantas, niveles de su comunidad, insignias, puesto en el ranking, historia visual y espejo digital. *[ESCENARIO IDEAL]*
+- **Estadísticas:** **Dado** el público, **cuando** abre estadísticas, **entonces** ve huertos por provincia y tipo, voluntarios por nivel, plantas más cultivadas y producción por año. *[ESCENARIO IDEAL]*
+- **Privacidad:** **Dado** cualquier dato público, **cuando** se muestra, **entonces** no incluye cédulas, correos ni celulares y la ubicación se redondea a unos 1 km. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Endpoints públicos (4 horas)
+- Pantallas de portada, mapa, ficha y estadísticas (6 horas)
+- Probar con axe y depurar (4 horas)
+
+### HU-050 · Mantener el registro centralizado y cambiar de responsable
+
+**Prioridad:** Media · **Estimación:** 8 horas
+
+**Historia de usuario**
+
+> **Como** técnico del MSP **quiero** consultar y exportar el registro de huertos, responsables y voluntarios, cambiar al responsable de un huerto y restablecer contraseñas, **para** gestionar el financiamiento.
+
+**Criterios de aceptación**
+
+- **Exportar:** **Dado** el registro, **cuando** el técnico exporta, **entonces** descarga un CSV con huertos, responsables y voluntarios. *[ESCENARIO IDEAL]*
+- **Cambio de responsable:** **Dado** un huerto, **cuando** el técnico registra a otra persona, **entonces** queda un solo responsable a la vez, se guarda el historial y la persona recibe su acceso por correo. *[ESCENARIO IDEAL]*
+- **Correo de una cuenta del MSP:** **Dado** un correo de un técnico o administrador, **cuando** se intenta usar como responsable, **entonces** el sistema lo rechaza. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Endpoints de registro, CSV, cambio de responsable y restablecer clave (4 horas)
+- Pantalla de registro (2 horas)
+- Probar y depurar (2 horas)
+
+### HU-051 · Administrar el sistema
+
+**Prioridad:** Media · **Estimación:** 6 horas
+
+**Historia de usuario**
+
+> **Como** administrador técnico del sistema **quiero** ver el estado de la base de datos, descargar respaldos y crear cuentas para los técnicos del MSP, **para** dar soporte a la plataforma.
+
+**Criterios de aceptación**
+
+- **Respaldo:** **Dado** el administrador, **cuando** pide un respaldo, **entonces** descarga un SQL completo generado con `pg_dump`. *[ESCENARIO IDEAL]*
+- **Cuentas:** **Dado** un técnico nuevo, **cuando** el administrador crea su cuenta, **entonces** recibe una clave temporal por correo; el administrador no puede desactivar su propia cuenta. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Endpoints de estado, respaldo y cuentas (3 horas)
+- Pantallas del administrador (2 horas)
+- Probar (1 hora)
+
+### HU-052 · Aprender los saberes ancestrales del huerto
+
+**Prioridad:** Alta · **Estimación:** 6 horas
+
+**Historia de usuario**
+
+> **Como** persona interesada **quiero** consultar los 13 pasos del huerto medicinal con su momento, su técnica y su fase lunar, y el calendario lunar del mes, **para** aprender el saber ancestral antes y durante la siembra.
+
+**Criterios de aceptación**
+
+- **Guía:** **Dada** la página de saberes, **cuando** la abre, **entonces** ve cada paso con cuándo y cómo hacerlo según los lineamientos del MSP (2017). *[ESCENARIO IDEAL]*
+- **Calendario:** **Dado** un mes, **cuando** elige un día, **entonces** ve su fase lunar y la actividad recomendada; las fechas fuera de 1900–2100 se muestran sin fase. *[ESCENARIO EXCEPCIONAL O PROBLEMÁTICO]*
+
+**Tareas de implementación**
+
+- Textos de los pasos y `calendarioLunar` en `@nexo/shared` (3 horas)
+- Pantalla de saberes y calendario (2 horas)
+- Probar (1 hora)
